@@ -26,3 +26,4 @@ libbitcoin-consensus.pc
 bin
 obj
 
+/build
