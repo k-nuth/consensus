@@ -1,8 +1,8 @@
 cmake_policy(VERSION 3.4)
 
-# libbitcoin-consensus
+# bitprim-consensus
 #==============================================================================
-project(libbitcoin-consensus
+project(bitprim-consensus
   VERSION 3.0.0
   LANGUAGES CXX C)
 cmake_minimum_required(VERSION 3.4)
@@ -258,14 +258,14 @@ _add_cxx_compile_flag(-fvisibility-inlines-hidden _has_visibility_inlines_hidden
 
 # Build
 #==============================================================================
-# src/libbitcoin-consensus.la => ${libdir}
+# src/bitprim-consensus.la => ${libdir}
 #------------------------------------------------------------------------------
 set(MODE STATIC)
 if (ENABLE_SHARED)
   set(MODE SHARED)
 endif()
 
-add_library(libbitcoin-consensus ${MODE}
+add_library(bitprim-consensus ${MODE}
   src/clone/amount.h
   src/clone/hash.cpp
   src/clone/hash.h
@@ -301,24 +301,24 @@ add_library(libbitcoin-consensus ${MODE}
   src/clone/script/script_error.h
   src/consensus/consensus.cpp
   src/consensus/consensus.hpp)
-target_include_directories(libbitcoin-consensus PUBLIC
+target_include_directories(bitprim-consensus PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_compile_definitions(libbitcoin-consensus PUBLIC -DBCK_STATIC)
-target_include_directories(libbitcoin-consensus PRIVATE
+target_compile_definitions(bitprim-consensus PUBLIC -DBCK_STATIC)
+target_include_directories(bitprim-consensus PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
-target_link_libraries(libbitcoin-consensus PUBLIC secp256k1)
+target_link_libraries(bitprim-consensus PUBLIC secp256k1)
 
 # Group sources
 file(GLOB_RECURSE headers
   RELATIVE ${CMAKE_CURRENT_LIST_DIR}
   include/*.h include/*.hpp)
-target_sources(libbitcoin-consensus PRIVATE "${headers}")
+target_sources(bitprim-consensus PRIVATE "${headers}")
 
-get_target_property(sources libbitcoin-consensus SOURCES)
+get_target_property(sources bitprim-consensus SOURCES)
 foreach (source ${sources})
   get_filename_component(group ${source} DIRECTORY)
   if (MSVC)
@@ -327,33 +327,33 @@ foreach (source ${sources})
   source_group("${group}" FILES ${source})
 endforeach()
 
-# local: test/libbitcoin_consensus_test
+# local: test/bitprim_consensus_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
-  add_executable(libbitcoin_consensus_test
+  add_executable(bitprim_consensus_test
     test/consensus__script_error_to_verify_result.cpp
     test/consensus__script_verify.cpp
     test/consensus__verify_flags_to_script_flags.cpp
     test/main.cpp
     test/script.hpp)
   if (ENABLE_SHARED)
-    target_compile_definitions(libbitcoin_consensus_test PRIVATE -DBOOST_TEST_DYN_LINK)
+    target_compile_definitions(bitprim_consensus_test PRIVATE -DBOOST_TEST_DYN_LINK)
   endif()
-  target_link_libraries(libbitcoin_consensus_test libbitcoin-consensus)
-  target_include_directories(libbitcoin_consensus_test PRIVATE
+  target_link_libraries(bitprim_consensus_test bitprim-consensus)
+  target_include_directories(bitprim_consensus_test PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
-  target_include_directories(libbitcoin_consensus_test SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
-  target_link_libraries(libbitcoin_consensus_test
+  target_include_directories(bitprim_consensus_test SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
+  target_link_libraries(bitprim_consensus_test
     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 
   enable_testing()
-  set(_libbitcoin_tests consensus__script_error_to_verify_result consensus__script_verify consensus__verify_flags_to_script_flags)
-  foreach (_test_name ${_libbitcoin_tests})
+  set(_bitprim_tests consensus__script_error_to_verify_result consensus__script_verify consensus__verify_flags_to_script_flags)
+  foreach (_test_name ${_bitprim_tests})
     add_test(
-      NAME libbitcoin-consensus.test.${_test_name}
-      COMMAND libbitcoin_consensus_test
+      NAME test.${_test_name}
+      COMMAND bitprim_consensus_test
         --run_test=${_test_name}
         --show_progress=no
         --detect_memory_leak=0
@@ -364,18 +364,18 @@ endif()
 
 # Install
 #==============================================================================
-install(TARGETS libbitcoin-consensus
-  EXPORT libbitcoin-consensus
+install(TARGETS bitprim-consensus
+  EXPORT bitprim-consensus
   ARCHIVE DESTINATION lib)
 
-set(_libbitcoin_headers
+set(_bitprim_headers
   # include_bitcoin_HEADERS =
   bitcoin/consensus.hpp
   # include_bitcoin_consensus_HEADERS =
   bitcoin/consensus/define.hpp
   bitcoin/consensus/export.hpp
   bitcoin/consensus/version.hpp)
-foreach (_header ${_libbitcoin_headers})
+foreach (_header ${_bitprim_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)
   install(FILES "include/${_header}" DESTINATION "include/${_directory}")
 endforeach()
@@ -384,9 +384,9 @@ endforeach()
 #==============================================================================
 include(CMakePackageConfigHelpers)
 
-export(EXPORT libbitcoin-consensus
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/libbitcoin-consensusTargets.cmake")
-export(PACKAGE libbitcoin-consensus)
+export(EXPORT bitprim-consensus
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/bitprim-consensusTargets.cmake")
+export(PACKAGE bitprim-consensus)
 
 if (UNIX)
   set(_config_package_location "lib/cmake")
@@ -394,21 +394,21 @@ elseif (WIN32)
   set(_config_package_location "cmake")
 endif()
 
-install(EXPORT libbitcoin-consensus
-  FILE libbitcoin-consensusTargets.cmake
+install(EXPORT bitprim-consensus
+  FILE bitprim-consensusTargets.cmake
   DESTINATION ${_config_package_location})
 
-configure_file(libbitcoin-consensusConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/libbitcoin-consensusConfig.cmake"
+configure_file(bitprim-consensusConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-consensusConfig.cmake"
   @ONLY)
 
 write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/libbitcoin-consensusConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-consensusConfigVersion.cmake"
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
 install(
   FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/libbitcoin-consensusConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/libbitcoin-consensusConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-consensusConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-consensusConfigVersion.cmake"
   DESTINATION ${_config_package_location})

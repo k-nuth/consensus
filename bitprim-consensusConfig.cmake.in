@@ -1,0 +1,12 @@
+# - Config file for the BITPRIM_CONSENSUS package
+#
+#  BITPRIM_CONSENSUS_INCLUDE_DIRS - include directories for BITPRIM_CONSENSUS
+#  BITPRIM_CONSENSUS_LIBRARIES    - libraries to link against
+
+get_filename_component(BITPRIM_CONSENSUS_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(BITPRIM_CONSENSUS_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+include("${BITPRIM_CONSENSUS_CMAKE_DIR}/bitprim-consensusTargets.cmake")
+set(BITPRIM_CONSENSUS_LIBRARIES bitprim-consensus)
+
+find_package(secp256k1 0.0.01 REQUIRED)
