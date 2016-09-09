@@ -173,6 +173,12 @@ find_package(
   Boost 1.56.0 REQUIRED
   COMPONENTS unit_test_framework)
 
+# Require bitprim-protocol of at least version 3.0.0 and output ${bitprim_protocol_CPPFLAGS/LIBS/PKG}.
+#------------------------------------------------------------------------------
+if (NOT TARGET bitprim-protocol)
+  find_package(bitprim-protocol 3.0.0 REQUIRED)
+endif()
+
 # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
 if (NOT TARGET secp256k1)
@@ -285,14 +291,8 @@ function(_group_sources target sources_dir)
   set_target_properties(${target} PROPERTIES FOLDER "consensus")
 endfunction()
 
-# src/bitprim-consensus.la => ${libdir}
 #------------------------------------------------------------------------------
-set(MODE STATIC)
-if (ENABLE_SHARED)
-  set(MODE SHARED)
-endif()
-
-add_library(bitprim-consensus ${MODE}
+add_library(bitprim-consensus-clone OBJECT
   src/clone/amount.h
   src/clone/hash.cpp
   src/clone/hash.h
@@ -325,9 +325,31 @@ add_library(bitprim-consensus ${MODE}
   src/clone/script/interpreter.h
   src/clone/script/script.cpp
   src/clone/script/script.h
-  src/clone/script/script_error.h
+  src/clone/script/script_error.h)
+target_include_directories(bitprim-consensus-clone PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
+
+target_compile_definitions(bitprim-consensus-clone PRIVATE
+  $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
+target_include_directories(bitprim-consensus-clone PRIVATE
+  $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
+
+_group_sources(bitprim-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone")
+
+#------------------------------------------------------------------------------
+set(_bitprim_sources
   src/consensus/consensus.cpp
-  src/consensus/consensus.hpp)
+  src/consensus/consensus.hpp
+  $<TARGET_OBJECTS:bitprim-consensus-clone>)
+
+# src/bitprim-consensus.la => ${libdir}
+#------------------------------------------------------------------------------
+set(MODE STATIC)
+if (ENABLE_SHARED)
+  set(MODE SHARED)
+endif()
+
+add_library(bitprim-consensus ${MODE} ${_bitprim_sources})
 target_include_directories(bitprim-consensus PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
@@ -337,13 +359,41 @@ target_include_directories(bitprim-consensus PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
-target_link_libraries(bitprim-consensus PUBLIC secp256k1)
+target_link_libraries(bitprim-consensus secp256k1)
 
 _group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
 
+# src/bitprim-consensus-requester.la => ${libdir}
+#------------------------------------------------------------------------------
+add_library(bitprim-consensus-requester ${MODE}
+  requester/src/consensus/consensus.cpp
+  requester/src/consensus/consensus.hpp
+  $<TARGET_OBJECTS:bitprim-consensus-clone>)
+target_include_directories(bitprim-consensus-requester PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/requester/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+
+target_compile_definitions(bitprim-consensus-requester PUBLIC -DBCK_STATIC)
+target_include_directories(bitprim-consensus-requester PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/requester/src
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
+
+target_link_libraries(bitprim-consensus-requester secp256k1 bitprim-protocol)
+
+_group_sources(bitprim-consensus-requester "${CMAKE_CURRENT_LIST_DIR}/requester")
+
+# src/bitprim-consensus-replier => ${bindir}
+#------------------------------------------------------------------------------
+add_executable(bitprim-consensus-replier
+  replier/src/main.cpp)
+target_link_libraries(bitprim-consensus-replier bitprim-protocol bitprim-consensus)
+
+_group_sources(bitprim-consensus-replier "${CMAKE_CURRENT_LIST_DIR}/replier")
+
 # Tests
 #==============================================================================
-function(_add_tests target)
+function(_add_tests target group)
   if (ENABLE_SHARED)
     target_compile_definitions(${target} PRIVATE -DBOOST_TEST_DYN_LINK)
   endif()
@@ -352,7 +402,7 @@ function(_add_tests target)
 
   foreach (_test_name ${ARGN})
     add_test(
-      NAME test.consensus.${_test_name}
+      NAME test.${group}.${_test_name}
       COMMAND ${target}
         --run_test=${_test_name}
         --show_progress=no
@@ -381,17 +431,32 @@ if (WITH_TESTS)
   target_link_libraries(bitprim_consensus_test PUBLIC bitprim-consensus)
   _group_sources(bitprim_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
-  _add_tests(bitprim_consensus_test
+  _add_tests(bitprim_consensus_test "consensus"
     consensus__script_error_to_verify_result
     consensus__script_verify
     consensus__verify_flags_to_script_flags)
 endif()
 
+# local: test/bitprim_consensus_requester_test
+#------------------------------------------------------------------------------
+if (WITH_TESTS)
+  add_executable(bitprim_consensus_requester_test
+    test/consensus__script_verify.cpp
+    test/main.cpp
+    test/script.hpp)
+  target_link_libraries(bitprim_consensus_requester_test PUBLIC bitprim-consensus-requester)
+  _group_sources(bitprim_consensus_requester_test "${CMAKE_CURRENT_LIST_DIR}/test")
+
+  _add_tests(bitprim_consensus_requester_test "consensus-requester"
+    consensus__script_verify)
+endif()
+
 # Install
 #==============================================================================
-install(TARGETS bitprim-consensus
+install(TARGETS bitprim-consensus bitprim-consensus-requester bitprim-consensus-replier
   EXPORT bitprim-consensus
-  ARCHIVE DESTINATION lib)
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin)
 
 set(_bitprim_headers
   # include_bitcoin_HEADERS =
