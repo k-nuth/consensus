@@ -26,7 +26,28 @@
 #include <bitcoin/consensus.hpp>
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_SUITE(consensus__script_verify)
+#ifdef WITH_REPLIER
+#include <process.hpp>
+
+struct fixture
+{
+    ::process replier = ::process::exec(WITH_REPLIER);
+
+    fixture()
+      : replier(::process::exec(WITH_REPLIER))
+    {}
+
+    ~fixture()
+    {
+        replier.terminate();
+        replier.join();
+    }
+};
+#else
+struct fixture {};
+#endif
+
+BOOST_FIXTURE_TEST_SUITE(consensus__script_verify, ::fixture)
 
 using namespace libbitcoin::consensus;
 

@@ -363,6 +363,14 @@ target_link_libraries(bitprim-consensus secp256k1)
 
 _group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
 
+# src/bitprim-consensus-replier => ${bindir}
+#------------------------------------------------------------------------------
+add_executable(bitprim-consensus-replier
+  replier/src/main.cpp)
+target_link_libraries(bitprim-consensus-replier bitprim-protocol bitprim-consensus)
+
+_group_sources(bitprim-consensus-replier "${CMAKE_CURRENT_LIST_DIR}/replier")
+
 # src/bitprim-consensus-requester.la => ${libdir}
 #------------------------------------------------------------------------------
 add_library(bitprim-consensus-requester ${MODE}
@@ -378,18 +386,11 @@ target_compile_definitions(bitprim-consensus-requester PUBLIC -DBCK_STATIC)
 target_include_directories(bitprim-consensus-requester PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/requester/src
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
+add_dependencies(bitprim-consensus-requester bitprim-consensus-replier)
 
 target_link_libraries(bitprim-consensus-requester secp256k1 bitprim-protocol)
 
 _group_sources(bitprim-consensus-requester "${CMAKE_CURRENT_LIST_DIR}/requester")
-
-# src/bitprim-consensus-replier => ${bindir}
-#------------------------------------------------------------------------------
-add_executable(bitprim-consensus-replier
-  replier/src/main.cpp)
-target_link_libraries(bitprim-consensus-replier bitprim-protocol bitprim-consensus)
-
-_group_sources(bitprim-consensus-replier "${CMAKE_CURRENT_LIST_DIR}/replier")
 
 # Tests
 #==============================================================================
@@ -444,6 +445,10 @@ if (WITH_TESTS)
     test/consensus__script_verify.cpp
     test/main.cpp
     test/script.hpp)
+  target_compile_definitions(bitprim_consensus_requester_test PRIVATE
+    -DWITH_REPLIER="$<TARGET_FILE:bitprim-consensus-replier>")
+  target_include_directories(bitprim_consensus_requester_test PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/requester/test)
   target_link_libraries(bitprim_consensus_requester_test PUBLIC bitprim-consensus-requester)
   _group_sources(bitprim_consensus_requester_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
