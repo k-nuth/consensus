@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include "consensus/consensus.hpp"
+//#include "consensus/consensus.hpp"
 
 #include <cstddef>
 #include <iostream>
@@ -36,7 +36,29 @@ namespace consensus {
 
 zmq::context context;
 zmq::socket socket(context, zmq::socket::role::requester);
-auto ec = socket.connect({ "tcp://localhost:5555" });
+
+template <typename Reply>
+static Reply send_request(
+    const protocol::consensus::request& request, Reply& reply)
+{
+    static auto sc = socket.connect({ "tcp://localhost:5555" });
+
+    // send message
+    zmq::message message;
+    message.enqueue(request.SerializeAsString());
+    auto ec = socket.send(message);
+    assert(!ec);
+
+    // receive response
+    zmq::message response;
+    ec = socket.receive(response);
+    assert(!ec);
+
+    data_chunk payload;
+    response.dequeue(payload);
+    reply.ParseFromArray(payload.data(), payload.size());
+    return reply;
+}
 
 // This function is published. The implementation exposes no satoshi internals.
 verify_result_type verify_script(const unsigned char* transaction,
@@ -51,28 +73,16 @@ verify_result_type verify_script(const unsigned char* transaction,
         throw std::invalid_argument("prevout_script");
 
     // send message
-    Consensus consensus_message;
-    Consensus_VerifyScript* verify_script = consensus_message.mutable_verify_script();
+    protocol::consensus::request request;
+    auto* verify_script = request.mutable_verify_script();
     verify_script->set_transaction(transaction, transaction_size);
     verify_script->set_prevout_script(prevout_script, prevout_script_size);
     verify_script->set_tx_input_index(tx_input_index);
     verify_script->set_flags(flags);
 
-    zmq::message message;
-    message.enqueue(consensus_message.SerializeAsString());
-    ec = socket.send(message);
-    assert(!ec);
+    protocol::consensus::verify_script_reply reply;
+    send_request(request, reply);
 
-    // receive response
-    zmq::message response;
-    ec = socket.receive(response);
-    assert(!ec);
-
-    data_chunk payload;
-    response.dequeue(payload);
-
-    Consensus_VerifyScriptReply reply;
-    reply.ParseFromArray(payload.data(), payload.size());
     return static_cast<verify_result_type>(reply.result());
 }
 

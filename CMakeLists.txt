@@ -374,17 +374,14 @@ _group_sources(bitprim-consensus-replier "${CMAKE_CURRENT_LIST_DIR}/replier")
 # src/bitprim-consensus-requester.la => ${libdir}
 #------------------------------------------------------------------------------
 add_library(bitprim-consensus-requester ${MODE}
-  requester/src/consensus/consensus.cpp
-  requester/src/consensus/consensus.hpp
+  requester/src/consensus.cpp
   $<TARGET_OBJECTS:bitprim-consensus-clone>)
 target_include_directories(bitprim-consensus-requester PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/requester/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
 target_compile_definitions(bitprim-consensus-requester PUBLIC -DBCK_STATIC)
 target_include_directories(bitprim-consensus-requester PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/requester/src
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 add_dependencies(bitprim-consensus-requester bitprim-consensus-replier)
 
