@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-//#include "consensus/consensus.hpp"
-
 #include <cstddef>
 #include <iostream>
 #include <stdexcept>
@@ -26,39 +24,17 @@
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/export.hpp>
 #include <bitcoin/consensus/version.hpp>
-#include <bitcoin/protocol.hpp>
 #include <bitcoin/protocol/consensus.pb.h>
+#include <bitcoin/protocol/requester.hpp>
+#include <bitcoin/protocol/zmq/context.hpp>
 
 using namespace libbitcoin::protocol;
 
 namespace libbitcoin {
 namespace consensus {
 
-zmq::context context;
-zmq::socket socket(context, zmq::socket::role::requester);
-
-template <typename Reply>
-static Reply send_request(
-    const protocol::consensus::request& request, Reply& reply)
-{
-    static auto sc = socket.connect({ "tcp://localhost:5555" });
-
-    // send message
-    zmq::message message;
-    message.enqueue(request.SerializeAsString());
-    auto ec = socket.send(message);
-    assert(!ec);
-
-    // receive response
-    zmq::message response;
-    ec = socket.receive(response);
-    assert(!ec);
-
-    data_chunk payload;
-    response.dequeue(payload);
-    reply.ParseFromArray(payload.data(), payload.size());
-    return reply;
-}
+static zmq::context context;
+static protocol::requester requester(context, { "tcp://localhost:5555" });
 
 // This function is published. The implementation exposes no satoshi internals.
 verify_result_type verify_script(const unsigned char* transaction,
@@ -81,7 +57,8 @@ verify_result_type verify_script(const unsigned char* transaction,
     verify_script->set_flags(flags);
 
     protocol::consensus::verify_script_reply reply;
-    send_request(request, reply);
+    auto ec = requester.send(request, reply);
+    BITCOIN_ASSERT(!ec);
 
     return static_cast<verify_result_type>(reply.result());
 }

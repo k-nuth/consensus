@@ -1,7 +1,10 @@
 
 #include <bitcoin/consensus.hpp>
-#include <bitcoin/protocol.hpp>
+#include <bitcoin/consensus/settings.hpp>
 #include <bitcoin/protocol/consensus.pb.h>
+#include <bitcoin/protocol/zmq/context.hpp>
+#include <bitcoin/protocol/zmq/message.hpp>
+#include <bitcoin/protocol/zmq/socket.hpp>
 
 #define LOG_CONSENSUS "consensus"
 
