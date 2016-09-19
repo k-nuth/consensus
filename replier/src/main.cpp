@@ -1,5 +1,7 @@
 
 #include <bitcoin/consensus.hpp>
+#include <bitcoin/consensus/configuration.hpp>
+#include <bitcoin/consensus/parser.hpp>
 #include <bitcoin/consensus/settings.hpp>
 #include <bitcoin/protocol/consensus.pb.h>
 #include <bitcoin/protocol/zmq/context.hpp>
@@ -47,11 +49,11 @@ static zmq::message dispatch(
     return reply;
 }
 
-static int main(int argc, char *argv[])
+static int main(parser& metadata)
 {
     zmq::context context;
     zmq::socket socket(context, zmq::socket::role::replier);
-    auto ec = socket.bind({ "tcp://*:5555" });
+    auto ec = socket.bind(metadata.configured.consensus.replier);
     assert(!ec);
 
     while (true)
@@ -80,5 +82,11 @@ BC_USE_LIBBITCOIN_MAIN
 int bc::main(int argc, char* argv[])
 {
     set_utf8_stdio();
-    return consensus::main(argc, argv);
+    consensus::parser metadata(bc::settings::mainnet);
+    const auto& args = const_cast<const char**>(argv);
+
+    if (!metadata.parse(argc, args, cerr))
+        return console_result::failure;
+
+    return consensus::main(metadata);
 }

@@ -34,7 +34,7 @@ namespace libbitcoin {
 namespace consensus {
 
 static zmq::context context;
-static protocol::requester requester(context, { "tcp://localhost:5555" });
+protocol::requester requester(context);
 
 // This function is published. The implementation exposes no satoshi internals.
 verify_result_type verify_script(const unsigned char* transaction,

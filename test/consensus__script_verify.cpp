@@ -26,16 +26,18 @@
 #include <bitcoin/consensus.hpp>
 #include <boost/test/unit_test.hpp>
 
-#ifdef WITH_REPLIER
+#ifdef WITH_CONSENSUS_REPLIER
 #include <process.hpp>
 
 struct fixture
 {
-    ::process replier = ::process::exec(WITH_REPLIER);
+    ::process replier;
 
     fixture()
-      : replier(::process::exec(WITH_REPLIER))
-    {}
+      : replier(::process::exec(WITH_CONSENSUS_REPLIER))
+    {
+        libbitcoin::consensus::requester.connect({ "tcp://localhost:5501" });
+    }
 
     ~fixture()
     {

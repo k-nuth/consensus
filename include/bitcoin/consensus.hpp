@@ -16,6 +16,7 @@
 
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/export.hpp>
+#include <bitcoin/consensus/settings.hpp>
 #include <bitcoin/consensus/version.hpp>
 
 #endif
