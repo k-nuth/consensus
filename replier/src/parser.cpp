@@ -8,7 +8,7 @@
 #include <boost/program_options.hpp>
 #include <bitcoin/consensus/settings.hpp>
 
-BC_DECLARE_CONFIG_DEFAULT_PATH("libbitcoin" / "bn.cfg")
+BC_DECLARE_CONFIG_DEFAULT_PATH("libbitcoin" / "bk.cfg")
 
 // TODO: localize descriptions.
 

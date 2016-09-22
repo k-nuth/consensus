@@ -377,9 +377,6 @@ target_link_libraries(bitprim-consensus-replier bitprim-protocol bitprim-consens
 target_include_directories(bitprim-consensus-replier PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/replier/include)
 
-target_compile_definitions(bitprim-consensus-replier PUBLIC
-  -DWITH_CONSENSUS_REQUESTER)
-
 _group_sources(bitprim-consensus-replier "${CMAKE_CURRENT_LIST_DIR}/replier")
 
 # src/bitprim-consensus-requester.la => ${libdir}

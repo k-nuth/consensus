@@ -15,6 +15,10 @@ using namespace libbitcoin::protocol;
 namespace libbitcoin {
 namespace consensus {
 
+//! verify_result_type verify_script(const unsigned char* transaction,
+//!   size_t transaction_size, const unsigned char* prevout_script,
+//!   size_t prevout_script_size, unsigned int tx_input_index, 
+//!   unsigned int flags);
 static protocol::consensus::verify_script_reply dispatch_verify_script(
     const protocol::consensus::verify_script_request& request)
 {
