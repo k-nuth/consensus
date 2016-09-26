@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.4)
 project(bitprim-consensus
   VERSION 3.0.0
   LANGUAGES CXX C)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Check for baseline language coverage in the compiler for the C++11 standard.
 #------------------------------------------------------------------------------
@@ -311,6 +312,8 @@ target_include_directories(bitprim-consensus PRIVATE
 
 target_link_libraries(bitprim-consensus PUBLIC secp256k1)
 
+set_target_properties(bitprim-consensus PROPERTIES FOLDER "consensus")
+
 # Group sources
 file(GLOB_RECURSE headers
   RELATIVE ${CMAKE_CURRENT_LIST_DIR}
@@ -326,6 +329,8 @@ foreach (source ${sources})
   source_group("${group}" FILES ${source})
 endforeach()
 
+# Tests
+#==============================================================================
 # local: test/bitprim_consensus_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
@@ -346,6 +351,8 @@ if (WITH_TESTS)
   target_include_directories(bitprim_consensus_test SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
   target_link_libraries(bitprim_consensus_test
     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+
+  set_target_properties(bitprim_consensus_test PROPERTIES FOLDER "consensus")
 
   enable_testing()
   set(_bitprim_tests consensus__script_error_to_verify_result consensus__script_verify consensus__verify_flags_to_script_flags)
