@@ -258,6 +258,27 @@ _add_cxx_compile_flag(-fvisibility-inlines-hidden _has_visibility_inlines_hidden
 
 # Build
 #==============================================================================
+function(_group_sources target sources_dir)
+  file(GLOB_RECURSE _headers
+    ${sources_dir}/include/*.h ${sources_dir}/include/*.hpp)
+  target_sources(${target} PRIVATE ${_headers})
+
+  get_target_property(sources ${target} SOURCES)
+  foreach (source ${sources})
+    get_filename_component(group ${source} ABSOLUTE)
+    get_filename_component(group ${group} DIRECTORY)
+    file(RELATIVE_PATH group "${sources_dir}" "${group}")
+    if (group)
+      if (MSVC)
+        string(REPLACE "/" "\\" group "${group}")
+      endif()
+      source_group("${group}" FILES "${source}")
+    endif()
+  endforeach()
+
+  set_target_properties(${target} PROPERTIES FOLDER "consensus")
+endfunction()
+
 # src/bitprim-consensus.la => ${libdir}
 #------------------------------------------------------------------------------
 set(MODE STATIC)
@@ -312,22 +333,7 @@ target_include_directories(bitprim-consensus PRIVATE
 
 target_link_libraries(bitprim-consensus PUBLIC secp256k1)
 
-set_target_properties(bitprim-consensus PROPERTIES FOLDER "consensus")
-
-# Group sources
-file(GLOB_RECURSE headers
-  RELATIVE ${CMAKE_CURRENT_LIST_DIR}
-  include/*.h include/*.hpp)
-target_sources(bitprim-consensus PRIVATE "${headers}")
-
-get_target_property(sources bitprim-consensus SOURCES)
-foreach (source ${sources})
-  get_filename_component(group ${source} DIRECTORY)
-  if (MSVC)
-    string(REPLACE "/" "\\" group ${group})
-  endif()
-  source_group("${group}" FILES ${source})
-endforeach()
+_group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
 
 # Tests
 #==============================================================================
@@ -352,7 +358,7 @@ if (WITH_TESTS)
   target_link_libraries(bitprim_consensus_test
     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 
-  set_target_properties(bitprim_consensus_test PROPERTIES FOLDER "consensus")
+  _group_sources(bitprim_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
   enable_testing()
   set(_bitprim_tests consensus__script_error_to_verify_result consensus__script_verify consensus__verify_flags_to_script_flags)
