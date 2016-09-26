@@ -337,6 +337,29 @@ _group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
 
 # Tests
 #==============================================================================
+function(_add_tests target)
+  if (ENABLE_SHARED)
+    target_compile_definitions(${target} PRIVATE -DBOOST_TEST_DYN_LINK)
+  endif()
+  target_include_directories(${target} SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
+  target_link_libraries(${target} PUBLIC ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+
+  foreach (_test_name ${ARGN})
+    add_test(
+      NAME test.consensus.${_test_name}
+      COMMAND ${target}
+        --run_test=${_test_name}
+        --show_progress=no
+        --detect_memory_leak=0
+        --report_level=no
+        --build_info=yes)
+  endforeach()
+endfunction()
+
+if (WITH_TESTS)
+  enable_testing()
+endif()
+
 # local: test/bitprim_consensus_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
@@ -346,32 +369,16 @@ if (WITH_TESTS)
     test/consensus__verify_flags_to_script_flags.cpp
     test/main.cpp
     test/script.hpp)
-  if (ENABLE_SHARED)
-    target_compile_definitions(bitprim_consensus_test PRIVATE -DBOOST_TEST_DYN_LINK)
-  endif()
-  target_link_libraries(bitprim_consensus_test bitprim-consensus)
   target_include_directories(bitprim_consensus_test PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
-
-  target_include_directories(bitprim_consensus_test SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
-  target_link_libraries(bitprim_consensus_test
-    ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-
+  target_link_libraries(bitprim_consensus_test PUBLIC bitprim-consensus)
   _group_sources(bitprim_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
-  enable_testing()
-  set(_bitprim_tests consensus__script_error_to_verify_result consensus__script_verify consensus__verify_flags_to_script_flags)
-  foreach (_test_name ${_bitprim_tests})
-    add_test(
-      NAME test.${_test_name}
-      COMMAND bitprim_consensus_test
-        --run_test=${_test_name}
-        --show_progress=no
-        --detect_memory_leak=0
-        --report_level=no
-        --build_info=yes)
-  endforeach()
+  _add_tests(bitprim_consensus_test
+    consensus__script_error_to_verify_result
+    consensus__script_verify
+    consensus__verify_flags_to_script_flags)
 endif()
 
 # Install
