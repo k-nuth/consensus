@@ -4,6 +4,7 @@
 #include <bitcoin/consensus/parser.hpp>
 #include <bitcoin/consensus/settings.hpp>
 #include <bitcoin/protocol/consensus.pb.h>
+#include <bitcoin/protocol/replier.hpp>
 #include <bitcoin/protocol/zmq/context.hpp>
 #include <bitcoin/protocol/zmq/message.hpp>
 #include <bitcoin/protocol/zmq/socket.hpp>
@@ -15,9 +16,12 @@ using namespace libbitcoin::protocol;
 namespace libbitcoin {
 namespace consensus {
 
+static zmq::context context;
+static replier replier_(context);
+
 //! verify_result_type verify_script(const unsigned char* transaction,
 //!   size_t transaction_size, const unsigned char* prevout_script,
-//!   size_t prevout_script_size, unsigned int tx_input_index, 
+//!   size_t prevout_script_size, unsigned int tx_input_index,
 //!   unsigned int flags);
 static protocol::consensus::verify_script_reply dispatch_verify_script(
     const protocol::consensus::verify_script_request& request)
@@ -55,23 +59,17 @@ static zmq::message dispatch(
 
 static int main(parser& metadata)
 {
-    zmq::context context;
-    zmq::socket socket(context, zmq::socket::role::replier);
-    auto ec = socket.bind(metadata.configured.consensus.replier);
+    auto ec = replier_.bind(metadata.configured.consensus.replier);
     assert(!ec);
 
     while (true)
     {
-        zmq::message message;
-        ec = socket.receive(message);
+        protocol::consensus::request request;
+        ec = replier_.receive(request);
         assert(!ec);
 
-        protocol::consensus::request request;
-        if (!message.dequeue(request))
-            break;
-
         zmq::message reply = dispatch(request);
-        ec = socket.send(reply);
+        ec = replier_.send(reply);
         assert(!ec);
     }
 
