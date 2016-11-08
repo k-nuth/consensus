@@ -335,8 +335,10 @@ add_library(bitprim-consensus-clone OBJECT
 target_include_directories(bitprim-consensus-clone PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
+
 target_compile_definitions(bitprim-consensus-clone PRIVATE
   $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
+
 target_include_directories(bitprim-consensus-clone PRIVATE
   $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
 
@@ -373,7 +375,13 @@ add_executable(bitprim-consensus-replier
   replier/src/configuration.cpp
   replier/src/main.cpp
   replier/src/parser.cpp)
+
+if (NOT MSVC)
+  target_compile_definitions(bitprim-consensus-replier PUBLIC -DSYSCONFDIR=\"${SYSCONFDIR}\")
+endif()
+
 target_link_libraries(bitprim-consensus-replier bitprim-protocol bitprim-consensus)
+
 target_include_directories(bitprim-consensus-replier PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/replier/include)
 
