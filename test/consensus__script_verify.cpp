@@ -54,7 +54,7 @@ BOOST_FIXTURE_TEST_SUITE(consensus__script_verify, ::fixture)
 
 using namespace libbitcoin::consensus;
 
-typedef std::vector<uint8_t> data_chunk;
+using data_chunk = std::vector<uint8_t>;
 
 static unsigned from_hex(const char ch)
 {
