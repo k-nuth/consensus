@@ -1,8 +1,6 @@
-[![Build Status](https://travis-ci.org/libbitcoin/libbitcoin-consensus.svg?branch=master)](https://travis-ci.org/libbitcoin/libbitcoin-consensus)
+[![Build Status](https://travis-ci.org/bitprim/bitprim-consensus.svg?branch=master)](https://travis-ci.org/bitprim/bitprim-consensus)
 
-[![Coverage Status](https://coveralls.io/repos/libbitcoin/libbitcoin-consensus/badge.svg)](https://coveralls.io/r/libbitcoin/libbitcoin-consensus)
-
-# Libbitcoin Consensus
+# Bitprim Consensus
 
 *Bitcoin consensus library*
 
@@ -16,7 +14,7 @@ $ sudo make install
 $ sudo ldconfig
 ```
 
-`libbitcoin-consensus` is now installed in `/usr/local/`.
+`bitprim-consensus` is now installed in `/usr/local/`.
 
 ## Dependencies
 
@@ -24,11 +22,11 @@ This library has no dependencies, although the test cases have a boost dependenc
 
 ## Configure Options
 
-There is a dependency on [boost test](http://www.boost.org/doc/libs/1_57_0/libs/test/doc/html/index.html) for `make check` builds (tests). The `--without-tests` option disables test builds and eliminates the boost check during configure.
+There is a dependency on [boost test](http://www.boost.org/doc/libs/1_50_0/libs/test/doc/html/index.html) for `make check` builds (tests). The `--without-tests` option disables test builds and eliminates the boost check during configure.
 
 ## Supported Platforms
 
-**Ubuntu** (gcc and clang) and **OSX** (clang) are regularly tested via a [travis build matrix](https://travis-ci.org/libbitcoin/libbitcoin-consensus). There is also a Visual Studio 2013 solution for **Windows** builds (vc12). Unlike other libbitcoin libraries, consensus does not require a c++11 compiler.
+**Ubuntu** (gcc and clang) and **OSX** (clang) are regularly tested via a [travis build matrix](https://travis-ci.org/libbitcoin/libbitcoin-consensus). There is also a Visual Studio 2013 solution for **Windows** builds (vc12). Unlike other bitprim libraries, consensus does not require a c++11 compiler.
 
 ## Language Bindings
 
@@ -76,8 +74,8 @@ script/script.h
 script/script_error.h
 ```
 
-# Libbitcoin Integration
+# Bitprim Integration
 
-Libbitcoin natively implements consensus checks that are redundant with `libbitcoin-consensus`. Libbitcoin includes a full bitcoin client and server SDK. This includes the full node implementation [libbitcoin-node](https://github.com/libbitcoin/libbitcoin-node), which builds on [libbitcoin](https://github.com/libbitcoin/libbitcoin) and [libbitcoin-blockchain](https://github.com/libbitcoin/libbitcoin-blockchain).
+Bitprim natively implements consensus checks that are redundant with `bitprim-consensus`. Bitprim includes a full bitcoin client and server SDK. This includes the full node implementation [bitprim-node](https://github.com/bitprim/bitprim-node), which builds on [bitprim-core](https://github.com/bitprim/bitprim-core) and [bitprim-blockchain](https://github.com/bitprim/bitprim-blockchain).
 
-The `libbitcoin-blockchain` configuration provides the `--with-consensus` option. This allows the developer to select either `libbitcoin` native or `libbitcoin-consensus` checks. The option defaults to `yes` so that by default all `libbitcoin-node` and `libbitcoin-server` builds use the same consensus checks as a Satoshi node.
+The `bitprim-blockchain` configuration provides the `--with-consensus` option. This allows the developer to select either `bitprim-core` native or `bitprim-consensus` checks. The option defaults to `yes` so that by default all `bitprim-node` and `bitprim-server` builds use the same consensus checks as a Satoshi node.
