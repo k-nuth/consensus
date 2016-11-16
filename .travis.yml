@@ -274,7 +274,8 @@ install:
   - cmake ..
   - make -j2 --silent
   - sudo make install --silent
-  - cd ../..
+  - cd ..
+  - cd ..
 
 
   ############################################################################
@@ -295,7 +296,8 @@ install:
   - cmake .. -DENABLE_TESTS=OFF -DWITH_TESTS=OFF -DWITH_EXAMPLES=OFF -DENABLE_MODULE_RECOVERY=ON -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}"
   - make -j2 --silent
   - sudo make install --silent
-  - cd ../..
+  - cd ..
+  - cd ..
 
   ############################################################################
   # set libraries
@@ -334,11 +336,14 @@ before_script:
   # - (mkdir build &&
   # - cd build
   # - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" ..
-  - (mkdir build && cd build && cmake .. -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}")
+  - mkdir build 
+  - cd build
+  - cmake .. -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}"
 
 script:
 
-  - (make -j2 && sudo make install)
+  - make -j2 
+  - sudo make install
   # - make tests -k
 
   # ############################################################################
