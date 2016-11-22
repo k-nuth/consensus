@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <bitcoin/bitcoin/config/endpoint.hpp>
+#include <bitcoin/bitcoin/config/settings.hpp>
 #include <bitcoin/bitcoin/constants.hpp>
 #include <bitcoin/consensus/define.hpp>
 
@@ -15,7 +16,7 @@ class BCK_API settings
 {
 public:
     settings();
-    settings(bc::settings context);
+    settings(config::settings context);
 
     /// Properties.
     config::endpoint replier;

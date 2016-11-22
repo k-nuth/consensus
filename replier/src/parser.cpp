@@ -26,7 +26,7 @@ parser::parser(const configuration& defaults)
 }
 
 // Initialize configuration using defaults of the given context.
-parser::parser(const bc::settings& context)
+parser::parser(const config::settings& context)
   : configured(context)
 {
     // Default endpoint for replier.

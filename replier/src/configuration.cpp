@@ -7,7 +7,7 @@ namespace libbitcoin {
 namespace consensus {
 
 // Construct with defaults derived from given context.
-configuration::configuration(bc::settings context)
+configuration::configuration(config::settings context)
   : help(false),
     settings(false),
     version(false),

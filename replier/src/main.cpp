@@ -84,7 +84,7 @@ BC_USE_LIBBITCOIN_MAIN
 int bc::main(int argc, char* argv[])
 {
     set_utf8_stdio();
-    consensus::parser metadata(bc::settings::mainnet);
+    consensus::parser metadata(config::settings::mainnet);
     const auto& args = const_cast<const char**>(argv);
 
     if (!metadata.parse(argc, args, cerr))
