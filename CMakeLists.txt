@@ -354,7 +354,6 @@ endif()
 add_library(bitprim-consensus ${MODE}
   src/consensus/consensus.cpp
   src/consensus/consensus.hpp
-  src/consensus/settings.cpp
   $<TARGET_OBJECTS:bitprim-consensus-clone>)
 target_include_directories(bitprim-consensus PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -487,7 +486,6 @@ set(_bitprim_headers
   # include_bitcoin_consensus_HEADERS =
   bitcoin/consensus/define.hpp
   bitcoin/consensus/export.hpp
-  bitcoin/consensus/settings.hpp
   bitcoin/consensus/version.hpp)
 foreach (_header ${_bitprim_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)
