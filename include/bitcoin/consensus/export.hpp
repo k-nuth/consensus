@@ -23,16 +23,8 @@
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/version.hpp>
 
-#if WITH_CONSENSUS_REQUESTER
-#include <bitcoin/protocol/requester.hpp>
-#endif
-
 namespace libbitcoin {
 namespace consensus {
-
-#if WITH_CONSENSUS_REQUESTER
-    extern protocol::requester requester;
-#endif
 
 /**
  * Result values from calling verify_script.

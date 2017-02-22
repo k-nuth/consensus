@@ -25,35 +25,11 @@
 #include <bitcoin/consensus.hpp>
 #include <boost/test/unit_test.hpp>
 
-#ifdef WITH_CONSENSUS_REPLIER
-#include <process.hpp>
-
-struct fixture
-{
-    ::process replier;
-
-    fixture()
-      : replier(::process::exec(WITH_CONSENSUS_REPLIER))
-    {
-        libbitcoin::consensus::requester.connect({ "tcp://localhost:5501" });
-    }
-
-    ~fixture()
-    {
-        libbitcoin::consensus::requester.disconnect();
-        replier.terminate();
-        replier.join();
-    }
-};
-#else
-struct fixture {};
-#endif
-
-BOOST_FIXTURE_TEST_SUITE(consensus__script_verify, ::fixture)
+BOOST_AUTO_TEST_SUITE(consensus__script_verify)
 
 using namespace libbitcoin::consensus;
 
-using data_chunk = std::vector<uint8_t>;
+typedef std::vector<uint8_t> data_chunk;
 
 static unsigned from_hex(const char ch)
 {
