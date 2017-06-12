@@ -181,9 +181,9 @@ endif()
 
 # Require bitprim-protocol of at least version 3.0.0 and output ${bitprim_protocol_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
-if (NOT TARGET bitprim-protocol)
-  find_package(bitprim-protocol 3.0.0 REQUIRED)
-endif()
+#if (NOT TARGET bitprim-protocol)
+#  find_package(bitprim-protocol 3.0.0 REQUIRED)
+#endif()
 
 # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
