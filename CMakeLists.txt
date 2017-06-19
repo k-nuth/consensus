@@ -331,7 +331,12 @@ add_library(bitprim-consensus-clone OBJECT
   src/clone/script/interpreter.h
   src/clone/script/script.cpp
   src/clone/script/script.h
-  src/clone/script/script_error.h)
+  src/clone/script/script_error.h
+)
+
+set_property(TARGET bitprim-consensus-clone PROPERTY POSITION_INDEPENDENT_CODE ON)
+  
+  
 target_include_directories(bitprim-consensus-clone PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
@@ -354,7 +359,12 @@ endif()
 add_library(bitprim-consensus ${MODE}
   src/consensus/consensus.cpp
   src/consensus/consensus.hpp
-  $<TARGET_OBJECTS:bitprim-consensus-clone>)
+  $<TARGET_OBJECTS:bitprim-consensus-clone>
+)
+
+set_property(TARGET bitprim-consensus PROPERTY POSITION_INDEPENDENT_CODE ON)
+  
+  
 target_include_directories(bitprim-consensus PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
