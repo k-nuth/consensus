@@ -27,3 +27,8 @@ bin
 obj
 
 /build
+
+.idea/
+cmake-build-debug/
+
+CMakeSettings.json
