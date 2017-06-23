@@ -173,17 +173,23 @@ find_package(
   Boost 1.56.0 REQUIRED
   COMPONENTS unit_test_framework)
 
+if (UNIX)
+  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
+elseif (WIN32)
+  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
+endif()
+
 # Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
 if (NOT TARGET bitprim-core)
   find_package(bitprim-core 3.0.0 REQUIRED)
 endif()
 
-# Require bitprim-protocol of at least version 3.0.0 and output ${bitprim_protocol_CPPFLAGS/LIBS/PKG}.
-#------------------------------------------------------------------------------
-#if (NOT TARGET bitprim-protocol)
-#  find_package(bitprim-protocol 3.0.0 REQUIRED)
-#endif()
+# #  Require bitprim-protocol of at least version 3.0.0 and output ${bitprim_protocol_CPPFLAGS/LIBS/PKG}.
+# #------------------------------------------------------------------------------
+# if (NOT TARGET bitprim-protocol)
+#   find_package(bitprim-protocol 3.0.0 REQUIRED)
+# endif()
 
 # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
