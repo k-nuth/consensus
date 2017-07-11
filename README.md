@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bitprim/bitprim-consensus.svg?branch=master)](https://travis-ci.org/bitprim/bitprim-consensus)
+[![Build Status](https://travis-ci.org/bitprim/bitprim-consensus.svg?branch=c-api)](https://travis-ci.org/bitprim/bitprim-consensus)
 
 # Bitprim Consensus
 
