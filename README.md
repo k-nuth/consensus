@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bitprim/bitprim-consensus.svg?branch=c-api)](https://travis-ci.org/bitprim/bitprim-consensus)
+[![Build Status](https://travis-ci.org/bitprim/bitprim-consensus.svg?branch=c-api)](https://travis-ci.org/bitprim/bitprim-consensus) [![Appveyor Status](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-consensus?branch=c-api&svg=true)](https://ci.appveyor.com/project/hanchon/bitprim-consensus?branch=c-api)
 
 # Bitprim Consensus
 
