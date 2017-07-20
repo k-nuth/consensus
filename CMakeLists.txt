@@ -60,6 +60,12 @@ option(ENABLE_SHARED "" OFF)
 include(CheckIncludeFile)
 include(CheckCXXSymbolExists)
 
+# Including common functions
+#------------------------------------------------------------------------------
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(BitprimTools)
+
+
 
 #==============================================================================
 # Conditionally define the preprocessor symbol HAVE_DECL_BSWAP_16.
