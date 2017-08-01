@@ -318,11 +318,11 @@ target_include_directories(bitprim-consensus-clone PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
 
-target_compile_definitions(bitprim-consensus-clone PRIVATE
-  $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
+#target_compile_definitions(bitprim-consensus-clone PRIVATE
+#  $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
 
-target_include_directories(bitprim-consensus-clone PRIVATE
-  $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
+#target_include_directories(bitprim-consensus-clone PRIVATE
+#  $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
 
 _group_sources(bitprim-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone")
 
