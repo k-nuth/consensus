@@ -12,7 +12,6 @@ class BitprimconsensusConan(ConanFile):
     default_options = "shared=False"
     generators = "cmake"
 
-    # exports_sources = "src/*", "CMakeLists.txt", "cmake/*"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-consensusConfig.cmake.in", "include/*"
 
     package_files = "build/lbitprim-consensus.a"
@@ -20,23 +19,6 @@ class BitprimconsensusConan(ConanFile):
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
                 ("secp256k1/0.1@bitprim/stable"),
                 ("bitprim-core/0.1@bitprim/stable"))
-
-
-    # def build(self):
-    #     cmake = CMake(self)
-    #     cmake.configure(source_dir=self.conan_directory)
-    #     cmake.build()
-
-    # def package(self):
-    #     self.copy("*.h", dst="include", src="src")
-    #     self.copy("*.lib", dst="lib", keep_path=False)
-    #     self.copy("*.dll", dst="bin", keep_path=False)
-    #     self.copy("*.dylib*", dst="lib", keep_path=False)
-    #     self.copy("*.so", dst="lib", keep_path=False)
-    #     self.copy("*.a", dst="lib", keep_path=False)
-    #
-    # def package_info(self):
-    #     self.cpp_info.libs = ["bitprim-consensus"]
 
     def build(self):
         cmake = CMake(self)
