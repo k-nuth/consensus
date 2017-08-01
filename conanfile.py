@@ -17,6 +17,11 @@ class BitprimconsensusConan(ConanFile):
 
     package_files = "build/lbitprim-consensus.a"
 
+    requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
+                ("secp256k1/0.1@bitprim/stable"),
+                ("bitprim-core/0.1@bitprim/stable"))
+
+
     # def build(self):
     #     cmake = CMake(self)
     #     cmake.configure(source_dir=self.conan_directory)
