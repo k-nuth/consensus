@@ -180,12 +180,12 @@ _check_has_decl(sys/endian.h HAVE_SYS_ENDIAN_H htobe64 HAVE_DECL_HTOBE64)
 #==============================================================================
 # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
-if (NOT ENABLE_SHARED)
-  set(Boost_USE_STATIC_LIBS ON)
-endif()
-find_package(
-  Boost 1.56.0 REQUIRED
-  COMPONENTS unit_test_framework)
+#if (NOT ENABLE_SHARED)
+#  set(Boost_USE_STATIC_LIBS ON)
+#endif()
+#find_package(
+#  Boost 1.56.0 REQUIRED
+#  COMPONENTS unit_test_framework)
 
 if (UNIX)
   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
@@ -193,23 +193,17 @@ elseif (WIN32)
   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
 endif()
 
-# Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
-#------------------------------------------------------------------------------
-if (NOT TARGET bitprim-core)
-  find_package(bitprim-core 3.0.0 REQUIRED)
-endif()
+## Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
+##------------------------------------------------------------------------------
+#if (NOT TARGET bitprim-core)
+#  find_package(bitprim-core 3.0.0 REQUIRED)
+#endif()
 
-# #  Require bitprim-protocol of at least version 3.0.0 and output ${bitprim_protocol_CPPFLAGS/LIBS/PKG}.
-# #------------------------------------------------------------------------------
-# if (NOT TARGET bitprim-protocol)
-#   find_package(bitprim-protocol 3.0.0 REQUIRED)
-# endif()
-
-# Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
-#------------------------------------------------------------------------------
-if (NOT TARGET secp256k1)
-  find_package(secp256k1 0.0.01 REQUIRED)
-endif()
+## Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+##------------------------------------------------------------------------------
+#if (NOT TARGET secp256k1)
+#  find_package(secp256k1 0.0.01 REQUIRED)
+#endif()
 
 # Set flags.
 #==============================================================================
@@ -353,49 +347,11 @@ target_include_directories(bitprim-consensus PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
-target_link_libraries(bitprim-consensus secp256k1 bitprim-core)
+#target_link_libraries(bitprim-consensus secp256k1 bitprim-core)
+target_link_libraries(bitprim-core PUBLIC ${CONAN_LIBS})
 
 _group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
 
-## src/bitprim-consensus-replier => ${bindir}
-##------------------------------------------------------------------------------
-#add_executable(bitprim-consensus-replier
-#  replier/src/configuration.cpp
-#  replier/src/main.cpp
-#  replier/src/parser.cpp)
-#
-#if (NOT MSVC)
-#  target_compile_definitions(bitprim-consensus-replier PUBLIC -DSYSCONFDIR=\"${SYSCONFDIR}\")
-#endif()
-#
-#target_link_libraries(bitprim-consensus-replier bitprim-protocol bitprim-consensus)
-#
-#target_include_directories(bitprim-consensus-replier PRIVATE
-#  ${CMAKE_CURRENT_SOURCE_DIR}/replier/include)
-#
-#_group_sources(bitprim-consensus-replier "${CMAKE_CURRENT_LIST_DIR}/replier")
-
-## src/bitprim-consensus-requester.la => ${libdir}
-##------------------------------------------------------------------------------
-#add_library(bitprim-consensus-requester ${MODE}
-#  requester/src/consensus.cpp
-#  src/consensus/settings.cpp
-#  $<TARGET_OBJECTS:bitprim-consensus-clone>)
-#target_include_directories(bitprim-consensus-requester PUBLIC
-#  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#  $<INSTALL_INTERFACE:include>)
-#
-#target_compile_definitions(bitprim-consensus-requester PUBLIC -DBCK_STATIC)
-#target_include_directories(bitprim-consensus-requester PRIVATE
-#  ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
-#
-#target_compile_definitions(bitprim-consensus-requester PUBLIC
-#  -DWITH_CONSENSUS_REQUESTER)
-#add_dependencies(bitprim-consensus-requester bitprim-consensus-replier)
-#
-#target_link_libraries(bitprim-consensus-requester secp256k1 bitprim-core bitprim-protocol)
-#
-#_group_sources(bitprim-consensus-requester "${CMAKE_CURRENT_LIST_DIR}/requester")
 
 # Tests
 #==============================================================================
@@ -425,23 +381,6 @@ if (WITH_TESTS)
     consensus__verify_flags_to_script_flags)
 endif()
 
-## local: test/bitprim_consensus_requester_test
-##------------------------------------------------------------------------------
-#if (WITH_TESTS)
-#  add_executable(bitprim_consensus_requester_test
-#    test/consensus__script_verify.cpp
-#    test/main.cpp
-#    test/script.hpp)
-#  target_compile_definitions(bitprim_consensus_requester_test PRIVATE
-#    -DWITH_CONSENSUS_REPLIER="$<TARGET_FILE:bitprim-consensus-replier>")
-#  target_include_directories(bitprim_consensus_requester_test PRIVATE
-#    ${CMAKE_CURRENT_SOURCE_DIR}/requester/test)
-#  target_link_libraries(bitprim_consensus_requester_test PUBLIC bitprim-consensus-requester)
-#  _group_sources(bitprim_consensus_requester_test "${CMAKE_CURRENT_LIST_DIR}/test")
-#
-#  _add_tests(bitprim_consensus_requester_test "consensus-requester"
-#    consensus__script_verify)
-#endif()
 
 # Install
 #==============================================================================
