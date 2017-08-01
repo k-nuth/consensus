@@ -352,8 +352,7 @@ target_include_directories(bitprim-consensus PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
 #target_link_libraries(bitprim-consensus secp256k1 bitprim-core)
-#target_link_libraries(bitprim-core PUBLIC ${CONAN_LIBS})
-target_link_libraries(bitprim-core ${CONAN_LIBS})
+target_link_libraries(bitprim-consensus PUBLIC ${CONAN_LIBS})
 
 _group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
 

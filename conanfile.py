@@ -12,7 +12,6 @@ class BitprimconsensusConan(ConanFile):
     default_options = "shared=False"
     generators = "cmake"
 
-    # exports_sources = "src/*", "CMakeLists.txt", "cmake/*"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-consensusConfig.cmake.in", "include/*"
 
     package_files = "build/lbitprim-consensus.a"
