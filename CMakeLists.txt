@@ -25,6 +25,10 @@ project(bitprim-consensus
   VERSION 3.0.0
   LANGUAGES CXX C)
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Check for baseline language coverage in the compiler for the C++11 standard.
@@ -351,7 +355,6 @@ target_include_directories(bitprim-consensus PRIVATE
 target_link_libraries(bitprim-consensus PUBLIC ${CONAN_LIBS})
 
 _group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
-
 
 # Tests
 #==============================================================================
