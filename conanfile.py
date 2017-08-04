@@ -23,6 +23,7 @@ class BitprimconsensusConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
+        cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = "ON"
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()
 
