@@ -1,4 +1,4 @@
-# Bitprim Consensus
+# Bitprim Consensus <a target="_blank" href="https://gitter.im/bitprim/Lobby">![Gitter Chat][badge.Gitter]</a>
 
 *Bitcoin consensus library*
 
