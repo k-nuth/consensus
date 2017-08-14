@@ -375,7 +375,7 @@ if (WITH_TESTS)
   target_include_directories(bitprim_consensus_test PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
-  target_link_libraries(bitprim_consensus_test PUBLIC bitprim-consensus)
+  target_link_libraries(bitprim_consensus_test PUBLIC bitprim-consensus ${CONAN_LIBS})
   _group_sources(bitprim_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
   _add_tests(bitprim_consensus_test "consensus"
