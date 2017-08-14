@@ -184,9 +184,10 @@ _check_has_decl(sys/endian.h HAVE_SYS_ENDIAN_H htobe64 HAVE_DECL_HTOBE64)
 #==============================================================================
 # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
-#if (NOT ENABLE_SHARED)
-#  set(Boost_USE_STATIC_LIBS ON)
-#endif()
+if (NOT ENABLE_SHARED)
+  set(Boost_USE_STATIC_LIBS ON)
+endif()
+
 #find_package(
 #  Boost 1.56.0 REQUIRED
 #  COMPONENTS unit_test_framework)
