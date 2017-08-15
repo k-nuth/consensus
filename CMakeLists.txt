@@ -40,7 +40,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #==============================================================================
 # Implement --with-tests and declare WITH_TESTS.
 #------------------------------------------------------------------------------
-option(WITH_TESTS "Compile with unit tests." OFF)
+option(WITH_TESTS "Compile with unit tests." ON)
 
 # Implement --with-java and declare WITH_JAVA.
 #------------------------------------------------------------------------------
@@ -367,22 +367,27 @@ endif()
 # local: test/bitprim_consensus_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
+ 
   add_executable(bitprim_consensus_test
     test/consensus__script_error_to_verify_result.cpp
     test/consensus__script_verify.cpp
     test/consensus__verify_flags_to_script_flags.cpp
     test/main.cpp
     test/script.hpp)
+ 
   target_include_directories(bitprim_consensus_test PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
-  target_link_libraries(bitprim_consensus_test PUBLIC bitprim-consensus ${CONAN_LIBS})
+ 
+  target_link_libraries(bitprim_consensus_test PUBLIC bitprim-consensus)
+ 
   _group_sources(bitprim_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
   _add_tests(bitprim_consensus_test "consensus"
     consensus__script_error_to_verify_result
     consensus__script_verify
     consensus__verify_flags_to_script_flags)
+
 endif()
 
 
