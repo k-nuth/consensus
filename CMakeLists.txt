@@ -36,6 +36,10 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Implement --use-conan
+#------------------------------------------------------------------------------
+option(USE_CONAN "Use Conan Build Tool." OFF)
+
 # Process options.
 #==============================================================================
 # Implement --with-tests and declare WITH_TESTS.
@@ -59,6 +63,8 @@ endif()
 # Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
 #------------------------------------------------------------------------------
 option(ENABLE_SHARED "" OFF)
+
+
 
 # Set preprocessor defines.
 include(CheckIncludeFile)
@@ -192,23 +198,27 @@ endif()
 #  Boost 1.56.0 REQUIRED
 #  COMPONENTS unit_test_framework)
 
-if (UNIX)
-  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
-elseif (WIN32)
-  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
-endif()
+# if (UNIX)
+#   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
+# elseif (WIN32)
+#   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
+# endif()
 
-## Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
-##------------------------------------------------------------------------------
-#if (NOT TARGET bitprim-core)
-#  find_package(bitprim-core 3.0.0 REQUIRED)
-#endif()
 
-## Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
-##------------------------------------------------------------------------------
-#if (NOT TARGET secp256k1)
-#  find_package(secp256k1 0.0.01 REQUIRED)
-#endif()
+if (NOT USE_CONAN)
+  # Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
+  #------------------------------------------------------------------------------
+  if (NOT TARGET bitprim-core)
+  find_package(bitprim-core 3.0.0 REQUIRED)
+  endif()
+
+  # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+  #------------------------------------------------------------------------------
+  if (NOT TARGET secp256k1)
+  find_package(secp256k1 0.0.01 REQUIRED)
+  endif()
+endif (NOT USE_CONAN)
+
 
 # Set flags.
 #==============================================================================
@@ -352,8 +362,11 @@ target_include_directories(bitprim-consensus PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
-#target_link_libraries(bitprim-consensus secp256k1 bitprim-core)
-target_link_libraries(bitprim-consensus PUBLIC ${CONAN_LIBS})
+if (NOT USE_CONAN)
+  target_link_libraries(bitprim-consensus secp256k1 bitprim-core)
+else()
+  target_link_libraries(bitprim-consensus PUBLIC ${CONAN_LIBS})
+endif()
 
 _group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
 
