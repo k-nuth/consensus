@@ -369,9 +369,8 @@ target_include_directories(bitprim-consensus PRIVATE
 
 if (NOT USE_CONAN)
   target_link_libraries(bitprim-consensus secp256k1 bitprim-core)
-else()
-  target_link_libraries(bitprim-consensus PUBLIC ${CONAN_LIBS})
 endif()
+target_link_libraries(bitprim-consensus PUBLIC ${CONAN_LIBS})
 
 _group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
 
