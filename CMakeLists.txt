@@ -357,7 +357,12 @@ target_include_directories(bitprim-consensus PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_compile_definitions(bitprim-consensus PUBLIC -DBCK_STATIC)
+
+if (NOT ENABLE_SHARED)
+  target_compile_definitions(bitprim-consensus PUBLIC -DBCK_STATIC)
+endif()
+
+
 target_include_directories(bitprim-consensus PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
