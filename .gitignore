@@ -27,7 +27,7 @@ bin
 obj
 
 /build
-
+__pycache__/
 .idea/
 cmake-build-debug/
 
