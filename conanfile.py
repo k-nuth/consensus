@@ -55,8 +55,8 @@ class BitprimConsensusConan(ConanFile):
 
 
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
-                ("secp256k1/0.1@bitprim/testing"),
-                ("bitprim-core/0.1@bitprim/testing"))
+                ("secp256k1/0.1@bitprim/stable"),
+                ("bitprim-core/0.1@bitprim/stable"))
 
     def build(self):
         cmake = CMake(self)
