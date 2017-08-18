@@ -1,5 +1,4 @@
 from conan.packager import ConanMultiPackager
-import os
 
 if __name__ == "__main__":
     builder = ConanMultiPackager(username="bitprim", channel="testing",
@@ -11,7 +10,7 @@ if __name__ == "__main__":
     filtered_builds = []
     for settings, options, env_vars, build_requires in builder.builds:
         if settings["build_type"] == "Release" \
-                and options["bitprim-consensus:shared"] == False:
+                and not options["bitprim-consensus:shared"]:
             filtered_builds.append([settings, options, env_vars, build_requires])
 
     builder.builds = filtered_builds
