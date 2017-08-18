@@ -43,6 +43,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #------------------------------------------------------------------------------
 option(USE_CONAN "Use Conan Build Tool." OFF)
 
+# Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
+#------------------------------------------------------------------------------
+option(ENABLE_SHARED "" OFF)
+
+# Implement POSITION_INDEPENDENT_CODE
+#------------------------------------------------------------------------------
+option(ENABLE_POSITION_INDEPENDENT_CODE "Enable POSITION_INDEPENDENT_CODE property" ON)
+
 # Process options.
 #==============================================================================
 # Implement --with-tests and declare WITH_TESTS.
@@ -63,9 +71,6 @@ if (WITH_PYTHON)
   message(FATAL_ERROR "WITH_PYTHON not yet implemented")
 endif()
 
-# Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
-#------------------------------------------------------------------------------
-option(ENABLE_SHARED "" OFF)
 
 
 
@@ -325,7 +330,9 @@ add_library(bitprim-consensus-clone OBJECT
   src/clone/script/script_error.h
 )
 
-set_property(TARGET bitprim-consensus-clone PROPERTY POSITION_INDEPENDENT_CODE ON)
+if (ENABLE_POSITION_INDEPENDENT_CODE)
+  set_property(TARGET bitprim-consensus-clone PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif(ENABLE_POSITION_INDEPENDENT_CODE)
   
   
 target_include_directories(bitprim-consensus-clone PRIVATE
@@ -353,7 +360,9 @@ add_library(bitprim-consensus ${MODE}
   $<TARGET_OBJECTS:bitprim-consensus-clone>
 )
 
-set_property(TARGET bitprim-consensus PROPERTY POSITION_INDEPENDENT_CODE ON)
+if (ENABLE_POSITION_INDEPENDENT_CODE)
+  set_property(TARGET bitprim-consensus PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif(ENABLE_POSITION_INDEPENDENT_CODE)
   
   
 target_include_directories(bitprim-consensus PUBLIC

@@ -68,6 +68,12 @@ class BitprimConsensusConan(ConanFile):
         cmake.definitions["WITH_JAVA"] = option_on_off(self.options.with_java)
         cmake.definitions["WITH_PYTHON"] = option_on_off(self.options.with_python)
         
+        if self.settings.compiler == "gcc":
+            if float(str(self.settings.compiler.version)) >= 5:
+                cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "1"
+            else:
+                cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "0"
+        
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()
 
