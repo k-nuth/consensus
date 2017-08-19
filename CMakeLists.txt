@@ -386,6 +386,12 @@ if (NOT USE_CONAN)
 endif()
 target_link_libraries(bitprim-consensus PUBLIC ${CONAN_LIBS})
 
+if (USE_CONAN)
+  if (MINGW)
+    target_link_libraries(bitprim-consensus PUBLIC ws2_32 wsock32) #TODO(fernando): manage with Conan
+  endif()
+endif()
+
 _group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
 
 # Tests
