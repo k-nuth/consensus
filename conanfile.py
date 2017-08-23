@@ -38,13 +38,15 @@ class BitprimConsensusConan(ConanFile):
                "with_tests": [True, False],
                "with_java": [True, False],
                "with_python": [True, False],
+               "use_cpp11_abi": [True, False]
     }
 
     default_options = "shared=False", \
         "fPIC=True", \
         "with_tests=True", \
         "with_java=False", \
-        "with_python=False"
+        "with_python=False", \
+        "use_cpp11_abi=True"
 
     generators = "cmake"
     build_policy = "missing"
@@ -66,6 +68,7 @@ class BitprimConsensusConan(ConanFile):
         cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = "ON"
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.options.shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
+        cmake.definitions["USE_CPP11_ABI"] = option_on_off(self.options.use_cpp11_abi)
         cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         cmake.definitions["WITH_JAVA"] = option_on_off(self.options.with_java)
         cmake.definitions["WITH_PYTHON"] = option_on_off(self.options.with_python)
