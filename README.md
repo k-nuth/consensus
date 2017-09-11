@@ -2,9 +2,9 @@
 
 *Bitcoin consensus library*
 
-| **master(linux/osx)** | **conan-build-win(linux/osx)**   | **master(windows)**   | **conan-build-win(windows)** |
+| **master(linux/osx)** | **dev(linux/osx)**   | **master(windows)**   | **dev(windows)** |
 |:------:|:-:|:-:|:-:|
-| [![Build Status](https://travis-ci.org/bitprim/bitprim-consensus.svg)](https://travis-ci.org/bitprim/bitprim-consensus)       | [![Build StatusB](https://travis-ci.org/bitprim/bitprim-consensus.svg?branch=conan-build-win)](https://travis-ci.org/bitprim/bitprim-consensus?branch=conan-build-win)  | [![Appveyor Status](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-consensus?svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-consensus)  | [![Appveyor StatusB](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-consensus?branch=conan-build-win&svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-consensus?branch=conan-build-win)  |
+| [![Build Status](https://travis-ci.org/bitprim/bitprim-consensus.svg)](https://travis-ci.org/bitprim/bitprim-consensus)       | [![Build StatusB](https://travis-ci.org/bitprim/bitprim-consensus.svg?branch=dev)](https://travis-ci.org/bitprim/bitprim-consensus?branch=dev)  | [![Appveyor Status](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-consensus?svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-consensus)  | [![Appveyor StatusB](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-consensus?branch=dev&svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-consensus?branch=dev)  |
 
 ## Installation
 Make sure you have installed [bitprim-core](https://github.com/bitprim/bitprim-core) beforehand according to its respective build instructions.
