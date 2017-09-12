@@ -178,7 +178,7 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
 verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags)
+    unsigned int flags, int64_t amount /* = 0 */)
 {
     if (transaction_size > 0 && transaction == NULL)
         throw std::invalid_argument("transaction");
@@ -204,9 +204,10 @@ verify_result_type verify_script(const unsigned char* transaction,
         return verify_result_tx_size_invalid;
 
     ScriptError_t error;
-    const CAmount amount = 0;
+    // const CAmount amount = 0;
     TransactionSignatureChecker checker(&tx, tx_input_index, amount);
     const unsigned int script_flags = verify_flags_to_script_flags(flags);
+
     CScript output_script(prevout_script, prevout_script + prevout_script_size);
     const CScript& input_script = tx.vin[tx_input_index].scriptSig;
 
