@@ -906,6 +906,7 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
                         scriptCode.FindAndDelete(CScript(vchSig));
                     }
 
+                    //TODO(bitprim): Bitcoin Cash enabled by default in CheckSignatureEncoding, because the "clone" Consensus is used for the Cash variant
                     if (!CheckSignatureEncoding(vchSig, flags, serror, true) || !CheckPubKeyEncoding(vchPubKey, flags, sigversion, serror)) {
                         //serror is set
                         return false;
@@ -980,6 +981,8 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
                         // Note how this makes the exact order of pubkey/signature evaluation
                         // distinguishable by CHECKMULTISIG NOT if the STRICTENC flag is set.
                         // See the script_(in)valid tests for details.
+
+                        //TODO(bitprim): Bitcoin Cash enabled by default in CheckSignatureEncoding, because the "clone" Consensus is used for the Cash variant
                         if (!CheckSignatureEncoding(vchSig, flags, serror, true) || !CheckPubKeyEncoding(vchPubKey, flags, sigversion, serror)) {
                             // serror is set
                             return false;
