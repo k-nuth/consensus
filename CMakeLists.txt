@@ -240,18 +240,21 @@ endif()
 #   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
 # endif()
 
+message("FER-USE_CONAN")
+message(${USE_CONAN})
 
 if (NOT USE_CONAN)
-  # Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
+  message("Entro!!!")
+# Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET bitprim-core)
-  find_package(bitprim-core 3.0.0 REQUIRED)
+    find_package(bitprim-core 3.0.0 REQUIRED)
   endif()
 
   # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET secp256k1)
-  find_package(secp256k1 0.0.01 REQUIRED)
+    find_package(secp256k1 0.0.01 REQUIRED)
   endif()
 endif (NOT USE_CONAN)
 
@@ -366,12 +369,12 @@ endif(ENABLE_POSITION_INDEPENDENT_CODE)
 target_include_directories(bitprim-consensus-clone PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
+#TODO(bitprim): chequear que pasa con estas 2 linas que siguen cuando se usa todo con CONAN
+target_compile_definitions(bitprim-consensus-clone PRIVATE
+ $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
 
-#target_compile_definitions(bitprim-consensus-clone PRIVATE
-#  $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
-
-#target_include_directories(bitprim-consensus-clone PRIVATE
-#  $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
+target_include_directories(bitprim-consensus-clone PRIVATE
+ $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
 
 _group_sources(bitprim-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone")
 
