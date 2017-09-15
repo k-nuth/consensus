@@ -369,12 +369,13 @@ endif(ENABLE_POSITION_INDEPENDENT_CODE)
 target_include_directories(bitprim-consensus-clone PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
-#TODO(bitprim): chequear que pasa con estas 2 linas que siguen cuando se usa todo con CONAN
-target_compile_definitions(bitprim-consensus-clone PRIVATE
- $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
+if (NOT USE_CONAN)
+  target_compile_definitions(bitprim-consensus-clone PRIVATE
+  $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
 
-target_include_directories(bitprim-consensus-clone PRIVATE
- $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
+  target_include_directories(bitprim-consensus-clone PRIVATE
+  $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
+endif()
 
 _group_sources(bitprim-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone")
 
