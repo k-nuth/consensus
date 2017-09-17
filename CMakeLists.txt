@@ -240,8 +240,11 @@ endif()
 #   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
 # endif()
 
+message("FER-USE_CONAN")
+message(${USE_CONAN})
 
 if (NOT USE_CONAN)
+  message("Entro!!!")
   # Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET bitprim-core)
@@ -366,12 +369,13 @@ endif(ENABLE_POSITION_INDEPENDENT_CODE)
 target_include_directories(bitprim-consensus-clone PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
 
+if (NOT USE_CONAN)
+  target_compile_definitions(bitprim-consensus-clone PRIVATE
+  $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
 
-#target_compile_definitions(bitprim-consensus-clone PRIVATE
-#  $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
-
-#target_include_directories(bitprim-consensus-clone PRIVATE
-#  $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
+  target_include_directories(bitprim-consensus-clone PRIVATE
+  $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
+endif()
 
 _group_sources(bitprim-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone")
 
