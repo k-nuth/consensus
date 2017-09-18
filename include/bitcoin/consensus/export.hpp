@@ -20,6 +20,8 @@
 #define LIBBITCOIN_CONSENSUS_EXPORT_HPP
 
 #include <cstddef>
+#include <cstdint>
+
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/version.hpp>
 
@@ -185,7 +187,7 @@ typedef enum verify_flags_type
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags);
+    unsigned int flags, int64_t amount = 0);
 
 } // namespace consensus
 } // namespace libbitcoin
