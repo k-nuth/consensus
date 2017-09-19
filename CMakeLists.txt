@@ -248,13 +248,13 @@ if (NOT USE_CONAN)
   # Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET bitprim-core)
-  find_package(bitprim-core 3.0.0 REQUIRED)
+    find_package(bitprim-core 3.0.0 REQUIRED)
   endif()
 
   # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET secp256k1)
-  find_package(secp256k1 0.0.01 REQUIRED)
+    find_package(secp256k1 0.0.01 REQUIRED)
   endif()
 endif (NOT USE_CONAN)
 
