@@ -248,7 +248,7 @@ message(${USE_CONAN})
 
 if (NOT USE_CONAN)
   message("Entro!!!")
-# Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
+  # Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET bitprim-core)
     find_package(bitprim-core 3.0.0 REQUIRED)
