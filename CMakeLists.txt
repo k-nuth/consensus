@@ -22,7 +22,7 @@ cmake_minimum_required(VERSION 3.4)
 # bitprim-consensus
 #==============================================================================
 project(bitprim-consensus
-  VERSION 3.0.0
+  VERSION 0.3.0
   LANGUAGES CXX C)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -248,10 +248,10 @@ message(${USE_CONAN})
 
 if (NOT USE_CONAN)
   message("Entro!!!")
-  # Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
+  # Require bitprim-core of at least version 0.3.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET bitprim-core)
-    find_package(bitprim-core 3.0.0 REQUIRED)
+    find_package(bitprim-core 0.3.0 REQUIRED)
   endif()
 
   # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
