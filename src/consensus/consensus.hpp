@@ -31,6 +31,8 @@ namespace consensus {
 BCK_API verify_result_type script_error_to_verify_result(ScriptError_t code);
 BCK_API unsigned int verify_flags_to_script_flags(unsigned int flags);
 
+char const* version(); //TODO(bitprim): use BCK_API and simililars in the rest of the projects
+
 } // namespace consensus
 } // namespace libbitcoin
 
