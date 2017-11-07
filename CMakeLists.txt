@@ -22,7 +22,7 @@ cmake_minimum_required(VERSION 3.4)
 # bitprim-consensus
 #==============================================================================
 project(bitprim-consensus
-  VERSION 3.0.0
+  VERSION 0.3.0
   LANGUAGES CXX C)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -78,6 +78,10 @@ if (WITH_PYTHON)
   message(FATAL_ERROR "WITH_PYTHON not yet implemented")
 endif()
 
+
+
+set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
+# message(${BITPRIM_BUILD_NUMBER})
 
 
 
@@ -243,15 +247,15 @@ endif()
 #   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
 # endif()
 
-message("FER-USE_CONAN")
-message(${USE_CONAN})
+# message("FER-USE_CONAN")
+# message(${USE_CONAN})
 
 if (NOT USE_CONAN)
-  message("Entro!!!")
-  # Require bitprim-core of at least version 3.0.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
+#   message("Entro!!!")
+  # Require bitprim-core of at least version 0.3.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET bitprim-core)
-    find_package(bitprim-core 3.0.0 REQUIRED)
+    find_package(bitprim-core 0.3.0 REQUIRED)
   endif()
 
   # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
@@ -369,8 +373,12 @@ if (ENABLE_POSITION_INDEPENDENT_CODE)
 endif(ENABLE_POSITION_INDEPENDENT_CODE)
   
   
+
 target_include_directories(bitprim-consensus-clone PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
+
+target_compile_definitions(bitprim-consensus-clone PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"")
+  
 
 if (NOT USE_CONAN)
   target_compile_definitions(bitprim-consensus-clone PRIVATE
@@ -404,6 +412,7 @@ target_include_directories(bitprim-consensus PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
+target_compile_definitions(bitprim-consensus PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"")
 
 if (NOT ENABLE_SHARED)
   target_compile_definitions(bitprim-consensus PUBLIC -DBCK_STATIC)

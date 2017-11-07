@@ -248,5 +248,9 @@ verify_result_type verify_script(const unsigned char* transaction,
     return script_error_to_verify_result(error);
 }
 
+char const* version() {
+    return BITPRIM_CONSENSUS_VERSION;
+}
+
 } // namespace consensus
 } // namespace libbitcoin

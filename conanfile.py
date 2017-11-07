@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import os
 from conans import ConanFile, CMake
 
 def option_on_off(option):
@@ -24,7 +25,7 @@ def option_on_off(option):
 
 class BitprimConsensusConan(ConanFile):
     name = "bitprim-consensus"
-    version = "0.2"
+    version = "0.3"
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/bitprim/bitprim-consensus"
     description = "Bitcoin Consensus Library"
@@ -35,57 +36,60 @@ class BitprimConsensusConan(ConanFile):
 
     options = {"shared": [True, False],
                "fPIC": [True, False],
-               "with_tests": [True, False],
-               "with_java": [True, False],
-               "with_python": [True, False],
-               "not_use_cpp11_abi": [True, False]
     }
 
+    # "with_tests": [True, False],
+    # "with_java": [True, False],
+    # "with_python": [True, False],
+    # "not_use_cpp11_abi": [True, False]
+
     default_options = "shared=False", \
-        "fPIC=True", \
-        "with_tests=True", \
-        "with_java=False", \
-        "with_python=False", \
-        "not_use_cpp11_abi=False"
+        "fPIC=True"
+
+    # "with_tests=True", \
+    # "with_java=False", \
+    # "with_python=False", \
+    # "not_use_cpp11_abi=False"
+
+    with_tests = False
+    with_java = False
+    with_python = False
+    # not_use_cpp11_abi = False
 
     generators = "cmake"
     build_policy = "missing"
-
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-consensusConfig.cmake.in", "include/*", "test/*"
-
     package_files = "build/lbitprim-consensus.a"
 
-
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
-                ("secp256k1/0.2@bitprim/stable"),
-                ("bitprim-core/0.2@bitprim/stable"))
+                ("secp256k1/0.3@bitprim/stable"),
+                ("bitprim-core/0.3@bitprim/stable"))
 
     def build(self):
         cmake = CMake(self)
 
-        cmake.definitions["USE_CONAN"] = "ON"
-        cmake.definitions["NO_CONAN_AT_ALL"] = "OFF"
-        cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = "ON"
+        cmake.definitions["USE_CONAN"] = option_on_off(True)
+        cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
+        cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(False)
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.options.shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
-        # cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(self.options.not_use_cpp11_abi)
-        cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
-        cmake.definitions["WITH_JAVA"] = option_on_off(self.options.with_java)
-        cmake.definitions["WITH_PYTHON"] = option_on_off(self.options.with_python)
-        
-        # if self.settings.compiler == "gcc":
-        #     if float(str(self.settings.compiler.version)) >= 5:
-        #         cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "1"
-        #     else:
-        #         cmake.definitions["_GLIBCXX_USE_CXX11_ABI"] = "0"
 
+        # cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(self.options.not_use_cpp11_abi)
+        # cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
+        # cmake.definitions["WITH_JAVA"] = option_on_off(self.options.with_java)
+        # cmake.definitions["WITH_PYTHON"] = option_on_off(self.options.with_python)
+
+        cmake.definitions["WITH_TESTS"] = option_on_off(self.with_tests)
+        cmake.definitions["WITH_JAVA"] = option_on_off(self.with_java)
+        cmake.definitions["WITH_PYTHON"] = option_on_off(self.with_python)
+        
         if self.settings.compiler == "gcc":
             if float(str(self.settings.compiler.version)) >= 5:
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
             else:
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(True)
 
-
+        cmake.definitions["BITPRIM_BUILD_NUMBER"] = os.getenv('BITPRIM_BUILD_NUMBER', '-')
         cmake.configure(source_dir=self.conanfile_directory)
         cmake.build()
 

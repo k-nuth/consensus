@@ -32,3 +32,5 @@ __pycache__/
 cmake-build-debug/
 
 CMakeSettings.json
+
+.vscode/
