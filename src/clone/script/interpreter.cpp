@@ -255,6 +255,21 @@ bool static CheckMinimalPush(const valtype& data, opcodetype opcode) {
     }
     return true;
 }
+static uint32_t GetHashType(const valtype &vchSig) {
+    if (vchSig.size() == 0) {
+        return 0;
+    }
+
+    return vchSig[vchSig.size() - 1];
+}
+static void CleanupScriptCode(CScript &scriptCode,
+                              const std::vector<uint8_t> &vchSig) {
+    // Drop the signature in scripts when SIGHASH_FORKID is not used.
+    uint32_t nHashType = GetHashType(vchSig);
+    if (!(nHashType & SIGHASH_FORKID)) {
+        scriptCode.FindAndDelete(CScript(vchSig));
+    }
+}
 
 bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* serror)
 {
@@ -455,7 +470,7 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
                         if (stack.size() < 1)
                             return set_error(serror, SCRIPT_ERR_UNBALANCED_CONDITIONAL);
                         valtype& vch = stacktop(-1);
-                        if (sigversion == SIGVERSION_WITNESS_V0 && (flags & SCRIPT_VERIFY_MINIMALIF)) {
+                        if (flags & SCRIPT_VERIFY_MINIMALIF) {
                             if (vch.size() > 1)
                                 return set_error(serror, SCRIPT_ERR_MINIMALIF);
                             if (vch.size() == 1 && vch[0] != 1)
@@ -901,10 +916,8 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
                     // Subset of script starting at the most recent codeseparator
                     CScript scriptCode(pbegincodehash, pend);
 
-                    // Drop the signature in pre-segwit scripts but not segwit scripts
-                    if (sigversion == SIGVERSION_BASE) {
-                        scriptCode.FindAndDelete(CScript(vchSig));
-                    }
+                    // Drop the signature in not FORK_ID txns
+                    CleanupScriptCode(scriptCode, vchSig);
 
                     //TODO(bitprim): Bitcoin Cash enabled by default in CheckSignatureEncoding, because the "clone" Consensus is used for the Cash variant
                     if (!CheckSignatureEncoding(vchSig, flags, serror, true) || !CheckPubKeyEncoding(vchPubKey, flags, sigversion, serror)) {
@@ -967,9 +980,7 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
                     for (int k = 0; k < nSigsCount; k++)
                     {
                         valtype& vchSig = stacktop(-isig-k);
-                        if (sigversion == SIGVERSION_BASE) {
-                            scriptCode.FindAndDelete(CScript(vchSig));
-                        }
+                        CleanupScriptCode(scriptCode, vchSig);
                     }
 
                     bool fSuccess = true;
@@ -1424,13 +1435,10 @@ static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, 
 
 bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror)
 {
-    static const CScriptWitness emptyWitness;
-    if (witness == NULL) {
-        witness = &emptyWitness;
-    }
-    bool hadWitness = false;
-
     set_error(serror, SCRIPT_ERR_UNKNOWN_ERROR);
+    // If FORKID is enabled, we also ensure strict encoding.
+    // Using this consensus FORK_ID is always active
+    flags |= SCRIPT_VERIFY_STRICTENC;
 
     if ((flags & SCRIPT_VERIFY_SIGPUSHONLY) != 0 && !scriptSig.IsPushOnly()) {
         return set_error(serror, SCRIPT_ERR_SIG_PUSHONLY);
@@ -1451,25 +1459,6 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
 
     if (CastToBool(stack.back()) == false)
         return set_error(serror, SCRIPT_ERR_EVAL_FALSE);
-
-    // Bare witness programs
-    int witnessversion;
-    std::vector<unsigned char> witnessprogram;
-    if (flags & SCRIPT_VERIFY_WITNESS) {
-        if (scriptPubKey.IsWitnessProgram(witnessversion, witnessprogram)) {
-            hadWitness = true;
-            if (scriptSig.size() != 0) {
-                // The scriptSig must be _exactly_ CScript(), otherwise we reintroduce malleability.
-                return set_error(serror, SCRIPT_ERR_WITNESS_MALLEATED);
-            }
-            if (!VerifyWitnessProgram(*witness, witnessversion, witnessprogram, flags, checker, serror)) {
-                return false;
-            }
-            // Bypass the cleanstack check at the end. The actual stack is obviously not clean
-            // for witness programs.
-            stack.resize(1);
-        }
-    }
 
     // Additional validation for spend-to-script-hash transactions:
     if ((flags & SCRIPT_VERIFY_P2SH) && scriptPubKey.IsPayToScriptHash())
@@ -1497,24 +1486,6 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
             return set_error(serror, SCRIPT_ERR_EVAL_FALSE);
         if (!CastToBool(stack.back()))
             return set_error(serror, SCRIPT_ERR_EVAL_FALSE);
-
-        // P2SH witness program
-        if (flags & SCRIPT_VERIFY_WITNESS) {
-            if (pubKey2.IsWitnessProgram(witnessversion, witnessprogram)) {
-                hadWitness = true;
-                if (scriptSig != CScript() << std::vector<unsigned char>(pubKey2.begin(), pubKey2.end())) {
-                    // The scriptSig must be _exactly_ a single push of the redeemScript. Otherwise we
-                    // reintroduce malleability.
-                    return set_error(serror, SCRIPT_ERR_WITNESS_MALLEATED_P2SH);
-                }
-                if (!VerifyWitnessProgram(*witness, witnessversion, witnessprogram, flags, checker, serror)) {
-                    return false;
-                }
-                // Bypass the cleanstack check at the end. The actual stack is obviously not clean
-                // for witness programs.
-                stack.resize(1);
-            }
-        }
     }
 
     // The CLEANSTACK check is only performed after potential P2SH evaluation,
@@ -1524,19 +1495,8 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
         // Disallow CLEANSTACK without P2SH, as otherwise a switch CLEANSTACK->P2SH+CLEANSTACK
         // would be possible, which is not a softfork (and P2SH should be one).
         assert((flags & SCRIPT_VERIFY_P2SH) != 0);
-        assert((flags & SCRIPT_VERIFY_WITNESS) != 0);
         if (stack.size() != 1) {
             return set_error(serror, SCRIPT_ERR_CLEANSTACK);
-        }
-    }
-
-    if (flags & SCRIPT_VERIFY_WITNESS) {
-        // We can't check for correct unexpected witness data if P2SH was off, so require
-        // that WITNESS implies P2SH. Otherwise, going from WITNESS->P2SH+WITNESS would be
-        // possible, which is not a softfork.
-        assert((flags & SCRIPT_VERIFY_P2SH) != 0);
-        if (!hadWitness && !witness->IsNull()) {
-            return set_error(serror, SCRIPT_ERR_WITNESS_UNEXPECTED);
         }
     }
 
