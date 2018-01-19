@@ -25,7 +25,7 @@ def option_on_off(option):
 
 class BitprimConsensusConan(ConanFile):
     name = "bitprim-consensus"
-    version = "0.5"
+    version = "0.6"
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/bitprim/bitprim-consensus"
     description = "Bitcoin Consensus Library"
@@ -63,7 +63,7 @@ class BitprimConsensusConan(ConanFile):
 
     requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
                 ("secp256k1/0.3@bitprim/stable"),
-                ("bitprim-core/0.5@bitprim/stable"))
+                ("bitprim-core/0.6@bitprim/stable"))
 
     def build(self):
         cmake = CMake(self)
