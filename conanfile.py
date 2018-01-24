@@ -61,7 +61,7 @@ class BitprimConsensusConan(ConanFile):
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-consensusConfig.cmake.in", "include/*", "test/*"
     package_files = "build/lbitprim-consensus.a"
 
-    requires = (("bitprim-conan-boost/1.64.0@bitprim/stable"),
+    requires = (("bitprim-conan-boost/1.66.0@bitprim/stable"),
                 ("secp256k1/0.3@bitprim/testing"),
                 ("bitprim-core/0.7@bitprim/testing"))
 
