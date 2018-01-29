@@ -36,25 +36,25 @@ class BitprimConsensusConan(ConanFile):
 
     options = {"shared": [True, False],
                "fPIC": [True, False],
+               "with_tests": [True, False],
+               "with_java": [True, False],
+               "with_python": [True, False]
     }
 
-    # "with_tests": [True, False],
-    # "with_java": [True, False],
-    # "with_python": [True, False],
     # "not_use_cpp11_abi": [True, False]
 
     default_options = "shared=False", \
-        "fPIC=True"
+        "fPIC=True", \
+        "with_tests=True", \
+        "with_java=False", \
+        "with_python=False"
 
-    # "with_tests=True", \
-    # "with_java=False", \
-    # "with_python=False", \
     # "not_use_cpp11_abi=False"
 
-    with_tests = False
-    with_java = False
-    with_python = False
-    # not_use_cpp11_abi = False
+    # with_tests = False
+    # with_java = False
+    # with_python = False
+    # # not_use_cpp11_abi = False
 
     generators = "cmake"
     build_policy = "missing"
@@ -64,6 +64,11 @@ class BitprimConsensusConan(ConanFile):
     requires = (("bitprim-conan-boost/1.66.0@bitprim/stable"),
                 ("secp256k1/0.3@bitprim/testing"),
                 ("bitprim-core/0.7@bitprim/testing"))
+
+    def package_id(self):
+        self.info.options.with_tests = "ANY"
+        self.info.options.with_java = "ANY"
+        self.info.options.with_python = "ANY"
 
     def build(self):
         cmake = CMake(self)
@@ -75,13 +80,13 @@ class BitprimConsensusConan(ConanFile):
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.options.fPIC)
 
         # cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(self.options.not_use_cpp11_abi)
-        # cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
-        # cmake.definitions["WITH_JAVA"] = option_on_off(self.options.with_java)
-        # cmake.definitions["WITH_PYTHON"] = option_on_off(self.options.with_python)
+        cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
+        cmake.definitions["WITH_JAVA"] = option_on_off(self.options.with_java)
+        cmake.definitions["WITH_PYTHON"] = option_on_off(self.options.with_python)
 
-        cmake.definitions["WITH_TESTS"] = option_on_off(self.with_tests)
-        cmake.definitions["WITH_JAVA"] = option_on_off(self.with_java)
-        cmake.definitions["WITH_PYTHON"] = option_on_off(self.with_python)
+        # cmake.definitions["WITH_TESTS"] = option_on_off(self.with_tests)
+        # cmake.definitions["WITH_JAVA"] = option_on_off(self.with_java)
+        # cmake.definitions["WITH_PYTHON"] = option_on_off(self.with_python)
         
         if self.settings.compiler == "gcc":
             if float(str(self.settings.compiler.version)) >= 5:
