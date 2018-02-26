@@ -22,17 +22,17 @@ cmake_minimum_required(VERSION 3.4)
 # bitprim-consensus
 #==============================================================================
 project(bitprim-consensus
-  VERSION 0.6.0
+  VERSION 0.7.0
   LANGUAGES CXX C)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  if (NOT NOT_USE_CPP11_ABI)
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-  else()
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-  endif()
-  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-macro-redefined")
-endif()
+# if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+#   if (NOT NOT_USE_CPP11_ABI)
+#     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+#   else()
+#     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+#   endif()
+#   set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-macro-redefined")
+# endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -64,6 +64,8 @@ option(ENABLE_POSITION_INDEPENDENT_CODE "Enable POSITION_INDEPENDENT_CODE proper
 #------------------------------------------------------------------------------
 option(WITH_TESTS "Compile with unit tests." ON)
 
+
+#TODO(fernando): check libbitcoin for with_java and with_python parameters
 # Implement --with-java and declare WITH_JAVA.
 #------------------------------------------------------------------------------
 option(WITH_JAVA "Compile the Java bindings." OFF)
@@ -209,14 +211,21 @@ _check_has_decl(sys/endian.h HAVE_SYS_ENDIAN_H htobe64 HAVE_DECL_HTOBE64)
 #==============================================================================
 # Only if enabled
 #------------------------------------------------------------------------------
-if (NOT NO_CONAN_AT_ALL)
-  if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-      include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-      conan_basic_setup()
-  else()
-      message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
-  endif()
+# if (NOT NO_CONAN_AT_ALL)
+#   if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#       include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#       conan_basic_setup()
+#   else()
+#       message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
+#   endif()
+# endif()
+
+if (EXISTS ${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
+    include(${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
+else()
+    message( STATUS "bitprimbuildinfo doent exists")
 endif()
+
 
 # Check dependencies.
 #==============================================================================
@@ -252,16 +261,16 @@ endif()
 
 if (NOT USE_CONAN)
 #   message("Entro!!!")
-  # Require bitprim-core of at least version 0.6.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
+  # Require bitprim-core of at least version 0.7.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET bitprim-core)
-    find_package(bitprim-core 0.6.0 REQUIRED)
+    find_package(bitprim-core 0.7.0 REQUIRED)
   endif()
 
-  # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+  # Require secp256k1 of at least version 0.3.0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET secp256k1)
-    find_package(secp256k1 0.0.01 REQUIRED)
+    find_package(secp256k1 0.3.0 REQUIRED)
   endif()
 endif (NOT USE_CONAN)
 
@@ -430,11 +439,11 @@ else()
 endif()
 
 
-if (USE_CONAN)
+# if (USE_CONAN)
   if (MINGW)
     target_link_libraries(bitprim-consensus PUBLIC ws2_32 wsock32) #TODO(fernando): manage with Conan
   endif()
-endif()
+# endif()
 
 _group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
 
