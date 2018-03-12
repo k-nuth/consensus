@@ -25,7 +25,7 @@ def option_on_off(option):
 
 class BitprimConsensusConan(ConanFile):
     name = "bitprim-consensus"
-    version = "0.7"
+    version = "0.8"
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/bitprim/bitprim-consensus"
     description = "Bitcoin Consensus Library"
@@ -56,7 +56,7 @@ class BitprimConsensusConan(ConanFile):
     #TODO(fernando): Add the Boost requirement?
     requires = (("boost/1.66.0@bitprim/stable"),
                 ("secp256k1/0.3@bitprim/testing"),
-                ("bitprim-core/0.7@bitprim/testing"))
+                ("bitprim-core/0.8@bitprim/testing"))
 
 
     @property
