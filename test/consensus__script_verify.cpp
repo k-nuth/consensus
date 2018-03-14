@@ -24,7 +24,12 @@
 #include <vector>
 #include <bitcoin/consensus.hpp>
 #include <boost/test/unit_test.hpp>
-#include <clone/script/interpreter.h>
+
+#ifdef BITPRIM_CURRENCY_BCH
+#include <clone-abc/script/interpreter.h>
+#else // BITPRIM_CURRENCY_BCH
+#include <clone-legacy/script/interpreter.h>
+#endif // BITPRIM_CURRENCY_BCH
 
 BOOST_AUTO_TEST_SUITE(consensus__script_verify)
 
@@ -157,7 +162,9 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true__forkid)
     std::string CONSENSUS_FORKID_TX_PREV_SCRIPT = "76a9140bd183d2e2333b99fc4d5c70377f8bc0645d30b188ac";
     int CONSENSUS_FORKID_TX_AMMOUT = 85899498;
 
-    const verify_result result = test_verify(CONSENSUS_FORKID_TX, CONSENSUS_FORKID_TX_PREV_SCRIPT,0,0,0,CONSENSUS_FORKID_TX_AMMOUT);
+    auto flags = SCRIPT_ENABLE_SIGHASH_FORKID;
+
+    const verify_result result = test_verify(CONSENSUS_FORKID_TX, CONSENSUS_FORKID_TX_PREV_SCRIPT,0,flags,0,CONSENSUS_FORKID_TX_AMMOUT);
     BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
 }
 
@@ -168,7 +175,9 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true__forkid_long_int)
     std::string CONSENSUS_FORKID_TX_PREV_SCRIPT = "76a914b939fdc5c4dd28318fd80b4203dc43003c4353ec88ac";
     unsigned long int CONSENSUS_FORKID_TX_AMMOUT = 5000000000;
 
-    const verify_result result = test_verify(CONSENSUS_FORKID_TX, CONSENSUS_FORKID_TX_PREV_SCRIPT,0,0,0,CONSENSUS_FORKID_TX_AMMOUT);
+    auto flags = SCRIPT_ENABLE_SIGHASH_FORKID;
+
+    const verify_result result = test_verify(CONSENSUS_FORKID_TX, CONSENSUS_FORKID_TX_PREV_SCRIPT,0,flags,0,CONSENSUS_FORKID_TX_AMMOUT);
     BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
 }
 

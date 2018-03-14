@@ -19,45 +19,66 @@
 
 import os
 from conans import ConanFile, CMake
+from conans import __version__ as conan_version
+from conans.model.version import Version
+
 
 def option_on_off(option):
     return "ON" if option else "OFF"
 
+def get_content(file_name):
+    # print(os.path.dirname(os.path.abspath(__file__)))
+    # print(os.getcwd())
+    # print(file_name)
+    file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), file_name)
+    with open(file_path, 'r') as f:
+        return f.read()
+
+def get_version():
+    return get_content('conan_version')
+
+def get_channel():
+    return get_content('conan_channel')
+
+def get_conan_req_version():
+    return get_content('conan_req_version')
+
 class BitprimConsensusConan(ConanFile):
     name = "bitprim-consensus"
-    version = "0.8"
+    version = get_version()
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/bitprim/bitprim-consensus"
     description = "Bitcoin Consensus Library"
     settings = "os", "compiler", "build_type", "arch"
 
+    if conan_version < Version(get_conan_req_version()):
+        raise Exception ("Conan version should be greater or equal than %s" % (get_conan_req_version(), ))
+
     options = {"shared": [True, False],
                "fPIC": [True, False],
                "with_tests": [True, False],
                "with_java": [True, False],
-               "with_python": [True, False]
+               "with_python": [True, False],
+               "currency": ['BCH', 'BTC', 'LTC']
     }
 
     default_options = "shared=False", \
         "fPIC=True", \
         "with_tests=False", \
         "with_java=False", \
-        "with_python=False"
+        "with_python=False", \
+        "currency=BCH"
 
     generators = "cmake"
     build_policy = "missing"
+
+    exports = "conan_channel", "conan_version", "conan_req_version"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-consensusConfig.cmake.in", "bitprimbuildinfo.cmake", "include/*", "test/*"
     package_files = "build/lbitprim-consensus.a"
 
-    # requires = (("boost/1.66.0@bitprim/stable"),
-    #             ("secp256k1/0.3@bitprim/testing"),
-    #             ("bitprim-core/0.7@bitprim/testing"))
-
-    #TODO(fernando): Add the Boost requirement?
     requires = (("boost/1.66.0@bitprim/stable"),
-                ("secp256k1/0.3@bitprim/testing"),
-                ("bitprim-core/0.8@bitprim/testing"))
-
+                ("secp256k1/0.3@bitprim/%s" % get_channel()),
+                ("bitprim-core/0.8@bitprim/%s" % get_channel()))
 
     @property
     def msvc_mt_build(self):
@@ -94,7 +115,6 @@ class BitprimConsensusConan(ConanFile):
         if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
             if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
                 self.info.settings.compiler.libcxx = "ANY"
-        
 
     def build(self):
         cmake = CMake(self)
@@ -110,7 +130,11 @@ class BitprimConsensusConan(ConanFile):
         cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         cmake.definitions["WITH_JAVA"] = option_on_off(self.options.with_java)
         cmake.definitions["WITH_PYTHON"] = option_on_off(self.options.with_python)
-        
+
+        # print("self.options.currency")
+        # print(self.options.currency)
+        cmake.definitions["CURRENCY"] = self.options.currency
+
         if self.settings.compiler != "Visual Studio":
             # cmake.definitions["CONAN_CXX_FLAGS"] += " -Wno-deprecated-declarations"
             cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " -Wno-deprecated-declarations"
@@ -135,7 +159,6 @@ class BitprimConsensusConan(ConanFile):
         if self.options.with_tests:
             cmake.test()
             # cmake.test(target="tests")
-        
 
     def imports(self):
         self.copy("*.h", "", "include")
@@ -149,7 +172,6 @@ class BitprimConsensusConan(ConanFile):
         self.copy("*.dylib*", dst="lib", keep_path=False)
         self.copy("*.so", dst="lib", keep_path=False)
         self.copy("*.a", dst="lib", keep_path=False)
-
 
     def package_info(self):
         self.cpp_info.includedirs = ['include']
