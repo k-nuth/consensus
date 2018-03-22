@@ -22,7 +22,7 @@ cmake_minimum_required(VERSION 3.4)
 # bitprim-consensus
 #==============================================================================
 project(bitprim-consensus
-  VERSION 0.7.0
+  VERSION 0.8.0
   LANGUAGES CXX C)
 
 # if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -85,6 +85,19 @@ endif()
 set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
 # message(${BITPRIM_BUILD_NUMBER})
 
+set(CURRENCY "BCH" CACHE STRING "Specify the Cryptocurrency (BCH|BTC|LTC).")
+
+if (${CURRENCY} STREQUAL "BCH")
+  add_definitions(-DBITPRIM_CURRENCY_BCH)
+elseif (${CURRENCY} STREQUAL "BTC")
+  add_definitions(-DBITPRIM_CURRENCY_BTC)
+elseif (${CURRENCY} STREQUAL "LTC")
+  add_definitions(-DBITPRIM_CURRENCY_LTC)
+else()
+  message(FATAL_ERROR "Invalid Cryptocurrency: ${CURRENCY}")
+endif()
+
+message(STATUS "Bitprim: Cryptocurrency: ${CURRENCY}")
 
 
 # Set preprocessor defines.
@@ -261,10 +274,10 @@ endif()
 
 if (NOT USE_CONAN)
 #   message("Entro!!!")
-  # Require bitprim-core of at least version 0.7.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
+  # Require bitprim-core of at least version 0.8.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET bitprim-core)
-    find_package(bitprim-core 0.7.0 REQUIRED)
+    find_package(bitprim-core 0.8.0 REQUIRED)
   endif()
 
   # Require secp256k1 of at least version 0.3.0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
@@ -341,41 +354,86 @@ endif()
 #==============================================================================
 
 #------------------------------------------------------------------------------
-add_library(bitprim-consensus-clone OBJECT
-  src/clone/amount.h
-  src/clone/hash.cpp
-  src/clone/hash.h
-  src/clone/prevector.h
-  src/clone/pubkey.cpp
-  src/clone/pubkey.h
-  src/clone/serialize.h
-  src/clone/tinyformat.h
-  src/clone/uint256.cpp
-  src/clone/uint256.h
-  src/clone/utilstrencodings.cpp
-  src/clone/utilstrencodings.h
-  src/clone/version.h
-  src/clone/compat/byteswap.h
-  src/clone/compat/endian.h
-  src/clone/crypto/common.h
-  src/clone/crypto/hmac_sha512.cpp
-  src/clone/crypto/hmac_sha512.h
-  src/clone/crypto/ripemd160.cpp
-  src/clone/crypto/ripemd160.h
-  src/clone/crypto/sha1.cpp
-  src/clone/crypto/sha1.h
-  src/clone/crypto/sha256.cpp
-  src/clone/crypto/sha256.h
-  src/clone/crypto/sha512.cpp
-  src/clone/crypto/sha512.h
-  src/clone/primitives/transaction.cpp
-  src/clone/primitives/transaction.h
-  src/clone/script/interpreter.cpp
-  src/clone/script/interpreter.h
-  src/clone/script/script.cpp
-  src/clone/script/script.h
-  src/clone/script/script_error.h
-)
+if (${CURRENCY} STREQUAL "BCH")
+#message("clone BCH")
+
+  add_library(bitprim-consensus-clone OBJECT
+    src/clone-abc/amount.h
+    src/clone-abc/amount.cpp
+    src/clone-abc/hash.cpp
+    src/clone-abc/hash.h
+    src/clone-abc/prevector.h
+    src/clone-abc/pubkey.cpp
+    src/clone-abc/pubkey.h
+    src/clone-abc/serialize.h
+    src/clone-abc/tinyformat.h
+    src/clone-abc/uint256.cpp
+    src/clone-abc/uint256.h
+    src/clone-abc/utilstrencodings.cpp
+    src/clone-abc/utilstrencodings.h
+    src/clone-abc/version.h
+    src/clone-abc/compat/byteswap.h
+    src/clone-abc/compat/endian.h
+    src/clone-abc/crypto/common.h
+    src/clone-abc/crypto/hmac_sha512.cpp
+    src/clone-abc/crypto/hmac_sha512.h
+    src/clone-abc/crypto/ripemd160.cpp
+    src/clone-abc/crypto/ripemd160.h
+    src/clone-abc/crypto/sha1.cpp
+    src/clone-abc/crypto/sha1.h
+    src/clone-abc/crypto/sha256.cpp
+    src/clone-abc/crypto/sha256.h
+    src/clone-abc/crypto/sha512.cpp
+    src/clone-abc/crypto/sha512.h
+    src/clone-abc/primitives/transaction.cpp
+    src/clone-abc/primitives/transaction.h
+    src/clone-abc/script/interpreter.cpp
+    src/clone-abc/script/interpreter.h
+    src/clone-abc/script/script.cpp
+    src/clone-abc/script/script.h
+    src/clone-abc/script/script_error.h
+  )
+
+else()
+#message("clone BTC")
+
+  add_library(bitprim-consensus-clone OBJECT
+    src/clone-legacy/amount.h
+    src/clone-legacy/hash.cpp
+    src/clone-legacy/hash.h
+    src/clone-legacy/prevector.h
+    src/clone-legacy/pubkey.cpp
+    src/clone-legacy/pubkey.h
+    src/clone-legacy/serialize.h
+    src/clone-legacy/tinyformat.h
+    src/clone-legacy/uint256.cpp
+    src/clone-legacy/uint256.h
+    src/clone-legacy/utilstrencodings.cpp
+    src/clone-legacy/utilstrencodings.h
+    src/clone-legacy/version.h
+    src/clone-legacy/compat/byteswap.h
+    src/clone-legacy/compat/endian.h
+    src/clone-legacy/crypto/common.h
+    src/clone-legacy/crypto/hmac_sha512.cpp
+    src/clone-legacy/crypto/hmac_sha512.h
+    src/clone-legacy/crypto/ripemd160.cpp
+    src/clone-legacy/crypto/ripemd160.h
+    src/clone-legacy/crypto/sha1.cpp
+    src/clone-legacy/crypto/sha1.h
+    src/clone-legacy/crypto/sha256.cpp
+    src/clone-legacy/crypto/sha256.h
+    src/clone-legacy/crypto/sha512.cpp
+    src/clone-legacy/crypto/sha512.h
+    src/clone-legacy/primitives/transaction.cpp
+    src/clone-legacy/primitives/transaction.h
+    src/clone-legacy/script/interpreter.cpp
+    src/clone-legacy/script/interpreter.h
+    src/clone-legacy/script/script.cpp
+    src/clone-legacy/script/script.h
+    src/clone-legacy/script/script_error.h
+  )
+endif()
+
 
 if (ENABLE_POSITION_INDEPENDENT_CODE)
   set_property(TARGET bitprim-consensus-clone PROPERTY POSITION_INDEPENDENT_CODE ON)
@@ -383,8 +441,14 @@ endif(ENABLE_POSITION_INDEPENDENT_CODE)
   
   
 
-target_include_directories(bitprim-consensus-clone PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
+
+if (${CURRENCY} STREQUAL "BCH")
+#message("clone BCH 2")
+  target_include_directories(bitprim-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
+else()
+#message("clone BTC 2")
+  target_include_directories(bitprim-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
+endif()
 
 target_compile_definitions(bitprim-consensus-clone PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"")
   
@@ -397,7 +461,17 @@ if (NOT USE_CONAN)
   $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
 endif()
 
-_group_sources(bitprim-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone")
+if (${CURRENCY} STREQUAL "BCH")
+#message("clone BCH 3")
+
+  _group_sources(bitprim-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc")
+else()
+#message("clone BTC 3")
+
+_group_sources(bitprim-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy")
+endif()
+
+
 
 # src/bitprim-consensus.la => ${libdir}
 #------------------------------------------------------------------------------
@@ -428,9 +502,22 @@ if (NOT ENABLE_SHARED)
 endif()
 
 
-target_include_directories(bitprim-consensus PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/src
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
+
+
+if (${CURRENCY} STREQUAL "BCH")
+#message("clone BCH 4")
+
+  target_include_directories(bitprim-consensus PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
+else()
+#message("clone BTC 4")
+
+  target_include_directories(bitprim-consensus PRIVATE
+      ${CMAKE_CURRENT_SOURCE_DIR}/src
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
+endif()
+
 
 if (NOT NO_CONAN_AT_ALL)
   target_link_libraries(bitprim-consensus PUBLIC ${CONAN_LIBS})
@@ -459,16 +546,28 @@ endif()
 if (WITH_TESTS)
  
   add_executable(bitprim_consensus_test
-    test/consensus__script_error_to_verify_result.cpp
+    # test/consensus__script_error_to_verify_result.cpp
     test/consensus__script_verify.cpp
-    test/consensus__verify_flags_to_script_flags.cpp
+    # test/consensus__verify_flags_to_script_flags.cpp
     test/main.cpp
     test/script.hpp)
  
-  target_include_directories(bitprim_consensus_test PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clone)
  
+
+  if (${CURRENCY} STREQUAL "BCH")
+  #message("clone BCH 5")
+
+    target_include_directories(bitprim_consensus_test PRIVATE
+      ${CMAKE_CURRENT_SOURCE_DIR}/src
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
+  else()
+  #message("clone BTC 5")
+    target_include_directories(bitprim_consensus_test PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
+  endif()
+  
+
   target_link_libraries(bitprim_consensus_test PUBLIC bitprim-consensus)
  
   _group_sources(bitprim_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
