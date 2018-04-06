@@ -218,6 +218,16 @@ typedef enum verify_flags_type
      * SCRIPT_ENABLE_SIGHASH_FORKID (bitcoin-cash).
      */
     , verify_flags_script_enable_sighash_forkid = (1U << 16)
+
+    /**
+     * SCRIPT_ENABLE_REPLAY_PROTECTION (bitcoin-cash).
+     */
+    , verify_flags_script_enable_replay_protection = (1U << 17)
+
+    /**
+     * SCRIPT_ENABLE_MONOLITH_OPCODES (bitcoin-cash).
+     */
+    , verify_flags_script_enable_monolith_opcodes = (1U << 18)
 #endif
 
 } verify_flags;
