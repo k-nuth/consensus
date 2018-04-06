@@ -78,7 +78,7 @@ class BitprimConsensusConan(ConanFile):
 
     requires = (("boost/1.66.0@bitprim/stable"),
                 ("secp256k1/0.3@bitprim/%s" % get_channel()),
-                ("bitprim-core/0.8@bitprim/%s" % get_channel()))
+                ("bitprim-core/0.9@bitprim/%s" % get_channel()))
 
     @property
     def msvc_mt_build(self):

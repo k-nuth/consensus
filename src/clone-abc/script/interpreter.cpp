@@ -207,7 +207,7 @@ static bool IsDefinedHashtypeSignature(const valtype &vchSig) {
     if (vchSig.size() == 0) {
         return false;
     }
-    if (!GetHashType(vchSig).hasSupportedBaseSigHashType()) {
+    if (!GetHashType(vchSig).hasSupportedBaseType()) {
         return false;
     }
 
@@ -291,15 +291,44 @@ static bool CheckMinimalPush(const valtype &data, opcodetype opcode) {
     return true;
 }
 
+static bool IsOpcodeDisabled(opcodetype opcode, uint32_t flags) {
+    switch (opcode) {
+        case OP_INVERT:
+        case OP_2MUL:
+        case OP_2DIV:
+        case OP_MUL:
+        case OP_LSHIFT:
+        case OP_RSHIFT:
+            // Disabled opcodes.
+            return true;
+
+        case OP_CAT:
+        case OP_SPLIT:
+        case OP_AND:
+        case OP_OR:
+        case OP_XOR:
+        case OP_NUM2BIN:
+        case OP_BIN2NUM:
+        case OP_DIV:
+        case OP_MOD:
+            // Opcodes that have been reenabled.
+            if ((flags & SCRIPT_ENABLE_MONOLITH_OPCODES) == 0) {
+                return true;
+            }
+
+        default:
+            break;
+    }
+
+    return false;
+}
+
 bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                 uint32_t flags, const BaseSignatureChecker &checker,
                 ScriptError *serror) {
     static const CScriptNum bnZero(0);
     static const CScriptNum bnOne(1);
-    static const CScriptNum bnFalse(0);
-    static const CScriptNum bnTrue(1);
     static const valtype vchFalse(0);
-    static const valtype vchZero(0);
     static const valtype vchTrue(1, 1);
 
     CScript::const_iterator pc = script.begin();
@@ -335,13 +364,8 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                 return set_error(serror, SCRIPT_ERR_OP_COUNT);
             }
 
-            if (opcode == OP_CAT || opcode == OP_SUBSTR || opcode == OP_LEFT ||
-                opcode == OP_RIGHT || opcode == OP_INVERT || opcode == OP_AND ||
-                opcode == OP_OR || opcode == OP_XOR || opcode == OP_2MUL ||
-                opcode == OP_2DIV || opcode == OP_MUL || opcode == OP_DIV ||
-                opcode == OP_MOD || opcode == OP_LSHIFT ||
-                opcode == OP_RSHIFT) {
-                // Disabled opcodes.
+            // Some opcodes are disabled.
+            if (IsOpcodeDisabled(opcode, flags)) {
                 return set_error(serror, SCRIPT_ERR_DISABLED_OPCODE);
             }
 
@@ -351,7 +375,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                     return set_error(serror, SCRIPT_ERR_MINIMALDATA);
                 }
                 stack.push_back(vchPushValue);
-            } else if (fExec || (OP_IF <= opcode && opcode <= OP_ENDIF))
+            } else if (fExec || (OP_IF <= opcode && opcode <= OP_ENDIF)) {
                 switch (opcode) {
                     //
                     // Push value
@@ -781,6 +805,48 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                     //
                     // Bitwise logic
                     //
+                    case OP_AND:
+                    case OP_OR:
+                    case OP_XOR: {
+                        // (x1 x2 - out)
+                        if (stack.size() < 2) {
+                            return set_error(
+                                serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                        }
+                        valtype &vch1 = stacktop(-2);
+                        valtype &vch2 = stacktop(-1);
+
+                        // Inputs must be the same size
+                        if (vch1.size() != vch2.size()) {
+                            return set_error(serror,
+                                             SCRIPT_ERR_INVALID_OPERAND_SIZE);
+                        }
+
+                        // To avoid allocating, we modify vch1 in place.
+                        switch (opcode) {
+                            case OP_AND:
+                                for (size_t i = 0; i < vch1.size(); ++i) {
+                                    vch1[i] &= vch2[i];
+                                }
+                                break;
+                            case OP_OR:
+                                for (size_t i = 0; i < vch1.size(); ++i) {
+                                    vch1[i] |= vch2[i];
+                                }
+                                break;
+                            case OP_XOR:
+                                for (size_t i = 0; i < vch1.size(); ++i) {
+                                    vch1[i] ^= vch2[i];
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+
+                        // And pop vch2.
+                        popstack(stack);
+                    } break;
+
                     case OP_EQUAL:
                     case OP_EQUALVERIFY:
                         // case OP_NOTEQUAL: // use OP_NUMNOTEQUAL
@@ -792,6 +858,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                             }
                             valtype &vch1 = stacktop(-2);
                             valtype &vch2 = stacktop(-1);
+
                             bool fEqual = (vch1 == vch2);
                             // OP_NOTEQUAL is disabled because it would be too
                             // easy to say something like n != 1 and have some
@@ -859,6 +926,8 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
 
                     case OP_ADD:
                     case OP_SUB:
+                    case OP_DIV:
+                    case OP_MOD:
                     case OP_BOOLAND:
                     case OP_BOOLOR:
                     case OP_NUMEQUAL:
@@ -885,6 +954,24 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
 
                             case OP_SUB:
                                 bn = bn1 - bn2;
+                                break;
+
+                            case OP_DIV:
+                                // denominator must not be 0
+                                if (bn2 == 0) {
+                                    return set_error(serror,
+                                                     SCRIPT_ERR_DIV_BY_ZERO);
+                                }
+                                bn = bn1 / bn2;
+                                break;
+
+                            case OP_MOD:
+                                // divisor must not be 0
+                                if (bn2 == 0) {
+                                    return set_error(serror,
+                                                     SCRIPT_ERR_MOD_BY_ZERO);
+                                }
+                                bn = bn1 % bn2;
                                 break;
 
                             case OP_BOOLAND:
@@ -1180,9 +1267,121 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                         }
                     } break;
 
+                    //
+                    // Byte string operations
+                    //
+                    case OP_CAT: {
+                        // (x1 x2 -- out)
+                        if (stack.size() < 2) {
+                            return set_error(
+                                serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                        }
+                        valtype &vch1 = stacktop(-2);
+                        valtype &vch2 = stacktop(-1);
+                        if (vch1.size() + vch2.size() >
+                            MAX_SCRIPT_ELEMENT_SIZE) {
+                            return set_error(serror, SCRIPT_ERR_PUSH_SIZE);
+                        }
+                        vch1.insert(vch1.end(), vch2.begin(), vch2.end());
+                        popstack(stack);
+                    } break;
+
+                    case OP_SPLIT: {
+                        // (in position -- x1 x2)
+                        if (stack.size() < 2) {
+                            return set_error(
+                                serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                        }
+
+                        const valtype &data = stacktop(-2);
+
+                        // Make sure the split point is apropriate.
+                        uint64_t position =
+                            CScriptNum(stacktop(-1), fRequireMinimal).getint();
+                        if (position > data.size()) {
+                            return set_error(serror,
+                                             SCRIPT_ERR_INVALID_SPLIT_RANGE);
+                        }
+
+                        // Prepare the results in their own buffer as `data`
+                        // will be invalidated.
+                        valtype n1(data.begin(), data.begin() + position);
+                        valtype n2(data.begin() + position, data.end());
+
+                        // Replace existing stack values by the new values.
+                        stacktop(-2) = std::move(n1);
+                        stacktop(-1) = std::move(n2);
+                    } break;
+
+                    //
+                    // Conversion operations
+                    //
+                    case OP_NUM2BIN: {
+                        // (in size -- out)
+                        if (stack.size() < 2) {
+                            return set_error(
+                                serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                        }
+
+                        uint64_t size =
+                            CScriptNum(stacktop(-1), fRequireMinimal).getint();
+                        if (size > MAX_SCRIPT_ELEMENT_SIZE) {
+                            return set_error(serror, SCRIPT_ERR_PUSH_SIZE);
+                        }
+
+                        popstack(stack);
+                        valtype &rawnum = stacktop(-1);
+
+                        // Try to see if we can fit that number in the number of
+                        // byte requested.
+                        CScriptNum::MinimallyEncode(rawnum);
+                        if (rawnum.size() > size) {
+                            // We definitively cannot.
+                            return set_error(serror,
+                                             SCRIPT_ERR_IMPOSSIBLE_ENCODING);
+                        }
+
+                        // We already have an element of the right size, we
+                        // don't need to do anything.
+                        if (rawnum.size() == size) {
+                            break;
+                        }
+
+                        uint8_t signbit = 0x00;
+                        if (rawnum.size() > 0) {
+                            signbit = rawnum.back() & 0x80;
+                            rawnum[rawnum.size() - 1] &= 0x7f;
+                        }
+
+                        rawnum.reserve(size);
+                        while (rawnum.size() < size - 1) {
+                            rawnum.push_back(0x00);
+                        }
+
+                        rawnum.push_back(signbit);
+                    } break;
+
+                    case OP_BIN2NUM: {
+                        // (in -- out)
+                        if (stack.size() < 1) {
+                            return set_error(
+                                serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                        }
+
+                        valtype &n = stacktop(-1);
+                        CScriptNum::MinimallyEncode(n);
+
+                        // The resulting number must be a valid number.
+                        if (!CScriptNum::IsMinimallyEncoded(n)) {
+                            return set_error(serror,
+                                             SCRIPT_ERR_INVALID_NUMBER_RANGE);
+                        }
+                    } break;
+
                     default:
                         return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
                 }
+            }
 
             // Size limits
             if (stack.size() + altstack.size() > 1000) {
@@ -1267,8 +1466,8 @@ public:
         }
         // Serialize the nSequence
         if (nInput != nIn &&
-            (sigHashType.getBaseSigHashType() == BaseSigHashType::SINGLE ||
-             sigHashType.getBaseSigHashType() == BaseSigHashType::NONE)) {
+            (sigHashType.getBaseType() == BaseSigHashType::SINGLE ||
+             sigHashType.getBaseType() == BaseSigHashType::NONE)) {
             // let the others update at will
             ::Serialize(s, (int)0);
         } else {
@@ -1279,7 +1478,7 @@ public:
     /** Serialize an output of txTo */
     template <typename S>
     void SerializeOutput(S &s, unsigned int nOutput) const {
-        if (sigHashType.getBaseSigHashType() == BaseSigHashType::SINGLE &&
+        if (sigHashType.getBaseType() == BaseSigHashType::SINGLE &&
             nOutput != nIn) {
             // Do not lock-in the txout payee at other indices as txin
             ::Serialize(s, CTxOut());
@@ -1301,9 +1500,9 @@ public:
         }
         // Serialize vout
         unsigned int nOutputs =
-            (sigHashType.getBaseSigHashType() == BaseSigHashType::NONE)
+            (sigHashType.getBaseType() == BaseSigHashType::NONE)
                 ? 0
-                : ((sigHashType.getBaseSigHashType() == BaseSigHashType::SINGLE)
+                : ((sigHashType.getBaseType() == BaseSigHashType::SINGLE)
                        ? nIn + 1
                        : txTo.vout.size());
         ::WriteCompactSize(s, nOutputs);
@@ -1352,6 +1551,14 @@ uint256 SignatureHash(const CScript &scriptCode, const CTransaction &txTo,
                       unsigned int nIn, SigHashType sigHashType,
                       const Amount amount,
                       const PrecomputedTransactionData *cache, uint32_t flags) {
+    if (flags & SCRIPT_ENABLE_REPLAY_PROTECTION) {
+        // Legacy chain's value for fork id must be of the form 0xffxxxx.
+        // By xoring with 0xdead, we ensure that the value will be different
+        // from the original one, even if it already starts with 0xff.
+        uint32_t newForkValue = sigHashType.getForkValue() ^ 0xdead;
+        sigHashType = sigHashType.withForkValue(0xff0000 | newForkValue);
+    }
+
     if (sigHashType.hasForkId() && (flags & SCRIPT_ENABLE_SIGHASH_FORKID)) {
         uint256 hashPrevouts;
         uint256 hashSequence;
@@ -1362,16 +1569,15 @@ uint256 SignatureHash(const CScript &scriptCode, const CTransaction &txTo,
         }
 
         if (!sigHashType.hasAnyoneCanPay() &&
-            (sigHashType.getBaseSigHashType() != BaseSigHashType::SINGLE) &&
-            (sigHashType.getBaseSigHashType() != BaseSigHashType::NONE)) {
+            (sigHashType.getBaseType() != BaseSigHashType::SINGLE) &&
+            (sigHashType.getBaseType() != BaseSigHashType::NONE)) {
             hashSequence = cache ? cache->hashSequence : GetSequenceHash(txTo);
         }
 
-        if ((sigHashType.getBaseSigHashType() != BaseSigHashType::SINGLE) &&
-            (sigHashType.getBaseSigHashType() != BaseSigHashType::NONE)) {
+        if ((sigHashType.getBaseType() != BaseSigHashType::SINGLE) &&
+            (sigHashType.getBaseType() != BaseSigHashType::NONE)) {
             hashOutputs = cache ? cache->hashOutputs : GetOutputsHash(txTo);
-        } else if ((sigHashType.getBaseSigHashType() ==
-                    BaseSigHashType::SINGLE) &&
+        } else if ((sigHashType.getBaseType() == BaseSigHashType::SINGLE) &&
                    (nIn < txTo.vout.size())) {
             CHashWriter ss(SER_GETHASH, 0);
             ss << txTo.vout[nIn];
@@ -1409,7 +1615,7 @@ uint256 SignatureHash(const CScript &scriptCode, const CTransaction &txTo,
     }
 
     // Check for invalid use of SIGHASH_SINGLE
-    if ((sigHashType.getBaseSigHashType() == BaseSigHashType::SINGLE) &&
+    if ((sigHashType.getBaseType() == BaseSigHashType::SINGLE) &&
         (nIn >= txTo.vout.size())) {
         //  nOut out of range
         return one;
