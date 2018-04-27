@@ -26,6 +26,7 @@ libbitcoin-consensus.pc
 bin
 obj
 
+
 /build
 __pycache__/
 .idea/
