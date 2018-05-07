@@ -222,6 +222,16 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
         script_flags |= SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
     if ((flags & verify_flags_checksequenceverify) != 0)
         script_flags |= SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
+    if ((flags & verify_flags_witness) != 0)
+        script_flags |= SCRIPT_VERIFY_WITNESS;
+    if ((flags & verify_flags_discourage_upgradable_witness_program) != 0)
+        script_flags |= SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM;
+    if ((flags & verify_flags_minimal_if) != 0)
+        script_flags |= SCRIPT_VERIFY_MINIMALIF;
+    if ((flags & verify_flags_null_fail) != 0)
+        script_flags |= SCRIPT_VERIFY_NULLFAIL;
+    if ((flags & verify_flags_witness_public_key_compressed) != 0)
+        script_flags |= SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
 
 #if ! defined(BITPRIM_CURRENCY_BCH)
     if ((flags & verify_flags_witness) != 0)
@@ -262,6 +272,9 @@ verify_result_type verify_script(const unsigned char* transaction,
     size_t prevout_script_size, unsigned int tx_input_index,
     unsigned int flags, int64_t amount /* = 0 */)
 {
+    if (prevout_value > INT64_MAX)
+        throw std::invalid_argument("value");
+
     if (transaction_size > 0 && transaction == NULL)
         throw std::invalid_argument("transaction");
 
@@ -294,6 +307,7 @@ verify_result_type verify_script(const unsigned char* transaction,
 
     CScript output_script(prevout_script, prevout_script + prevout_script_size);
     const auto& input_script = tx->vin[tx_input_index].scriptSig;
+    const auto witness_stack = &tx->vin[tx_input_index].scriptWitness;
 
     // See libbitcoin-blockchain : validate.cpp :
     // if (!output_script.run(input.script, current_tx, input_index, flags))...
