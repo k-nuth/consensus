@@ -186,32 +186,34 @@ typedef enum verify_flags_type
     /**
      * Verify CHECKSEQUENCEVERIFY, see BIP112 for details.
      */
-    verify_flags_checksequenceverify = (1U << 10),
+    verify_flags_checksequenceverify = (1U << 10)
 
+#if ! defined(BITPRIM_CURRENCY_BCH)
     /**
      * SCRIPT_VERIFY_WITNESS (bip141).
      */
-    verify_flags_witness = (1U << 11),
+    , verify_flags_witness = (1U << 11)
 
     /**
      * SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM (bip141 policy).
      */
-    verify_flags_discourage_upgradable_witness_program = (1U << 12),
+    , verify_flags_discourage_upgradable_witness_program = (1U << 12)
 
     /**
      * SCRIPT_VERIFY_MINIMALIF (bip141 p2wsh policy).
      */
-    verify_flags_minimal_if = (1U << 13),
+    , verify_flags_minimal_if = (1U << 13)
 
     /**
      * SCRIPT_VERIFY_NULLFAIL (bip141 global policy, bip146 soft fork).
      */
-    verify_flags_null_fail = (1U << 14),
+    , verify_flags_null_fail = (1U << 14)
 
     /**
      * SCRIPT_VERIFY_WITNESS_PUBKEYTYPE (bip141/bip143 p2wsh/p2wpkh policy).
      */
-    verify_flags_witness_public_key_compressed = (1U << 15)
+    , verify_flags_witness_public_key_compressed = (1U << 15)
+#endif
 
 #ifdef BITPRIM_CURRENCY_BCH
     /**
