@@ -165,7 +165,19 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_tx__tx_invalid)
     const verify_result result = test_verify("42", "42");
     BOOST_REQUIRE_EQUAL(result, verify_result_tx_invalid);
 }
+#ifdef BITPRIM_CURRENCY_BCH
+BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_input__tx_input_invalid)
+{
+    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 1);
+    BOOST_REQUIRE_EQUAL(result, verify_result_tx_input_invalid);
+}
 
+BOOST_AUTO_TEST_CASE(consensus__script_verify__undersized_tx__tx_invalid)
+{
+    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0, verify_flags_p2sh, -1);
+    BOOST_REQUIRE_EQUAL(result, verify_result_tx_invalid);
+}
+#else
 BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_input__tx_input_invalid)
 {
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0, 1);
@@ -177,7 +189,7 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__undersized_tx__tx_invalid)
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0, 0, verify_flags_p2sh, -1);
     BOOST_REQUIRE_EQUAL(result, verify_result_tx_invalid);
 }
-
+#endif
 BOOST_AUTO_TEST_CASE(consensus__script_verify__oversized_tx__tx_size_invalid)
 {
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0, 0, verify_flags_p2sh, +1);
@@ -195,7 +207,7 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true)
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT);
     BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
 }
-
+#ifdef BITPRIM_CURRENCY_BCH
 //TODO: just for Bitcoin Cash
 BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true__non_forkid)
 {
@@ -229,6 +241,7 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true__forkid_long_int)
 
     const verify_result result = test_verify(CONSENSUS_FORKID_TX, CONSENSUS_FORKID_TX_PREV_SCRIPT,0,flags,0,CONSENSUS_FORKID_TX_AMMOUT);
 }
+#else
 // TODO: BTC test
 BOOST_AUTO_TEST_CASE(consensus__script_verify__valid_nested_p2wpkh__true)
 {
@@ -245,7 +258,7 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__valid_nested_p2wpkh__true)
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_WITNESS_TX, CONSENSUS_SCRIPT_VERIFY_WITNESS_PREVOUT_SCRIPT, value, index, flags);
     BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
 }
-
+#endif
 // TODO: create negative test vector.
 //BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid__false)
 //{
