@@ -226,14 +226,15 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
 #if ! defined(BITPRIM_CURRENCY_BCH)
     if ((flags & verify_flags_witness) != 0)
         script_flags |= SCRIPT_VERIFY_WITNESS;
-#endif //! defined(BITPRIM_CURRENCY_BCH)
-
     if ((flags & verify_flags_discourage_upgradable_witness_program) != 0)
         script_flags |= SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM;
     if ((flags & verify_flags_minimal_if) != 0)
         script_flags |= SCRIPT_VERIFY_MINIMALIF;
     if ((flags & verify_flags_null_fail) != 0)
         script_flags |= SCRIPT_VERIFY_NULLFAIL;
+    if ((flags & verify_flags_witness_public_key_compressed) != 0)
+        script_flags |= SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
+#endif //! defined(BITPRIM_CURRENCY_BCH)
 
 #if ! defined(BITPRIM_CURRENCY_BCH)
     if ((flags & verify_flags_witness_public_key_compressed) != 0)
@@ -262,6 +263,9 @@ verify_result_type verify_script(const unsigned char* transaction,
     size_t prevout_script_size, unsigned int tx_input_index,
     unsigned int flags, int64_t amount /* = 0 */)
 {
+    if (amount > INT64_MAX)
+        throw std::invalid_argument("value");
+
     if (transaction_size > 0 && transaction == NULL)
         throw std::invalid_argument("transaction");
 

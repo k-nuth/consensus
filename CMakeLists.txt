@@ -572,10 +572,12 @@ if (WITH_TESTS)
  
   _group_sources(bitprim_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
-  _add_tests(bitprim_consensus_test "consensus"
-    consensus__script_error_to_verify_result
+  _add_tests(bitprim_consensus_test
+    #consensus__script_error_to_verify_result
     consensus__script_verify
-    consensus__verify_flags_to_script_flags)
+    #consensus__verify_flags_to_script_flags
+          )
+
 
 endif()
 
