@@ -77,7 +77,7 @@ class BitprimConsensusConan(ConanFile):
     package_files = "build/lbitprim-consensus.a"
 
     requires = (("boost/1.66.0@bitprim/stable"),
-                ("secp256k1/0.3@bitprim/%s" % get_channel()),
+                ("secp256k1/0.3@bitprim/stable"),
                 ("bitprim-core/0.10.0@bitprim/%s" % get_channel()))
 
     @property
