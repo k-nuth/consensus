@@ -23,7 +23,7 @@ $ sudo make install
 
 # About
 
-This library includes the following 33 files considered to be bitcoin script consensus-critical. These files are identical to those used in version 0.14.0 of bitcoin-core.
+This library includes the following 33 files considered to be bitcoin script consensus-critical. These files are identical to those used in version 0.15.0 of bitcoin core.
 
 ```
 amount.h
