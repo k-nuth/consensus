@@ -22,7 +22,6 @@ branches:
     - master
     - dev
     - /^v\d+\.\d+\.\d+$/
-    - feature_merge_abc_0171
 
 build: false
 
