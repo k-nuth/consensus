@@ -1,10 +1,7 @@
-# Bitprim Consensus <a target="_blank" href="https://gitter.im/bitprim/Lobby">![Gitter Chat][badge.Gitter]</a>
+# Bitprim Consensus <a target="_blank" href="http://semver.org">![Version][badge.version]</a> <a target="_blank" href="https://travis-ci.org/bitprim/bitprim-consensus">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/bitprim/bitprim-consensus">![Appveyor status][badge.Appveyor]</a> <a target="_blank" href="https://gitter.im/bitprim/Lobby">![Gitter Chat][badge.Gitter]</a>
 
-*Bitcoin consensus library*
+> Cryptocurrencies consensus library
 
-| **master(linux/osx)** | **dev(linux/osx)**   | **master(windows)**   | **dev(windows)** |
-|:------:|:-:|:-:|:-:|
-| [![Build Status](https://travis-ci.org/bitprim/bitprim-consensus.svg)](https://travis-ci.org/bitprim/bitprim-consensus)       | [![Build StatusB](https://travis-ci.org/bitprim/bitprim-consensus.svg?branch=dev)](https://travis-ci.org/bitprim/bitprim-consensus?branch=dev)  | [![Appveyor Status](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-consensus?svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-consensus)  | [![Appveyor StatusB](https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-consensus?branch=dev&svg=true)](https://ci.appveyor.com/project/bitprim/bitprim-consensus?branch=dev)  |
 
 ## Installation
 Make sure you have installed [bitprim-core](https://github.com/bitprim/bitprim-core) beforehand according to its respective build instructions.
@@ -67,4 +64,10 @@ Bitprim natively implements consensus checks that are redundant with `bitprim-co
 
 The `bitprim-blockchain` configuration provides the `--with-consensus` option. This allows the developer to select either `bitprim-core` native or `bitprim-consensus` checks. The option defaults to `yes` so that by default all `bitprim-node` and `bitprim-server` builds use the same consensus checks as a Satoshi node.
 
+
+<!-- Links -->
+[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-consensus?svg=true&branch=dev
 [badge.Gitter]: https://img.shields.io/badge/gitter-join%20chat-blue.svg
+[badge.Travis]: https://travis-ci.org/bitprim/bitprim-consensus.svg?branch=master
+[badge.version]: https://badge.fury.io/gh/bitprim%2Fbitprim-consensus.svg
+

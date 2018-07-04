@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 Bitprim developers (see AUTHORS)
+# Copyright (c) 2017-2018 Bitprim Inc.
 #
 # This file is part of Bitprim.
 #
@@ -18,30 +18,11 @@
 #
 
 import os
+# import sys
 from conans import ConanFile, CMake
 from conans import __version__ as conan_version
 from conans.model.version import Version
-
-
-def option_on_off(option):
-    return "ON" if option else "OFF"
-
-def get_content(file_name):
-    # print(os.path.dirname(os.path.abspath(__file__)))
-    # print(os.getcwd())
-    # print(file_name)
-    file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), file_name)
-    with open(file_path, 'r') as f:
-        return f.read().replace('\n', '').replace('\r', '')
-
-def get_version():
-    return get_content('conan_version')
-
-def get_channel():
-    return get_content('conan_channel')
-
-def get_conan_req_version():
-    return get_content('conan_req_version')
+from ci_utils import option_on_off, get_version, get_conan_req_version, march_conan_manip, pass_march_to_compiler
 
 class BitprimConsensusConan(ConanFile):
     name = "bitprim-consensus"
@@ -51,15 +32,18 @@ class BitprimConsensusConan(ConanFile):
     description = "Bitcoin Consensus Library"
     settings = "os", "compiler", "build_type", "arch"
 
-    if conan_version < Version(get_conan_req_version()):
-        raise Exception ("Conan version should be greater or equal than %s" % (get_conan_req_version(), ))
+    if Version(conan_version) < Version(get_conan_req_version()):
+        raise Exception ("Conan version should be greater or equal than %s. Detected: %s." % (get_conan_req_version(), conan_version))
 
     options = {"shared": [True, False],
                "fPIC": [True, False],
                "with_tests": [True, False],
                "with_java": [True, False],
                "with_python": [True, False],
-               "currency": ['BCH', 'BTC', 'LTC']
+               "currency": ['BCH', 'BTC', 'LTC'],
+               "microarchitecture": "ANY", #["x86_64", "haswell", "ivybridge", "sandybridge", "bulldozer", ...]
+               "fix_march": [True, False],
+               "verbose": [True, False]
     }
 
     default_options = "shared=False", \
@@ -67,18 +51,17 @@ class BitprimConsensusConan(ConanFile):
         "with_tests=False", \
         "with_java=False", \
         "with_python=False", \
-        "currency=BCH"
+        "currency=BCH", \
+        "microarchitecture=_DUMMY_",  \
+        "fix_march=False", \
+        "verbose=True"
 
     generators = "cmake"
-    build_policy = "missing"
 
-    exports = "conan_channel", "conan_version", "conan_req_version"
+    exports = "conan_*", "ci_utils/*"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-consensusConfig.cmake.in", "bitprimbuildinfo.cmake", "include/*", "test/*"
     package_files = "build/lbitprim-consensus.a"
-
-    requires = (("boost/1.66.0@bitprim/stable"),
-                ("secp256k1/0.3@bitprim/stable"),
-                ("bitprim-core/0.11.0@bitprim/%s" % get_channel()))
+    build_policy = "missing"
 
     @property
     def msvc_mt_build(self):
@@ -98,18 +81,41 @@ class BitprimConsensusConan(ConanFile):
         else:
             return self.options.shared
 
+    def requirements(self):
+        self.requires("boost/1.66.0@bitprim/stable")
+        self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
+        self.requires("bitprim-core/0.X@%s/%s" % (self.user, self.channel))
+
     def config_options(self):
-        # self.output.info('def config_options(self):')
+        if self.settings.arch != "x86_64":
+            self.output.info("microarchitecture is disabled for architectures other than x86_64, your architecture: %s" % (self.settings.arch,))
+            self.options.remove("microarchitecture")
+            self.options.remove("fix_march")
+
         if self.settings.compiler == "Visual Studio":
             self.options.remove("fPIC")
-
             if self.options.shared and self.msvc_mt_build:
                 self.options.remove("shared")
+
+    def configure(self):
+        if self.settings.arch == "x86_64" and self.options.microarchitecture == "_DUMMY_":
+            del self.options.fix_march
+            # self.options.remove("fix_march")
+            # raise Exception ("fix_march option is for using together with microarchitecture option.")
+
+        if self.settings.arch == "x86_64":
+            march_conan_manip(self)
+            self.options["*"].microarchitecture = self.options.microarchitecture
+
+        self.options["*"].currency = self.options.currency
+        self.output.info("Compiling for currency: %s" % (self.options.currency,))
 
     def package_id(self):
         self.info.options.with_tests = "ANY"
         self.info.options.with_java = "ANY"
         self.info.options.with_python = "ANY"
+        self.info.options.verbose = "ANY"
+        self.info.options.fix_march = "ANY"
 
         #For Bitprim Packages libstdc++ and libstdc++11 are the same
         if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
@@ -118,12 +124,9 @@ class BitprimConsensusConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-
         cmake.definitions["USE_CONAN"] = option_on_off(True)
         cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
-        # cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = option_on_off(False)
-        cmake.verbose = False
-
+        cmake.verbose = self.options.verbose
         cmake.definitions["ENABLE_SHARED"] = option_on_off(self.is_shared)
         cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.fPIC_enabled)
 
@@ -131,8 +134,6 @@ class BitprimConsensusConan(ConanFile):
         cmake.definitions["WITH_JAVA"] = option_on_off(self.options.with_java)
         cmake.definitions["WITH_PYTHON"] = option_on_off(self.options.with_python)
 
-        # print("self.options.currency")
-        # print(self.options.currency)
         cmake.definitions["CURRENCY"] = self.options.currency
 
         if self.settings.compiler != "Visual Studio":
@@ -141,7 +142,10 @@ class BitprimConsensusConan(ConanFile):
 
         if self.settings.compiler == "Visual Studio":
             cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " /DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE"
-        
+
+        cmake.definitions["MICROARCHITECTURE"] = self.options.microarchitecture
+        cmake.definitions["BITPRIM_PROJECT_VERSION"] = self.version
+
         if self.settings.compiler == "gcc":
             if float(str(self.settings.compiler.version)) >= 5:
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
@@ -151,8 +155,8 @@ class BitprimConsensusConan(ConanFile):
             if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
                 cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
 
+        pass_march_to_compiler(self, cmake)
 
-        cmake.definitions["BITPRIM_BUILD_NUMBER"] = os.getenv('BITPRIM_BUILD_NUMBER', '-')
         cmake.configure(source_dir=self.source_folder)
         cmake.build()
 

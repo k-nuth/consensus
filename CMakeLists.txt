@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 Bitprim developers (see AUTHORS)
+# Copyright (c) 2017-2018 Bitprim Inc.
 #
 # This file is part of Bitprim.
 #
@@ -22,17 +22,10 @@ cmake_minimum_required(VERSION 3.4)
 # bitprim-consensus
 #==============================================================================
 project(bitprim-consensus
-  VERSION 0.11.0
+  VERSION 0
   LANGUAGES CXX C)
+  # VERSION 0.11.0
 
-# if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-#   if (NOT NOT_USE_CPP11_ABI)
-#     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-#   else()
-#     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-#   endif()
-#   set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-macro-redefined")
-# endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -60,6 +53,7 @@ option(ENABLE_POSITION_INDEPENDENT_CODE "Enable POSITION_INDEPENDENT_CODE proper
 
 # Process options.
 #==============================================================================
+
 # Implement --with-tests and declare WITH_TESTS.
 #------------------------------------------------------------------------------
 option(WITH_TESTS "Compile with unit tests." ON)
@@ -82,8 +76,15 @@ endif()
 
 
 
-set(BITPRIM_BUILD_NUMBER "-" CACHE STRING "Specify the Bitprim Build Number.")
-# message(${BITPRIM_BUILD_NUMBER})
+set(BITPRIM_PROJECT_VERSION "-" CACHE STRING "Specify the Bitprim Project Version.")
+# message(${BITPRIM_PROJECT_VERSION})
+
+
+set(MICROARCHITECTURE "x86_64" CACHE STRING "Specify the Cryptocurrency (x86_64|...).")
+message( STATUS "Bitprim: Compiling for ${MICROARCHITECTURE}")
+# add_definitions(-DBITPRIM_MICROARCHITECTURE=${MICROARCHITECTURE})
+# add_definitions(-DBITPRIM_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
+
 
 set(CURRENCY "BCH" CACHE STRING "Specify the Cryptocurrency (BCH|BTC|LTC).")
 
@@ -106,7 +107,8 @@ include(CheckCXXSymbolExists)
 
 # Including common functions
 #------------------------------------------------------------------------------
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/ci_utils/cmake)
+
 include(BitprimTools)
 
 
@@ -224,17 +226,9 @@ _check_has_decl(sys/endian.h HAVE_SYS_ENDIAN_H htobe64 HAVE_DECL_HTOBE64)
 #==============================================================================
 # Only if enabled
 #------------------------------------------------------------------------------
-# if (NOT NO_CONAN_AT_ALL)
-#   if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-#       include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-#       conan_basic_setup()
-#   else()
-#       message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
-#   endif()
-# endif()
 
-if (EXISTS ${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
-    include(${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
+if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
+    include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
 else()
     message( STATUS "bitprimbuildinfo doent exists")
 endif()
@@ -263,27 +257,22 @@ if (NO_CONAN_AT_ALL)
   endif()
 endif()
 
-# if (UNIX)
-#   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/local/lib/cmake")
-# elseif (WIN32)
-#   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "cmake")
-# endif()
 
 # message("FER-USE_CONAN")
 # message(${USE_CONAN})
 
 if (NOT USE_CONAN)
 #   message("Entro!!!")
-  # Require bitprim-core of at least version 0.11.0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
+  # Require bitprim-core of at least version 0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET bitprim-core)
-    find_package(bitprim-core 0.11.0 REQUIRED)
+    find_package(bitprim-core 0 REQUIRED)
   endif()
 
-  # Require secp256k1 of at least version 0.3.0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+  # Require secp256k1 of at least version 0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET secp256k1)
-    find_package(secp256k1 0.3.0 REQUIRED)
+    find_package(secp256k1 0 REQUIRED)
   endif()
 endif (NOT USE_CONAN)
 
@@ -450,7 +439,7 @@ else()
   target_include_directories(bitprim-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
 endif()
 
-target_compile_definitions(bitprim-consensus-clone PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"")
+target_compile_definitions(bitprim-consensus-clone PUBLIC -DBITPRIM_PROJECT_VERSION="\\"${BITPRIM_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
   
 
 if (NOT USE_CONAN)
@@ -495,7 +484,8 @@ target_include_directories(bitprim-consensus PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_compile_definitions(bitprim-consensus PUBLIC -DBITPRIM_BUILD_NUMBER="\\"${BITPRIM_BUILD_NUMBER}\\"")
+target_compile_definitions(bitprim-consensus PUBLIC -DBITPRIM_PROJECT_VERSION="\\"${BITPRIM_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
+
 
 if (NOT ENABLE_SHARED)
   target_compile_definitions(bitprim-consensus PUBLIC -DBCK_STATIC)

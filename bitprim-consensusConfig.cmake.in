@@ -10,4 +10,4 @@ include("${BITPRIM_CONSENSUS_CMAKE_DIR}/bitprim-consensusTargets.cmake")
 set(BITPRIM_CONSENSUS_LIBRARIES bitprim-consensus)
 
 # find_package(bitprim-protocol 3.0.0 REQUIRED)
-find_package(secp256k1 0.0.01 REQUIRED)
+find_package(secp256k1 0 REQUIRED)
