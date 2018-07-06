@@ -22,7 +22,7 @@ from conans import CMake
 from ci_utils import option_on_off, get_version, get_conan_req_version, march_conan_manip, pass_march_to_compiler
 from ci_utils import BitprimConanFile
 
-class BitprimConsensusConan(ConanFile):
+class BitprimConsensusConan(BitprimConanFile):
     name = "bitprim-consensus"
     # version = get_version()
     license = "http://www.boost.org/users/license.html"
