@@ -41,7 +41,10 @@ class BitprimConsensusConan(BitprimConanFile):
                "currency": ['BCH', 'BTC', 'LTC'],
                "microarchitecture": "ANY", #["x86_64", "haswell", "ivybridge", "sandybridge", "bulldozer", ...]
                "fix_march": [True, False],
-               "verbose": [True, False]
+               "verbose": [True, False],
+               "use_domain": [True, False],
+               "cxxflags": "ANY",
+               "cflags": "ANY",
     }
 
     default_options = "shared=False", \
@@ -52,7 +55,10 @@ class BitprimConsensusConan(BitprimConanFile):
         "currency=BCH", \
         "microarchitecture=_DUMMY_",  \
         "fix_march=False", \
-        "verbose=False"
+        "verbose=False", \
+        "use_domain=False", \
+        "cxxflags=_DUMMY_", \
+        "cflags=_DUMMY_"
 
     generators = "cmake"
     exports = "conan_*", "ci_utils/*"
@@ -64,10 +70,12 @@ class BitprimConsensusConan(BitprimConanFile):
     def requirements(self):
         self.requires("boost/1.66.0@bitprim/stable")
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
-        self.requires("bitprim-core/0.X@%s/%s" % (self.user, self.channel))
 
-        # self.bitprim_requires(["secp256k1/0.X@%s/%s",
-        #                        "bitprim-core/0.X@%s/%s"])
+        # if self.options.use_domain:
+        #     self.requires("bitprim-domain/0.X@%s/%s" % (self.user, self.channel))
+        # else:
+        #     self.requires("bitprim-core/0.X@%s/%s" % (self.user, self.channel))
+
 
     def config_options(self):
         if self.settings.arch != "x86_64":
@@ -99,6 +107,8 @@ class BitprimConsensusConan(BitprimConanFile):
         self.info.options.with_python = "ANY"
         self.info.options.verbose = "ANY"
         self.info.options.fix_march = "ANY"
+        self.info.options.cxxflags = "ANY"
+        self.info.options.cflags = "ANY"
 
         #For Bitprim Packages libstdc++ and libstdc++11 are the same
         if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
@@ -125,6 +135,12 @@ class BitprimConsensusConan(BitprimConanFile):
 
         if self.settings.compiler == "Visual Studio":
             cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " /DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE"
+
+        if self.options.cxxflags != "_DUMMY_":
+            cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " " + str(self.options.cxxflags)
+        if self.options.cflags != "_DUMMY_":
+            cmake.definitions["CONAN_C_FLAGS"] = cmake.definitions.get("CONAN_C_FLAGS", "") + " " + str(self.options.cflags)
+
 
         cmake.definitions["MICROARCHITECTURE"] = self.options.microarchitecture
         cmake.definitions["BITPRIM_PROJECT_VERSION"] = self.version
