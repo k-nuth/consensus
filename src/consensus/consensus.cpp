@@ -238,11 +238,6 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
         script_flags |= SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
 #endif //! defined(BITPRIM_CURRENCY_BCH)
 
-#if ! defined(BITPRIM_CURRENCY_BCH)
-    if ((flags & verify_flags_witness_public_key_compressed) != 0)
-        script_flags |= SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
-#endif //! defined(BITPRIM_CURRENCY_BCH)
-
 #if defined(BITPRIM_CURRENCY_BCH)
     if ((flags & verify_flags_script_enable_sighash_forkid) != 0)
         script_flags |= SCRIPT_ENABLE_SIGHASH_FORKID;
