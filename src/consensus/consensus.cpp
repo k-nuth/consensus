@@ -162,10 +162,12 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
         // Softfork safeness
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS:
             return verify_result_discourage_upgradable_nops;
+
+#if ! defined(BITPRIM_CURRENCY_BCH)
+        // Softfork safeness
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM:
             return verify_result_discourage_upgradable_witness_program;
 
-#if ! defined(BITPRIM_CURRENCY_BCH)
         // Segregated witness
         case SCRIPT_ERR_WITNESS_PROGRAM_WRONG_LENGTH:
             return verify_result_witness_program_wrong_length;

@@ -354,6 +354,8 @@ if (${CURRENCY} STREQUAL "BCH")
     src/clone-abc/prevector.h
     src/clone-abc/pubkey.cpp
     src/clone-abc/pubkey.h
+    src/clone-abc/feerate.cpp
+    src/clone-abc/feerate.h
     src/clone-abc/serialize.h
     src/clone-abc/tinyformat.h
     src/clone-abc/uint256.cpp
@@ -376,11 +378,15 @@ if (${CURRENCY} STREQUAL "BCH")
     src/clone-abc/crypto/sha512.h
     src/clone-abc/primitives/transaction.cpp
     src/clone-abc/primitives/transaction.h
+    src/clone-abc/primitives/txid.h
     src/clone-abc/script/interpreter.cpp
     src/clone-abc/script/interpreter.h
     src/clone-abc/script/script.cpp
     src/clone-abc/script/script.h
+    src/clone-abc/script/script_flags.h
     src/clone-abc/script/script_error.h
+    src/clone-abc/script/sigencoding.h
+    src/clone-abc/script/sigencoding.cpp
   )
 
 else()

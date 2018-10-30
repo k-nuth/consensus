@@ -3,8 +3,8 @@ import os.path
 from shutil import copyfile
 
 
-PATH = '/home/fernando/dev/bitprim-consensus/src/clone-abc/'
-SOURCE_PATH = '/home/fernando/dev/bitcoin-abc/src/'
+PATH = '/home/hanchon/devel/hardforkchanges/bitprim-consensus/src/clone-abc/'
+SOURCE_PATH = '/home/hanchon/devel/hardforkchanges/bitcoin-abc/src/'
 
 # result = [os.path.join(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames if os.path.splitext(f)[1] == '.txt']
 # result = [os.path.join(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames]
