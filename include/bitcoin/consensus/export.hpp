@@ -227,9 +227,9 @@ typedef enum verify_flags_type
     , verify_flags_script_enable_replay_protection = (1U << 17)
 
     /**
-     * SCRIPT_ENABLE_MONOLITH_OPCODES (bitcoin-cash).
+     * SCRIPT_ENABLE_CHECKDATASIG (bitcoin-cash).
      */
-    , verify_flags_script_enable_monolith_opcodes = (1U << 18)
+    , verify_flags_script_enable_checkdatasig = (1U << 18)
 #endif
 
 } verify_flags;

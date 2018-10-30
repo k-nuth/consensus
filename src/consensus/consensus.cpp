@@ -248,8 +248,8 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
     if ((flags & verify_flags_script_enable_replay_protection) != 0)
         script_flags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
 
-    if ((flags & verify_flags_script_enable_monolith_opcodes) != 0)
-        script_flags |= SCRIPT_ENABLE_MONOLITH_OPCODES;
+    if ((flags & verify_flags_script_enable_checkdatasig) != 0)
+        script_flags |= SCRIPT_ENABLE_CHECKDATASIG;
 #endif
 
     return script_flags;
