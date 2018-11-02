@@ -68,7 +68,12 @@ class BitprimConsensusConan(BitprimConanFile):
 
 
     def requirements(self):
-        self.requires("boost/1.66.0@bitprim/stable")
+
+        if self.options.use_domain:
+            self.requires("boost/1.68.0@bitprim/stable")
+        else:
+            self.requires("boost/1.66.0@bitprim/stable")
+
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
 
         # if self.options.use_domain:
