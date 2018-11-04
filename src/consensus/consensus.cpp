@@ -162,10 +162,12 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
         // Softfork safeness
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS:
             return verify_result_discourage_upgradable_nops;
+
+#if ! defined(BITPRIM_CURRENCY_BCH)
+        // Softfork safeness
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM:
             return verify_result_discourage_upgradable_witness_program;
 
-#if ! defined(BITPRIM_CURRENCY_BCH)
         // Segregated witness
         case SCRIPT_ERR_WITNESS_PROGRAM_WRONG_LENGTH:
             return verify_result_witness_program_wrong_length;
@@ -236,11 +238,6 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
         script_flags |= SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
 #endif //! defined(BITPRIM_CURRENCY_BCH)
 
-#if ! defined(BITPRIM_CURRENCY_BCH)
-    if ((flags & verify_flags_witness_public_key_compressed) != 0)
-        script_flags |= SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
-#endif //! defined(BITPRIM_CURRENCY_BCH)
-
 #if defined(BITPRIM_CURRENCY_BCH)
     if ((flags & verify_flags_script_enable_sighash_forkid) != 0)
         script_flags |= SCRIPT_ENABLE_SIGHASH_FORKID;
@@ -248,8 +245,8 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
     if ((flags & verify_flags_script_enable_replay_protection) != 0)
         script_flags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
 
-    if ((flags & verify_flags_script_enable_monolith_opcodes) != 0)
-        script_flags |= SCRIPT_ENABLE_MONOLITH_OPCODES;
+    if ((flags & verify_flags_script_enable_checkdatasig) != 0)
+        script_flags |= SCRIPT_ENABLE_CHECKDATASIG;
 #endif
 
     return script_flags;
