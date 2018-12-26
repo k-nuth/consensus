@@ -59,6 +59,7 @@ test_script:
   # - git fetch --unshallow
   - git fetch origin master:master
   - git config core.autocrlf
+  - findstr /r "\r\n" *.*
 
   # - dir C:\MinGW
   - set PATH=C:\MinGW\bin;%PATH%
