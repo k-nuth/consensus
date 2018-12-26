@@ -60,6 +60,7 @@ test_script:
   - git fetch origin master:master
   - git config core.autocrlf
 
+  - python crlf.py
   - findstr /r "\r\n" *.py & exit 0
   - findstr /r "\r" *.py & exit 0
 
