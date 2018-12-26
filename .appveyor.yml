@@ -60,6 +60,7 @@ test_script:
   - git fetch origin master:master
   - git config core.autocrlf
   - findstr /r "\r\n" *.py
+  - findstr /r "\r" *.py
 
   # - dir C:\MinGW
   - set PATH=C:\MinGW\bin;%PATH%
