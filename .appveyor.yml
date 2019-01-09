@@ -40,7 +40,7 @@ environment:
     CONAN_STABLE_BRANCH_PATTERN: "master$" #"release/*"
 
 install:
-  - git config core.autocrlf
+  # - git config core.autocrlf
 
   - set PATH=%PATH%;%PYTHON%/Scripts/
   # - pip.exe install conan --upgrade > NUL
@@ -58,11 +58,11 @@ test_script:
   - git submodule update
   # - git fetch --unshallow
   - git fetch origin master:master
-  - git config core.autocrlf
 
-  - python crlf.py
-  - findstr /r "\r\n" *.py & exit 0
-  - findstr /r "\r" *.py & exit 0
+  # - git config core.autocrlf
+  # - python crlf.py
+  # - findstr /r "\r\n" *.py & exit 0
+  # - findstr /r "\r" *.py & exit 0
 
   # - dir C:\MinGW
   - set PATH=C:\MinGW\bin;%PATH%
