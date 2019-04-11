@@ -247,6 +247,12 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
 
     if ((flags & verify_flags_script_enable_checkdatasig) != 0)
         script_flags |= SCRIPT_ENABLE_CHECKDATASIG;
+
+    if ((flags & verify_flags_script_enable_schnorr) != 0)
+        script_flags |= SCRIPT_ENABLE_SCHNORR;
+
+    if ((flags & verify_flags_script_enable_segwit_recovery) != 0)
+        script_flags |= SCRIPT_ALLOW_SEGWIT_RECOVERY;
 #endif
 
     return script_flags;

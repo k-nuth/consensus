@@ -230,6 +230,17 @@ typedef enum verify_flags_type
      * SCRIPT_ENABLE_CHECKDATASIG (bitcoin-cash).
      */
     , verify_flags_script_enable_checkdatasig = (1U << 18)
+
+    /**
+     * SCRIPT_ENABLE_SCHNORR (bitcoin-cash).
+     */
+    , verify_flags_script_enable_schnorr = (1U << 19)
+
+    /**
+     * SCRIPT_ALLOW_SEGWIT_RECOVERY (bitcoin-cash).
+     */
+    , verify_flags_script_enable_segwit_recovery = (1U << 20)
+
 #endif
 
 } verify_flags;

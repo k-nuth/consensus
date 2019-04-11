@@ -57,7 +57,7 @@ class BitprimConsensusConan(BitprimConanFile):
         "microarchitecture=_DUMMY_",  \
         "fix_march=False", \
         "verbose=False", \
-        "use_domain=False", \
+        "use_domain=True", \
         "cxxflags=_DUMMY_", \
         "cflags=_DUMMY_", \
         "glibcxx_supports_cxx11_abi=_DUMMY_"
@@ -72,7 +72,7 @@ class BitprimConsensusConan(BitprimConanFile):
     def requirements(self):
 
         if self.options.use_domain:
-            self.requires("boost/1.68.0@bitprim/stable")
+            self.requires("boost/1.69.0@bitprim/stable")
         else:
             self.requires("boost/1.66.0@bitprim/stable")
 
@@ -105,7 +105,21 @@ class BitprimConsensusConan(BitprimConanFile):
 
         if self.settings.arch == "x86_64":
             march_conan_manip(self)
-            self.options["*"].microarchitecture = self.options.microarchitecture
+            self.options[""].microarchitecture = self.options.microarchitecture
+
+
+        # "enable_experimental=False", \
+        # "enable_endomorphism=False", \
+        # "enable_ecmult_static_precomputation=True", \
+        # "enable_module_ecdh=False", \
+        # "enable_module_schnorr=True", \
+        # "enable_module_recovery=True", \
+        # "enable_module_multiset=True", \
+        
+        if self.options.currency == 'BCH':
+            self.options["secp256k1"].enable_module_schnorr = True
+        else:
+            self.options["secp256k1"].enable_module_schnorr = False
 
         self.options["*"].currency = self.options.currency
         self.output.info("Compiling for currency: %s" % (self.options.currency,))
