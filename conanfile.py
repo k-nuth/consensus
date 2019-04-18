@@ -105,7 +105,7 @@ class BitprimConsensusConan(BitprimConanFile):
 
         if self.settings.arch == "x86_64":
             march_conan_manip(self)
-            self.options[""].microarchitecture = self.options.microarchitecture
+            self.options["*"].microarchitecture = self.options.microarchitecture
 
 
         # "enable_experimental=False", \
