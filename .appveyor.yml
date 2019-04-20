@@ -34,10 +34,21 @@ branches:
 build: false
 
 environment:
-    PYTHON: "C:\\Python27"
-    PYTHON_VERSION: "2.7.8"
-    PYTHON_ARCH: "32"
-    CONAN_STABLE_BRANCH_PATTERN: "master$" #"release/*"
+    # PYTHON: "C:\\Python27"
+    # PYTHON_VERSION: "2.7.8"
+    # PYTHON_ARCH: "32"
+    # CONAN_STABLE_BRANCH_PATTERN: "master$" #"release/*"
+
+#     PYTHON: "C:\\Python27"
+#     PYTHON_VERSION: "2.7.8"
+#     PYTHON_ARCH: "32"
+#     CONAN_STABLE_BRANCH_PATTERN: "master$" #"release/*"
+
+
+# 04/15/2019  08:45 AM    <DIR>          Python37
+# 04/15/2019  08:46 AM    <DIR>          Python37-x64
+#                0 File(s)              0 bytes
+
 
 install:
 
@@ -45,6 +56,10 @@ install:
     C:
     cd \
     dir Python*.*
+    cd Python37
+    dir
+    python.exe --version
+
 
   # - git config core.autocrlf
 
