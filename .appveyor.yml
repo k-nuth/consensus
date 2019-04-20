@@ -40,6 +40,12 @@ environment:
     CONAN_STABLE_BRANCH_PATTERN: "master$" #"release/*"
 
 install:
+
+  - |
+    C:
+    cd \
+    dir Python*.*
+
   # - git config core.autocrlf
 
   - set PATH=%PATH%;%PYTHON%/Scripts/
