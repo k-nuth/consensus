@@ -55,11 +55,6 @@ install:
   
   # - git config core.autocrlf
 
-  - cd C:\Users\appveyor\
-  - dir
-  - cd .conan
-  - dir
-  # - whoami
 
   - set PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%;
   - python.exe --version
@@ -77,6 +72,14 @@ install:
   # - conan search secp256k1/0.12.0@bitprim/staging
   - conan remove "*" -f
 
+
+  - cd C:\Users\appveyor\
+  - dir
+  - cd .conan
+  - dir
+  - cd data
+  - dir
+  # - whoami
 
 test_script:
   - git submodule init
