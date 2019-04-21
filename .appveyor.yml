@@ -68,7 +68,9 @@ install:
   - pip.exe install cpuid --upgrade > NUL
   - conan user # It creates the conan data directory
 
-  - conan search secp256k1/0.12.0@bitprim/staging
+  # - conan search secp256k1/0.12.0@bitprim/staging
+  - conan remove "*" -f
+
 
 test_script:
   - git submodule init
