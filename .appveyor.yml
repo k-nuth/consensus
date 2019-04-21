@@ -55,6 +55,8 @@ install:
   
   # - git config core.autocrlf
 
+  - dir cd C:\Users
+
   - set PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%;
   - python.exe --version
   - python.exe -m pip install --upgrade pip
