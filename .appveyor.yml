@@ -73,10 +73,10 @@ install:
   - conan remove "*" -f
 
 
-  - cd C:\Users\appveyor\
-  - dir
-  - cd .conan
-  - dir
+  # - cd C:\Users\appveyor\
+  # - dir
+  # - cd .conan
+  # - dir
   # - cd data
   # - dir
   # - whoami
