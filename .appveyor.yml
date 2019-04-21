@@ -55,8 +55,11 @@ install:
   
   # - git config core.autocrlf
 
-  - dir cd C:\Users
-  - whoami
+  - cd C:\Users\appveyor\
+  - dir
+  - cd .conan
+  - dir
+  # - whoami
 
   - set PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%;
   - python.exe --version
