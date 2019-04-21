@@ -77,8 +77,8 @@ install:
   - dir
   - cd .conan
   - dir
-  - cd data
-  - dir
+  # - cd data
+  # - dir
   # - whoami
 
 test_script:
