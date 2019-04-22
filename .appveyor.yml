@@ -105,11 +105,11 @@ test_script:
       $a = python ci_utils/set_envvars_and_files.py
       Write-Host $a
       Invoke-Expression $a
-      conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
-      echo "before python ci_utils/process_conan_reqs.py"
-      python ci_utils/process_conan_reqs.py
-      echo "after python ci_utils/process_conan_reqs.py"
-      conan remote remove bitprim
+      # conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
+      # echo "before python ci_utils/process_conan_reqs.py"
+      # python ci_utils/process_conan_reqs.py
+      # echo "after python ci_utils/process_conan_reqs.py"
+      # conan remote remove bitprim
 
   - python build.py
 
