@@ -28,18 +28,18 @@ if __name__ == "__main__":
                 marchs = ["x86-64"]
             marchs = ["x86-64"]
 
-            # opts_bch = copy.deepcopy(options)
+            opts_bch = copy.deepcopy(options)
             opts_btc = copy.deepcopy(options)
             # opts_ltc = copy.deepcopy(options)
 
-            # opts_bch["%s:currency" % name] = "BCH"
+            opts_bch["%s:currency" % name] = "BCH"
             opts_btc["%s:currency" % name] = "BTC"
             # opts_ltc["%s:currency" % name] = "LTC"
             
             # opts_bch_new = copy.deepcopy(opts_bch)
             # opts_bch_new["%s:use_domain" % name] = "True"
 
-            # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_bch, env_vars, build_requires)
+            handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_bch, env_vars, build_requires)
             # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_bch_new, env_vars, build_requires)
             handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_btc, env_vars, build_requires)
             # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_ltc, env_vars, build_requires)

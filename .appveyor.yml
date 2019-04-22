@@ -34,27 +34,30 @@ branches:
 build: false
 
 environment:
-    # PYTHON: "C:\\Python27"
-    # PYTHON_VERSION: "2.7.8"
-    # PYTHON_ARCH: "32"
     PYTHON: "C:\\Python37"
     PYTHON_VERSION: "3.7.3"
     PYTHON_ARCH: "32"
     CONAN_STABLE_BRANCH_PATTERN: "master$" #"release/*"
 
+install:
+
+  - set PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%;
+  - python.exe --version
+  - python.exe -m pip install --upgrade pip
+  - pip.exe install conan==1.14.3 > NUL
+  - pip.exe install conan_package_tools==0.25.1 > NUL
+  - pip.exe install cpuid --upgrade > NUL
+
+  # - pip.exe install conan --upgrade > NUL
+  # - pip.exe install conan==1.0.0b5 > NUL
+  # - pip.exe install conan_package_tools --upgrade > NUL
+
+  - conan user # It creates the conan data directory
 
 
 install:
-
-  # - |
-  #   C:
-  #   cd \
-  #   dir Python*.*
-  #   cd Python37
-  #   dir
   
   # - git config core.autocrlf
-
 
   - set PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%;
   - python.exe --version
@@ -69,17 +72,7 @@ install:
   - pip.exe install cpuid --upgrade > NUL
   - conan user # It creates the conan data directory
 
-  # - conan search secp256k1/0.12.0@bitprim/staging
-  # - conan remove "*" -f
 
-
-  # - cd C:\Users\appveyor\
-  # - dir
-  # - cd .conan
-  # - dir
-  # - cd data
-  # - dir
-  # - whoami
 
 test_script:
   - git submodule init
@@ -106,11 +99,7 @@ test_script:
       Write-Host $a
       Invoke-Expression $a
       conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
-      # echo "before python ci_utils/process_conan_reqs.py"
-      # python ci_utils/process_conan_reqs.py
-      # echo "after python ci_utils/process_conan_reqs.py"
-      # conan remote remove bitprim
-      conan info . --only requires
+      python ci_utils/process_conan_reqs.py
       conan remove "*" -f
       conan remote remove bitprim
 
@@ -136,21 +125,21 @@ for:
     environment:
       matrix:
 
-        # - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
-        # - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
-        # # - MINGW_CONFIGURATIONS: "6@x86_64@seh@posix"
-        # # - MINGW_CONFIGURATIONS: "5@x86_64@seh@posix"
+        - MINGW_CONFIGURATIONS: "8@x86_64@seh@posix"
+        - MINGW_CONFIGURATIONS: "7@x86_64@seh@posix"
+        # - MINGW_CONFIGURATIONS: "6@x86_64@seh@posix"
+        # - MINGW_CONFIGURATIONS: "5@x86_64@seh@posix"
 
         - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
           CONAN_VISUAL_VERSIONS: 15
           CONAN_VISUAL_RUNTIMES: MT
-          # BITPRIM_RUN_TESTS: true
+          BITPRIM_RUN_TESTS: true
           VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
-        # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        #   CONAN_VISUAL_VERSIONS: 15
-        #   CONAN_VISUAL_RUNTIMES: MD
-        #   BITPRIM_RUN_TESTS: true
-        #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          CONAN_VISUAL_RUNTIMES: MD
+          BITPRIM_RUN_TESTS: true
+          VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
         # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
         #   CONAN_VISUAL_VERSIONS: 14
 
