@@ -70,7 +70,7 @@ install:
   - conan user # It creates the conan data directory
 
   # - conan search secp256k1/0.12.0@bitprim/staging
-  - conan remove "*" -f
+  # - conan remove "*" -f
 
 
   # - cd C:\Users\appveyor\
@@ -111,6 +111,7 @@ test_script:
       # echo "after python ci_utils/process_conan_reqs.py"
       # conan remote remove bitprim
       conan info . --only requires
+      conan remove "*" -f
       conan remote remove bitprim
 
   - python build.py
