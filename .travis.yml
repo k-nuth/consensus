@@ -150,7 +150,7 @@ jobs:
       env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9
       if: branch =~ /^(release|hotfix).+$/    #Just releases
 
-      - stage: build and upload binaries
+    - stage: build and upload binaries
       os: linux
       sudo: required
       language: python
@@ -220,7 +220,7 @@ jobs:
       env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
 
-      - stage: build and upload binaries
+    - stage: build and upload binaries
       os: linux
       sudo: required
       language: python
