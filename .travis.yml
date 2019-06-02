@@ -106,15 +106,15 @@ jobs:
         - |
           conan user
           conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
-          echo "waiting for kth-core/0.X@kth/staging ..."
-          conan search kth-core/0.X@kth/staging -r kth_temp > /dev/null
+          echo "waiting for secp256k1/0.X@kth/staging ..."
+          conan search secp256k1/0.X@kth/staging -r kth_temp > /dev/null
           while [ $? == 1 ]
           do
             printf "."
             sleep 10
-            conan search kth-core/0.X@kth/staging -r kth_temp > /dev/null
+            conan search secp256k1/0.X@kth/staging -r kth_temp > /dev/null
           done
-          echo "kth-core/0.X@kth/staging found"
+          echo "secp256k1/0.X@kth/staging found"
 
 # Static Checks ------------------------------------------------------
     - stage: static checks
@@ -125,7 +125,7 @@ jobs:
       python: "3.7"
       services:
         - docker
-      env: CONAN_CLANG_VERSIONS=6.0 CONAN_DOCKER_IMAGE=conanio/clang60
+      env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
       # if: branch =~ /^(release|hotfix).+$/    #Just releases
       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
       install: skip
@@ -147,8 +147,19 @@ jobs:
       python: "3.7"
       services:
         - docker
-      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+      env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9
       if: branch =~ /^(release|hotfix).+$/    #Just releases
+
+      - stage: build and upload binaries
+      os: linux
+      sudo: required
+      language: python
+      dist: xenial
+      python: "3.7"
+      services:
+        - docker
+      env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
+      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
 
     - stage: build and upload binaries
       os: linux
@@ -160,7 +171,7 @@ jobs:
         - docker
       env: CONAN_GCC_VERSIONS=7 CONAN_DOCKER_IMAGE=conanio/gcc7 
            KNUTH_RUN_TESTS=true
-      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+      if: branch =~ /^(release|hotfix).+$/    #Just releases
 
     - stage: build and upload binaries
       os: linux
@@ -199,6 +210,17 @@ jobs:
 
     # Linux, Clang, libstdc++ ----------------------------------------------------
     - stage: build and upload binaries
+      os: linux
+      sudo: required
+      language: python
+      dist: xenial
+      python: "3.7"
+      services:
+        - docker
+      env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
+      if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
+
+      - stage: build and upload binaries
       os: linux
       sudo: required
       language: python
