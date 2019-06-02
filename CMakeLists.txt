@@ -1,7 +1,7 @@
 #
-# Copyright (c) 2017-2018 Bitprim Inc.
+# Copyright (c) 2017-2019 Knuth Project.
 #
-# This file is part of Bitprim.
+# This file is part of the Knuth Project.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -19,9 +19,9 @@
 
 cmake_minimum_required(VERSION 3.4)
 
-# bitprim-consensus
+# kth-consensus
 #==============================================================================
-project(bitprim-consensus
+project(kth-consensus
   VERSION 0
   LANGUAGES CXX C)
   # VERSION 0.11.0
@@ -76,29 +76,29 @@ endif()
 
 
 
-set(BITPRIM_PROJECT_VERSION "-" CACHE STRING "Specify the Bitprim Project Version.")
-# message(${BITPRIM_PROJECT_VERSION})
+set(KNUTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
+# message(${KNUTH_PROJECT_VERSION})
 
 
 set(MICROARCHITECTURE "x86_64" CACHE STRING "Specify the Cryptocurrency (x86_64|...).")
-message( STATUS "Bitprim: Compiling for ${MICROARCHITECTURE}")
-# add_definitions(-DBITPRIM_MICROARCHITECTURE=${MICROARCHITECTURE})
-# add_definitions(-DBITPRIM_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
+message( STATUS "Knuth: Compiling for ${MICROARCHITECTURE}")
+# add_definitions(-DKNUTH_MICROARCHITECTURE=${MICROARCHITECTURE})
+# add_definitions(-DKNUTH_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
 
 
 set(CURRENCY "BCH" CACHE STRING "Specify the Cryptocurrency (BCH|BTC|LTC).")
 
 if (${CURRENCY} STREQUAL "BCH")
-  add_definitions(-DBITPRIM_CURRENCY_BCH)
+  add_definitions(-DKNUTH_CURRENCY_BCH)
 elseif (${CURRENCY} STREQUAL "BTC")
-  add_definitions(-DBITPRIM_CURRENCY_BTC)
+  add_definitions(-DKNUTH_CURRENCY_BTC)
 elseif (${CURRENCY} STREQUAL "LTC")
-  add_definitions(-DBITPRIM_CURRENCY_LTC)
+  add_definitions(-DKNUTH_CURRENCY_LTC)
 else()
   message(FATAL_ERROR "Invalid Cryptocurrency: ${CURRENCY}")
 endif()
 
-message(STATUS "Bitprim: Cryptocurrency: ${CURRENCY}")
+message(STATUS "Knuth: Cryptocurrency: ${CURRENCY}")
 
 
 # Set preprocessor defines.
@@ -109,7 +109,7 @@ include(CheckCXXSymbolExists)
 #------------------------------------------------------------------------------
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/ci_utils/cmake)
 
-include(BitprimTools)
+include(KnuthTools)
 
 
 
@@ -227,10 +227,10 @@ _check_has_decl(sys/endian.h HAVE_SYS_ENDIAN_H htobe64 HAVE_DECL_HTOBE64)
 # Only if enabled
 #------------------------------------------------------------------------------
 
-if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
-    include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/bitprimbuildinfo.cmake)
+if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
+    include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
 else()
-    message( STATUS "bitprimbuildinfo doent exists")
+    message( STATUS "knuthbuildinfo doent exists")
 endif()
 
 
@@ -263,10 +263,10 @@ endif()
 
 if (NOT USE_CONAN)
 #   message("Entro!!!")
-  # Require bitprim-core of at least version 0 and output ${bitprim_core_CPPFLAGS/LIBS/PKG}.
+  # Require kth-core of at least version 0 and output ${knuth_core_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
-  if (NOT TARGET bitprim-core)
-    find_package(bitprim-core 0 REQUIRED)
+  if (NOT TARGET kth-core)
+    find_package(kth-core 0 REQUIRED)
   endif()
 
   # Require secp256k1 of at least version 0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
@@ -346,7 +346,7 @@ endif()
 if (${CURRENCY} STREQUAL "BCH")
 #message("clone BCH")
 
-  add_library(bitprim-consensus-clone OBJECT
+  add_library(kth-consensus-clone OBJECT
     src/clone-abc/amount.h
     src/clone-abc/amount.cpp
     src/clone-abc/hash.cpp
@@ -392,7 +392,7 @@ if (${CURRENCY} STREQUAL "BCH")
 else()
 #message("clone BTC")
 
-  add_library(bitprim-consensus-clone OBJECT
+  add_library(kth-consensus-clone OBJECT
     src/clone-legacy/amount.h
     src/clone-legacy/hash.cpp
     src/clone-legacy/hash.h
@@ -431,7 +431,7 @@ endif()
 
 
 if (ENABLE_POSITION_INDEPENDENT_CODE)
-  set_property(TARGET bitprim-consensus-clone PROPERTY POSITION_INDEPENDENT_CODE ON)
+  set_property(TARGET kth-consensus-clone PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif(ENABLE_POSITION_INDEPENDENT_CODE)
   
   
@@ -439,62 +439,62 @@ endif(ENABLE_POSITION_INDEPENDENT_CODE)
 
 if (${CURRENCY} STREQUAL "BCH")
 #message("clone BCH 2")
-  target_include_directories(bitprim-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
+  target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
 else()
 #message("clone BTC 2")
-  target_include_directories(bitprim-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
+  target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
 endif()
 
-target_compile_definitions(bitprim-consensus-clone PUBLIC -DBITPRIM_PROJECT_VERSION="\\"${BITPRIM_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
+target_compile_definitions(kth-consensus-clone PUBLIC -DKNUTH_PROJECT_VERSION="\\"${KNUTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
   
 
 if (NOT USE_CONAN)
-  target_compile_definitions(bitprim-consensus-clone PRIVATE
+  target_compile_definitions(kth-consensus-clone PRIVATE
   $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
 
-  target_include_directories(bitprim-consensus-clone PRIVATE
+  target_include_directories(kth-consensus-clone PRIVATE
   $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
 endif()
 
 if (${CURRENCY} STREQUAL "BCH")
 #message("clone BCH 3")
 
-  _group_sources(bitprim-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc")
+  _group_sources(kth-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc")
 else()
 #message("clone BTC 3")
 
-_group_sources(bitprim-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy")
+_group_sources(kth-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy")
 endif()
 
 
 
-# src/bitprim-consensus.la => ${libdir}
+# src/kth-consensus.la => ${libdir}
 #------------------------------------------------------------------------------
 set(MODE STATIC)
 if (ENABLE_SHARED)
   set(MODE SHARED)
 endif()
 
-add_library(bitprim-consensus ${MODE}
+add_library(kth-consensus ${MODE}
   src/consensus/consensus.cpp
   src/consensus/consensus.hpp
-  $<TARGET_OBJECTS:bitprim-consensus-clone>
+  $<TARGET_OBJECTS:kth-consensus-clone>
 )
 
 if (ENABLE_POSITION_INDEPENDENT_CODE)
-  set_property(TARGET bitprim-consensus PROPERTY POSITION_INDEPENDENT_CODE ON)
+  set_property(TARGET kth-consensus PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif(ENABLE_POSITION_INDEPENDENT_CODE)
   
   
-target_include_directories(bitprim-consensus PUBLIC
+target_include_directories(kth-consensus PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_compile_definitions(bitprim-consensus PUBLIC -DBITPRIM_PROJECT_VERSION="\\"${BITPRIM_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
+target_compile_definitions(kth-consensus PUBLIC -DKNUTH_PROJECT_VERSION="\\"${KNUTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
 
 
 if (NOT ENABLE_SHARED)
-  target_compile_definitions(bitprim-consensus PUBLIC -DBCK_STATIC)
+  target_compile_definitions(kth-consensus PUBLIC -DBCK_STATIC)
 endif()
 
 
@@ -503,32 +503,32 @@ endif()
 if (${CURRENCY} STREQUAL "BCH")
 #message("clone BCH 4")
 
-  target_include_directories(bitprim-consensus PRIVATE
+  target_include_directories(kth-consensus PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
 else()
 #message("clone BTC 4")
 
-  target_include_directories(bitprim-consensus PRIVATE
+  target_include_directories(kth-consensus PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
       ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
 endif()
 
 
 if (NOT NO_CONAN_AT_ALL)
-  target_link_libraries(bitprim-consensus PUBLIC ${CONAN_LIBS})
+  target_link_libraries(kth-consensus PUBLIC ${CONAN_LIBS})
 else()
-  target_link_libraries(bitprim-consensus secp256k1 bitprim-core)
+  target_link_libraries(kth-consensus secp256k1 kth-core)
 endif()
 
 
 # if (USE_CONAN)
   if (MINGW)
-    target_link_libraries(bitprim-consensus PUBLIC ws2_32 wsock32) #TODO(fernando): manage with Conan
+    target_link_libraries(kth-consensus PUBLIC ws2_32 wsock32) #TODO(fernando): manage with Conan
   endif()
 # endif()
 
-_group_sources(bitprim-consensus "${CMAKE_CURRENT_LIST_DIR}")
+_group_sources(kth-consensus "${CMAKE_CURRENT_LIST_DIR}")
 
 # Tests
 #==============================================================================
@@ -537,11 +537,11 @@ if (WITH_TESTS)
   enable_testing()
 endif()
 
-# local: test/bitprim_consensus_test
+# local: test/knuth_consensus_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
  
-  add_executable(bitprim_consensus_test
+  add_executable(knuth_consensus_test
     # test/consensus__script_error_to_verify_result.cpp
     test/consensus__script_verify.cpp
     # test/consensus__verify_flags_to_script_flags.cpp
@@ -553,22 +553,22 @@ if (WITH_TESTS)
   if (${CURRENCY} STREQUAL "BCH")
   #message("clone BCH 5")
 
-    target_include_directories(bitprim_consensus_test PRIVATE
+    target_include_directories(knuth_consensus_test PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
       ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
   else()
   #message("clone BTC 5")
-    target_include_directories(bitprim_consensus_test PRIVATE
+    target_include_directories(knuth_consensus_test PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
   endif()
   
 
-  target_link_libraries(bitprim_consensus_test PUBLIC bitprim-consensus)
+  target_link_libraries(knuth_consensus_test PUBLIC kth-consensus)
  
-  _group_sources(bitprim_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
+  _group_sources(knuth_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
-  _add_tests(bitprim_consensus_test
+  _add_tests(knuth_consensus_test
     #consensus__script_error_to_verify_result
     consensus__script_verify
     #consensus__verify_flags_to_script_flags
@@ -580,20 +580,20 @@ endif()
 
 # Install
 #==============================================================================
-# install(TARGETS bitprim-consensus bitprim-consensus-requester bitprim-consensus-replier
-install(TARGETS bitprim-consensus 
-  EXPORT bitprim-consensus
+# install(TARGETS kth-consensus kth-consensus-requester kth-consensus-replier
+install(TARGETS kth-consensus 
+  EXPORT kth-consensus
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin)
 
-set(_bitprim_headers
+set(_knuth_headers
   # include_bitcoin_HEADERS =
   bitcoin/consensus.hpp
   # include_bitcoin_consensus_HEADERS =
   bitcoin/consensus/define.hpp
   bitcoin/consensus/export.hpp
   bitcoin/consensus/version.hpp)
-foreach (_header ${_bitprim_headers})
+foreach (_header ${_knuth_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)
   install(FILES "include/${_header}" DESTINATION "include/${_directory}")
 endforeach()
@@ -602,9 +602,9 @@ endforeach()
 #==============================================================================
 include(CMakePackageConfigHelpers)
 
-export(EXPORT bitprim-consensus
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/bitprim-consensusTargets.cmake")
-export(PACKAGE bitprim-consensus)
+export(EXPORT kth-consensus
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/kth-consensusTargets.cmake")
+export(PACKAGE kth-consensus)
 
 if (UNIX)
   set(_config_package_location "lib/cmake")
@@ -612,21 +612,21 @@ elseif (WIN32)
   set(_config_package_location "cmake")
 endif()
 
-install(EXPORT bitprim-consensus
-  FILE bitprim-consensusTargets.cmake
+install(EXPORT kth-consensus
+  FILE kth-consensusTargets.cmake
   DESTINATION ${_config_package_location})
 
-configure_file(bitprim-consensusConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-consensusConfig.cmake"
+configure_file(kth-consensusConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/kth-consensusConfig.cmake"
   @ONLY)
 
 write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/bitprim-consensusConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/kth-consensusConfigVersion.cmake"
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
 install(
   FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-consensusConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/bitprim-consensusConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/kth-consensusConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/kth-consensusConfigVersion.cmake"
   DESTINATION ${_config_package_location})

@@ -25,11 +25,11 @@
 #include <bitcoin/consensus.hpp>
 #include <boost/test/unit_test.hpp>
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 #include <clone-abc/script/interpreter.h>
-#else // BITPRIM_CURRENCY_BCH
+#else // KNUTH_CURRENCY_BCH
 #include <clone-legacy/script/interpreter.h>
-#endif // BITPRIM_CURRENCY_BCH
+#endif // KNUTH_CURRENCY_BCH
 
 BOOST_AUTO_TEST_SUITE(consensus__script_verify)
 
@@ -98,7 +98,7 @@ static bool decode_base16(data_chunk& out, const std::string& in)
 //         tx_input_index, flags);
 // >>>>>>> libbitcoin/version3
 // }
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 static verify_result test_verify(const std::string& transaction,
     const std::string& prevout_script, uint32_t tx_input_index=0,
     const uint32_t flags=verify_flags_p2sh, int32_t tx_size_hack = 0, uint64_t amount = 0 )
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_tx__tx_invalid)
     const verify_result result = test_verify("42", "42");
     BOOST_REQUIRE_EQUAL(result, verify_result_tx_invalid);
 }
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_input__tx_input_invalid)
 {
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 1);
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true)
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT);
     BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
 }
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
 //TODO: just for Bitcoin Cash
 BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true__non_forkid)
 {

@@ -3,7 +3,7 @@ import os.path
 from shutil import copyfile
 
 
-PATH = '/Users/fernando/dev/bitprim/bitprim-consensus/src/clone-abc/'
+PATH = '/Users/fernando/dev/knuth/kth-consensus/src/clone-abc/'
 SOURCE_PATH = '/Users/fernando/dev/bitcoin-abc/src/'
 
 # result = [os.path.join(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames if os.path.splitext(f)[1] == '.txt']

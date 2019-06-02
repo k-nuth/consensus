@@ -1,7 +1,7 @@
 #
-# Copyright (c) 2017-2018 Bitprim Inc.
+# Copyright (c) 2017-2019 Knuth Project.
 #
-# This file is part of Bitprim.
+# This file is part of the Knuth Project.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -20,13 +20,13 @@
 import os
 from conans import CMake
 from ci_utils import option_on_off, get_version, get_conan_req_version, march_conan_manip, pass_march_to_compiler
-from ci_utils import BitprimConanFile
+from ci_utils import KnuthConanFile
 
-class BitprimConsensusConan(BitprimConanFile):
-    name = "bitprim-consensus"
+class KnuthConsensusConan(KnuthConanFile):
+    name = "kth-consensus"
     # version = get_version()
     license = "http://www.boost.org/users/license.html"
-    url = "https://github.com/bitprim/bitprim-consensus"
+    url = "https://github.com/k-nuth/kth-consensus"
     description = "Bitcoin Consensus Library"
     settings = "os", "compiler", "build_type", "arch"
 
@@ -64,24 +64,24 @@ class BitprimConsensusConan(BitprimConanFile):
 
     generators = "cmake"
     exports = "conan_*", "ci_utils/*"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "bitprim-consensusConfig.cmake.in", "bitprimbuildinfo.cmake", "include/*", "test/*"
-    package_files = "build/lbitprim-consensus.a"
+    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "kth-consensusConfig.cmake.in", "knuthbuildinfo.cmake", "include/*", "test/*"
+    package_files = "build/lkth-consensus.a"
     build_policy = "missing"
 
 
     def requirements(self):
 
         if self.options.use_domain:
-            self.requires("boost/1.69.0@bitprim/stable")
+            self.requires("boost/1.70.0@kth/stable")
         else:
-            self.requires("boost/1.66.0@bitprim/stable")
+            self.requires("boost/1.66.0@kth/stable")
 
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
 
         # if self.options.use_domain:
-        #     self.requires("bitprim-domain/0.X@%s/%s" % (self.user, self.channel))
+        #     self.requires("kth-domain/0.X@%s/%s" % (self.user, self.channel))
         # else:
-        #     self.requires("bitprim-core/0.X@%s/%s" % (self.user, self.channel))
+        #     self.requires("kth-core/0.X@%s/%s" % (self.user, self.channel))
 
 
     def config_options(self):
@@ -96,7 +96,7 @@ class BitprimConsensusConan(BitprimConanFile):
                 self.options.remove("shared")
 
     def configure(self):
-        BitprimConanFile.configure(self)
+        KnuthConanFile.configure(self)
 
         if self.settings.arch == "x86_64" and self.options.microarchitecture == "_DUMMY_":
             del self.options.fix_march
@@ -125,7 +125,7 @@ class BitprimConsensusConan(BitprimConanFile):
         self.output.info("Compiling for currency: %s" % (self.options.currency,))
 
     def package_id(self):
-        BitprimConanFile.package_id(self)
+        KnuthConanFile.package_id(self)
 
         self.info.options.with_tests = "ANY"
         self.info.options.with_java = "ANY"
@@ -135,7 +135,7 @@ class BitprimConsensusConan(BitprimConanFile):
         self.info.options.cxxflags = "ANY"
         self.info.options.cflags = "ANY"
 
-        # #For Bitprim Packages libstdc++ and libstdc++11 are the same
+        # #For Knuth Packages libstdc++ and libstdc++11 are the same
         # if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
         #     if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
         #         self.info.settings.compiler.libcxx = "ANY"
@@ -168,7 +168,7 @@ class BitprimConsensusConan(BitprimConanFile):
 
 
         cmake.definitions["MICROARCHITECTURE"] = self.options.microarchitecture
-        cmake.definitions["BITPRIM_PROJECT_VERSION"] = self.version
+        cmake.definitions["KNUTH_PROJECT_VERSION"] = self.version
 
         if self.settings.compiler == "gcc":
             if float(str(self.settings.compiler.version)) >= 5:
@@ -203,4 +203,4 @@ class BitprimConsensusConan(BitprimConanFile):
 
     def package_info(self):
         self.cpp_info.includedirs = ['include']
-        self.cpp_info.libs = ["bitprim-consensus"]
+        self.cpp_info.libs = ["kth-consensus"]

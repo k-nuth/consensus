@@ -22,7 +22,7 @@ public:
     constexpr Amount() : amount(0) {}
     constexpr Amount(const Amount &_camount) : amount(_camount.amount) {}
 
-    // NOTE (bitprim): it needs to be public to work with `verify_script`
+    // NOTE (knuth): it needs to be public to work with `verify_script`
     explicit constexpr Amount(int64_t _amount) : amount(_amount) {}
 
     static constexpr Amount zero() { return Amount(0); }

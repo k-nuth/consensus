@@ -188,7 +188,7 @@ typedef enum verify_flags_type
      */
     verify_flags_checksequenceverify = (1U << 10)
 
-#if ! defined(BITPRIM_CURRENCY_BCH)
+#if ! defined(KNUTH_CURRENCY_BCH)
     /**
      * SCRIPT_VERIFY_WITNESS (bip141).
      */
@@ -215,7 +215,7 @@ typedef enum verify_flags_type
     , verify_flags_witness_public_key_compressed = (1U << 15)
 #endif
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
     /**
      * SCRIPT_ENABLE_SIGHASH_FORKID (bitcoin-cash).
      */
@@ -260,7 +260,7 @@ typedef enum verify_flags_type
  * @returns                        A script verification result code.
  */
 
-#ifdef BITPRIM_CURRENCY_BCH
+#ifdef KNUTH_CURRENCY_BCH
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
@@ -270,7 +270,7 @@ typedef enum verify_flags_type
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned long long prevout_value,
     unsigned int tx_input_index, unsigned int flags);
-#endif //BITPRIM_CURRENCY_BCH
+#endif //KNUTH_CURRENCY_BCH
 
 
 } // namespace consensus

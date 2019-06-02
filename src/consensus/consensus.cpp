@@ -163,7 +163,7 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS:
             return verify_result_discourage_upgradable_nops;
 
-#if ! defined(BITPRIM_CURRENCY_BCH)
+#if ! defined(KNUTH_CURRENCY_BCH)
         // Softfork safeness
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM:
             return verify_result_discourage_upgradable_witness_program;
@@ -183,7 +183,7 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
             return verify_result_witness_unexpected;
         case SCRIPT_ERR_WITNESS_PUBKEYTYPE:
             return verify_result_witness_pubkeytype;
-#endif //! defined(BITPRIM_CURRENCY_BCH)
+#endif //! defined(KNUTH_CURRENCY_BCH)
 
         // Other
         case SCRIPT_ERR_OP_RETURN:
@@ -225,7 +225,7 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
     if ((flags & verify_flags_checksequenceverify) != 0)
         script_flags |= SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
 
-#if ! defined(BITPRIM_CURRENCY_BCH)
+#if ! defined(KNUTH_CURRENCY_BCH)
     if ((flags & verify_flags_witness) != 0)
         script_flags |= SCRIPT_VERIFY_WITNESS;
     if ((flags & verify_flags_discourage_upgradable_witness_program) != 0)
@@ -236,9 +236,9 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
         script_flags |= SCRIPT_VERIFY_NULLFAIL;
     if ((flags & verify_flags_witness_public_key_compressed) != 0)
         script_flags |= SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
-#endif //! defined(BITPRIM_CURRENCY_BCH)
+#endif //! defined(KNUTH_CURRENCY_BCH)
 
-#if defined(BITPRIM_CURRENCY_BCH)
+#if defined(KNUTH_CURRENCY_BCH)
     if ((flags & verify_flags_script_enable_sighash_forkid) != 0)
         script_flags |= SCRIPT_ENABLE_SIGHASH_FORKID;
 
@@ -260,7 +260,7 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
 
 // This function is published. The implementation exposes no satoshi internals.
 
-#if defined(BITPRIM_CURRENCY_BCH)
+#if defined(KNUTH_CURRENCY_BCH)
 verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
@@ -311,7 +311,7 @@ verify_result_type verify_script(const unsigned char* transaction,
 
     return script_error_to_verify_result(error);
 }
-#else //BITPRIM_CURRENCY_BCH
+#else //KNUTH_CURRENCY_BCH
 
 verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
@@ -362,10 +362,10 @@ verify_result_type verify_script(const unsigned char* transaction,
 
     return script_error_to_verify_result(error);
 }
-#endif //BITPRIM_CURRENCY_BCH
+#endif //KNUTH_CURRENCY_BCH
 
 char const* version() {
-    return BITPRIM_CONSENSUS_VERSION;
+    return KNUTH_CONSENSUS_VERSION;
 }
 
 } // namespace consensus

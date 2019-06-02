@@ -1,14 +1,14 @@
-# Bitprim Consensus <a target="_blank" href="http://semver.org">![Version][badge.version]</a> <a target="_blank" href="https://travis-ci.org/bitprim/bitprim-consensus">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/bitprim/bitprim-consensus">![Appveyor status][badge.Appveyor]</a> <a target="_blank" href="https://gitter.im/bitprim/Lobby">![Gitter Chat][badge.Gitter]</a>
+# Knuth Consensus <a target="_blank" href="http://semver.org">![Version][badge.version]</a> <a target="_blank" href="https://travis-ci.org/k-nuth/kth-consensus">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/k-nuth/kth-consensus">![Appveyor status][badge.Appveyor]</a> <a target="_blank" href="https://gitter.im/k-nuth/Lobby">![Gitter Chat][badge.Gitter]</a>
 
 > Cryptocurrencies consensus library
 
 
 ## Installation
-Make sure you have installed [bitprim-core](https://github.com/bitprim/bitprim-core) beforehand according to its respective build instructions.
+Make sure you have installed [kth-core](https://github.com/k-nuth/kth-core) beforehand according to its respective build instructions.
 
 ```
-$ git clone https://github.com/bitprim/bitprim-consensus.git
-$ cd bitprim-consensus
+$ git clone https://github.com/k-nuth/kth-consensus.git
+$ cd kth-consensus
 $ mkdir build
 $ cd build
 $ cmake .. -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-std=c++11"
@@ -16,7 +16,7 @@ $ make -j2
 $ sudo make install
 ```
 
-`bitprim-consensus` is now installed in `/usr/local/`.
+`kth-consensus` is now installed in `/usr/local/`.
 
 # About
 
@@ -58,16 +58,16 @@ script/script.h
 script/script_error.h
 ```
 
-# Bitprim Integration
+# Knuth Integration
 
-Bitprim natively implements consensus checks that are redundant with `bitprim-consensus`. Bitprim includes a full bitcoin client and server SDK. This includes the full node implementation [bitprim-node](https://github.com/bitprim/bitprim-node), which builds on [bitprim-core](https://github.com/bitprim/bitprim-core) and [bitprim-blockchain](https://github.com/bitprim/bitprim-blockchain).
+Knuth natively implements consensus checks that are redundant with `kth-consensus`. Knuth includes a full bitcoin client and server SDK. This includes the full node implementation [kth-node](https://github.com/k-nuth/kth-node), which builds on [kth-core](https://github.com/k-nuth/kth-core) and [kth-blockchain](https://github.com/k-nuth/kth-blockchain).
 
-The `bitprim-blockchain` configuration provides the `--with-consensus` option. This allows the developer to select either `bitprim-core` native or `bitprim-consensus` checks. The option defaults to `yes` so that by default all `bitprim-node` and `bitprim-server` builds use the same consensus checks as a Satoshi node.
+The `kth-blockchain` configuration provides the `--with-consensus` option. This allows the developer to select either `kth-core` native or `kth-consensus` checks. The option defaults to `yes` so that by default all `kth-node` and `kth-server` builds use the same consensus checks as a Satoshi node.
 
 
 <!-- Links -->
-[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/bitprim/bitprim-consensus?svg=true&branch=dev
+[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/k-nuth/kth-consensus?svg=true&branch=dev
 [badge.Gitter]: https://img.shields.io/badge/gitter-join%20chat-blue.svg
-[badge.Travis]: https://travis-ci.org/bitprim/bitprim-consensus.svg?branch=master
-[badge.version]: https://badge.fury.io/gh/bitprim%2Fbitprim-consensus.svg
+[badge.Travis]: https://travis-ci.org/k-nuth/kth-consensus.svg?branch=master
+[badge.version]: https://badge.fury.io/gh/k-nuth%2Fkth-consensus.svg
 

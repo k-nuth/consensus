@@ -1,0 +1,13 @@
+# - Config file for the KNUTH_CONSENSUS package
+#
+#  KNUTH_CONSENSUS_INCLUDE_DIRS - include directories for KNUTH_CONSENSUS
+#  KNUTH_CONSENSUS_LIBRARIES    - libraries to link against
+
+get_filename_component(KNUTH_CONSENSUS_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(KNUTH_CONSENSUS_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+include("${KNUTH_CONSENSUS_CMAKE_DIR}/kth-consensusTargets.cmake")
+set(KNUTH_CONSENSUS_LIBRARIES kth-consensus)
+
+# find_package(kth-protocol 3.0.0 REQUIRED)
+find_package(secp256k1 0 REQUIRED)

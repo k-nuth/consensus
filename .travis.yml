@@ -1,7 +1,7 @@
 #
-# Copyright (c) 2017-2018 Bitprim Inc.
+# Copyright (c) 2017-2019 Knuth Project.
 #
-# This file is part of Bitprim.
+# This file is part of the Knuth Project.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -98,21 +98,21 @@ jobs:
       services:
         - docker
       env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
-           BITPRIM_CI_CURRENCY=BCH
+           KNUTH_CI_CURRENCY=BCH
       if: branch =~ /^(release|hotfix).+$/    #Just releases
       script:
         - |
           conan user
-          conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
-          echo "waiting for bitprim-core/0.X@bitprim/staging ..."
-          conan search bitprim-core/0.X@bitprim/staging -r bitprim_temp > /dev/null
+          conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
+          echo "waiting for kth-core/0.X@kth/staging ..."
+          conan search kth-core/0.X@kth/staging -r kth_temp > /dev/null
           while [ $? == 1 ]
           do
             printf "."
             sleep 10
-            conan search bitprim-core/0.X@bitprim/staging -r bitprim_temp > /dev/null
+            conan search kth-core/0.X@kth/staging -r kth_temp > /dev/null
           done
-          echo "bitprim-core/0.X@bitprim/staging found"
+          echo "kth-core/0.X@kth/staging found"
 
 # Static Checks ------------------------------------------------------
     - stage: static checks
@@ -154,7 +154,7 @@ jobs:
       services:
         - docker
       env: CONAN_GCC_VERSIONS=7 CONAN_DOCKER_IMAGE=conanio/gcc7 
-           BITPRIM_RUN_TESTS=true
+           KNUTH_RUN_TESTS=true
       if: branch =~ /^(release|hotfix|dev|feature).*$/    #Avoid master
 
     - stage: build and upload binaries
@@ -235,7 +235,7 @@ jobs:
       language: generic
       osx_image: xcode10.1
       env: CONAN_APPLE_CLANG_VERSIONS=10.0
-           BITPRIM_RUN_TESTS=true
+           KNUTH_RUN_TESTS=true
       if: branch =~ /^(release|hotfix).+$/    #Just releases
     - stage: build and upload binaries
       os: osx
@@ -283,12 +283,12 @@ jobs:
 
         - eval $(python ci_utils/set_envvars_and_files.py)
         #TODO(fernando): configure the remote and user using environment variables
-        - conan remote add bitprim_temp https://api.bintray.com/conan/bitprim/bitprim
+        - conan remote add kth_temp https://api.bintray.com/conan/k-nuth/kth
         - conan user
-        - conan user ${CONAN_LOGIN_USERNAME} -r bitprim_temp -p ${CONAN_PASSWORD}
+        - conan user ${CONAN_LOGIN_USERNAME} -r kth_temp -p ${CONAN_PASSWORD}
         - conan user
-        - conan alias "${REPO_NAME}/0.X@bitprim/${BITPRIM_CONAN_CHANNEL}" "${REPO_NAME}/${BITPRIM_CONAN_VERSION}@bitprim/${BITPRIM_CONAN_CHANNEL}"
-        - conan upload "${REPO_NAME}/0.X@bitprim/${BITPRIM_CONAN_CHANNEL}" --all -r bitprim_temp
+        - conan alias "${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL}" "${REPO_NAME}/${KNUTH_CONAN_VERSION}@kth/${KNUTH_CONAN_CHANNEL}"
+        - conan upload "${REPO_NAME}/0.X@kth/${KNUTH_CONAN_CHANNEL}" --all -r kth_temp
 
 # Push to repos ------------------------------------------------------
     - stage: push to repos
