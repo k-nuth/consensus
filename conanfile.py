@@ -72,7 +72,7 @@ class KnuthConsensusConan(KnuthConanFile):
     def requirements(self):
 
         if self.options.use_domain:
-            self.requires("boost/1.70.0@kth/stable")
+            self.requires("boost/1.71.0@kth/stable")
         else:
             self.requires("boost/1.66.0@kth/stable")
 
