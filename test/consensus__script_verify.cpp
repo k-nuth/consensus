@@ -13,8 +13,8 @@
 
 #ifdef KTH_CURRENCY_BCH
 #include <clone-abc/script/interpreter.h>
-#else // KTH_CURRENCY_BCH
-#include <clone-legacy/script/interpreter.h>
+#else
+#include <clone-core/script/interpreter.h>
 #endif // KTH_CURRENCY_BCH
 
 BOOST_AUTO_TEST_SUITE(consensus__script_verify)

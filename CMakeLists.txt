@@ -379,39 +379,39 @@ else()
 #message("clone BTC")
 
   add_library(kth-consensus-clone OBJECT
-    src/clone-legacy/amount.h
-    src/clone-legacy/hash.cpp
-    src/clone-legacy/hash.h
-    src/clone-legacy/prevector.h
-    src/clone-legacy/pubkey.cpp
-    src/clone-legacy/pubkey.h
-    src/clone-legacy/serialize.h
-    src/clone-legacy/tinyformat.h
-    src/clone-legacy/uint256.cpp
-    src/clone-legacy/uint256.h
-    src/clone-legacy/utilstrencodings.cpp
-    src/clone-legacy/utilstrencodings.h
-    src/clone-legacy/version.h
-    src/clone-legacy/compat/byteswap.h
-    src/clone-legacy/compat/endian.h
-    src/clone-legacy/crypto/common.h
-    src/clone-legacy/crypto/hmac_sha512.cpp
-    src/clone-legacy/crypto/hmac_sha512.h
-    src/clone-legacy/crypto/ripemd160.cpp
-    src/clone-legacy/crypto/ripemd160.h
-    src/clone-legacy/crypto/sha1.cpp
-    src/clone-legacy/crypto/sha1.h
-    src/clone-legacy/crypto/sha256.cpp
-    src/clone-legacy/crypto/sha256.h
-    src/clone-legacy/crypto/sha512.cpp
-    src/clone-legacy/crypto/sha512.h
-    src/clone-legacy/primitives/transaction.cpp
-    src/clone-legacy/primitives/transaction.h
-    src/clone-legacy/script/interpreter.cpp
-    src/clone-legacy/script/interpreter.h
-    src/clone-legacy/script/script.cpp
-    src/clone-legacy/script/script.h
-    src/clone-legacy/script/script_error.h
+    src/clone-core/amount.h
+    src/clone-core/hash.cpp
+    src/clone-core/hash.h
+    src/clone-core/prevector.h
+    src/clone-core/pubkey.cpp
+    src/clone-core/pubkey.h
+    src/clone-core/serialize.h
+    src/clone-core/tinyformat.h
+    src/clone-core/uint256.cpp
+    src/clone-core/uint256.h
+    src/clone-core/utilstrencodings.cpp
+    src/clone-core/utilstrencodings.h
+    src/clone-core/version.h
+    src/clone-core/compat/byteswap.h
+    src/clone-core/compat/endian.h
+    src/clone-core/crypto/common.h
+    src/clone-core/crypto/hmac_sha512.cpp
+    src/clone-core/crypto/hmac_sha512.h
+    src/clone-core/crypto/ripemd160.cpp
+    src/clone-core/crypto/ripemd160.h
+    src/clone-core/crypto/sha1.cpp
+    src/clone-core/crypto/sha1.h
+    src/clone-core/crypto/sha256.cpp
+    src/clone-core/crypto/sha256.h
+    src/clone-core/crypto/sha512.cpp
+    src/clone-core/crypto/sha512.h
+    src/clone-core/primitives/transaction.cpp
+    src/clone-core/primitives/transaction.h
+    src/clone-core/script/interpreter.cpp
+    src/clone-core/script/interpreter.h
+    src/clone-core/script/script.cpp
+    src/clone-core/script/script.h
+    src/clone-core/script/script_error.h
   )
 endif()
 
@@ -428,7 +428,7 @@ if (${CURRENCY} STREQUAL "BCH")
   target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
 else()
 #message("clone BTC 2")
-  target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
+  target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core)
 endif()
 
 target_compile_definitions(kth-consensus-clone PUBLIC -DKTH_PROJECT_VERSION="\\"${KTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
@@ -449,7 +449,7 @@ if (${CURRENCY} STREQUAL "BCH")
 else()
 #message("clone BTC 3")
 
-_group_sources(kth-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy")
+_group_sources(kth-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core")
 endif()
 
 
@@ -497,7 +497,7 @@ else()
 
   target_include_directories(kth-consensus PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core)
 endif()
 
 
@@ -546,7 +546,7 @@ if (WITH_TESTS)
   #message("clone BTC 5")
     target_include_directories(knuth_consensus_test PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core)
   endif()
   
 
