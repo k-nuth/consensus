@@ -10,16 +10,16 @@
 #include <memory>
 #include <stdexcept>
 #include <string.h>
-#include <bitcoin/consensus/define.hpp>
-#include <bitcoin/consensus/export.hpp>
-#include <bitcoin/consensus/version.hpp>
+#include <kth/consensus/define.hpp>
+#include <kth/consensus/export.hpp>
+#include <kth/consensus/version.hpp>
 #include "primitives/transaction.h"
 #include "pubkey.h"
 #include "script/interpreter.h"
 #include "script/script_error.h"
 #include "version.h"
 
-namespace libbitcoin {
+namespace kth {
 namespace consensus {
 
 // Initialize libsecp256k1 context.
@@ -288,7 +288,7 @@ verify_result_type verify_script(const unsigned char* transaction,
     CScript output_script(prevout_script, prevout_script + prevout_script_size);
     auto const& input_script = tx->vin[tx_input_index].scriptSig;
 
-    // See libbitcoin-blockchain : validate.cpp :
+    // See blockchain : validate.cpp :
     // if (!output_script.run(input.script, current_tx, input_index, flags))...
     // const CScriptWitness* witness = nullptr;
     
@@ -340,7 +340,7 @@ verify_result_type verify_script(const unsigned char* transaction,
     auto const& input_script = tx->vin[tx_input_index].scriptSig;
     auto const witness_stack = &tx->vin[tx_input_index].scriptWitness;
 
-    // See libbitcoin-blockchain : validate_input.cpp :
+    // See blockchain : validate_input.cpp :
     // bc::blockchain::validate_input::verify_script(const transaction& tx,
     //     uint32_t input_index, uint32_t forks, bool use_libconsensus)...
     VerifyScript(input_script, output_script, witness_stack, script_flags,

@@ -574,11 +574,11 @@ install(TARGETS kth-consensus
 
 set(_knuth_headers
   # include_bitcoin_HEADERS =
-  bitcoin/consensus.hpp
+  kth/consensus.hpp
   # include_bitcoin_consensus_HEADERS =
-  bitcoin/consensus/define.hpp
-  bitcoin/consensus/export.hpp
-  bitcoin/consensus/version.hpp)
+  kth/consensus/define.hpp
+  kth/consensus/export.hpp
+  kth/consensus/version.hpp)
 foreach (_header ${_knuth_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)
   install(FILES "include/${_header}" DESTINATION "include/${_directory}")

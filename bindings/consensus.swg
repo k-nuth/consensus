@@ -1,7 +1,7 @@
 %module consensus
 %{
-#include <bitcoin/consensus.hpp>
+#include <kth/consensus.hpp>
 %}
-%include "../include/bitcoin/consensus/define.hpp"
-%include "../include/bitcoin/consensus/version.hpp"
-%include "../include/bitcoin/consensus/export.hpp"
+%include "../include/kth/consensus/define.hpp"
+%include "../include/kth/consensus/version.hpp"
+%include "../include/kth/consensus/export.hpp"

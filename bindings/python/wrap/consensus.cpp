@@ -3007,8 +3007,8 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_char swig_types[0]
-#define SWIGTYPE_p_libbitcoin__consensus__verify_flags_type swig_types[1]
-#define SWIGTYPE_p_libbitcoin__consensus__verify_result_type swig_types[2]
+#define SWIGTYPE_p_kth__consensus__verify_flags_type swig_types[1]
+#define SWIGTYPE_p_kth__consensus__verify_result_type swig_types[2]
 #define SWIGTYPE_p_unsigned_char swig_types[3]
 static swig_type_info *swig_types[5];
 static swig_module_info swig_module = {swig_types, 4, 0, 0, 0, 0};
@@ -3116,7 +3116,7 @@ namespace swig {
 }
 
 
-#include <bitcoin/consensus.hpp>
+#include <kth/consensus.hpp>
 
 
 SWIGINTERN swig_type_info*
@@ -3426,7 +3426,7 @@ SWIGINTERN PyObject *verify_result_eval_false_swigconstant(PyObject *SWIGUNUSEDP
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_eval_false",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_eval_false)));
+  SWIG_Python_SetConstant(d, "verify_result_eval_false",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_eval_false)));
   return SWIG_Py_Void();
 }
 
@@ -3437,7 +3437,7 @@ SWIGINTERN PyObject *verify_result_eval_true_swigconstant(PyObject *SWIGUNUSEDPA
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_eval_true",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_eval_true)));
+  SWIG_Python_SetConstant(d, "verify_result_eval_true",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_eval_true)));
   return SWIG_Py_Void();
 }
 
@@ -3448,7 +3448,7 @@ SWIGINTERN PyObject *verify_result_script_size_swigconstant(PyObject *SWIGUNUSED
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_script_size",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_script_size)));
+  SWIG_Python_SetConstant(d, "verify_result_script_size",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_script_size)));
   return SWIG_Py_Void();
 }
 
@@ -3459,7 +3459,7 @@ SWIGINTERN PyObject *verify_result_push_size_swigconstant(PyObject *SWIGUNUSEDPA
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_push_size",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_push_size)));
+  SWIG_Python_SetConstant(d, "verify_result_push_size",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_push_size)));
   return SWIG_Py_Void();
 }
 
@@ -3470,7 +3470,7 @@ SWIGINTERN PyObject *verify_result_op_count_swigconstant(PyObject *SWIGUNUSEDPAR
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_op_count",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_op_count)));
+  SWIG_Python_SetConstant(d, "verify_result_op_count",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_op_count)));
   return SWIG_Py_Void();
 }
 
@@ -3481,7 +3481,7 @@ SWIGINTERN PyObject *verify_result_stack_size_swigconstant(PyObject *SWIGUNUSEDP
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_stack_size",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_stack_size)));
+  SWIG_Python_SetConstant(d, "verify_result_stack_size",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_stack_size)));
   return SWIG_Py_Void();
 }
 
@@ -3492,7 +3492,7 @@ SWIGINTERN PyObject *verify_result_sig_count_swigconstant(PyObject *SWIGUNUSEDPA
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_sig_count",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_sig_count)));
+  SWIG_Python_SetConstant(d, "verify_result_sig_count",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_sig_count)));
   return SWIG_Py_Void();
 }
 
@@ -3503,7 +3503,7 @@ SWIGINTERN PyObject *verify_result_pubkey_count_swigconstant(PyObject *SWIGUNUSE
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_pubkey_count",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_pubkey_count)));
+  SWIG_Python_SetConstant(d, "verify_result_pubkey_count",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_pubkey_count)));
   return SWIG_Py_Void();
 }
 
@@ -3514,7 +3514,7 @@ SWIGINTERN PyObject *verify_result_verify_swigconstant(PyObject *SWIGUNUSEDPARM(
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_verify",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_verify)));
+  SWIG_Python_SetConstant(d, "verify_result_verify",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_verify)));
   return SWIG_Py_Void();
 }
 
@@ -3525,7 +3525,7 @@ SWIGINTERN PyObject *verify_result_equalverify_swigconstant(PyObject *SWIGUNUSED
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_equalverify",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_equalverify)));
+  SWIG_Python_SetConstant(d, "verify_result_equalverify",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_equalverify)));
   return SWIG_Py_Void();
 }
 
@@ -3536,7 +3536,7 @@ SWIGINTERN PyObject *verify_result_checkmultisigverify_swigconstant(PyObject *SW
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_checkmultisigverify",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_checkmultisigverify)));
+  SWIG_Python_SetConstant(d, "verify_result_checkmultisigverify",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_checkmultisigverify)));
   return SWIG_Py_Void();
 }
 
@@ -3547,7 +3547,7 @@ SWIGINTERN PyObject *verify_result_checksigverify_swigconstant(PyObject *SWIGUNU
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_checksigverify",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_checksigverify)));
+  SWIG_Python_SetConstant(d, "verify_result_checksigverify",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_checksigverify)));
   return SWIG_Py_Void();
 }
 
@@ -3558,7 +3558,7 @@ SWIGINTERN PyObject *verify_result_numequalverify_swigconstant(PyObject *SWIGUNU
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_numequalverify",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_numequalverify)));
+  SWIG_Python_SetConstant(d, "verify_result_numequalverify",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_numequalverify)));
   return SWIG_Py_Void();
 }
 
@@ -3569,7 +3569,7 @@ SWIGINTERN PyObject *verify_result_bad_opcode_swigconstant(PyObject *SWIGUNUSEDP
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_bad_opcode",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_bad_opcode)));
+  SWIG_Python_SetConstant(d, "verify_result_bad_opcode",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_bad_opcode)));
   return SWIG_Py_Void();
 }
 
@@ -3580,7 +3580,7 @@ SWIGINTERN PyObject *verify_result_disabled_opcode_swigconstant(PyObject *SWIGUN
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_disabled_opcode",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_disabled_opcode)));
+  SWIG_Python_SetConstant(d, "verify_result_disabled_opcode",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_disabled_opcode)));
   return SWIG_Py_Void();
 }
 
@@ -3591,7 +3591,7 @@ SWIGINTERN PyObject *verify_result_invalid_stack_operation_swigconstant(PyObject
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_invalid_stack_operation",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_invalid_stack_operation)));
+  SWIG_Python_SetConstant(d, "verify_result_invalid_stack_operation",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_invalid_stack_operation)));
   return SWIG_Py_Void();
 }
 
@@ -3602,7 +3602,7 @@ SWIGINTERN PyObject *verify_result_invalid_altstack_operation_swigconstant(PyObj
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_invalid_altstack_operation",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_invalid_altstack_operation)));
+  SWIG_Python_SetConstant(d, "verify_result_invalid_altstack_operation",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_invalid_altstack_operation)));
   return SWIG_Py_Void();
 }
 
@@ -3613,7 +3613,7 @@ SWIGINTERN PyObject *verify_result_unbalanced_conditional_swigconstant(PyObject 
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_unbalanced_conditional",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_unbalanced_conditional)));
+  SWIG_Python_SetConstant(d, "verify_result_unbalanced_conditional",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_unbalanced_conditional)));
   return SWIG_Py_Void();
 }
 
@@ -3624,7 +3624,7 @@ SWIGINTERN PyObject *verify_result_sig_hashtype_swigconstant(PyObject *SWIGUNUSE
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_sig_hashtype",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_sig_hashtype)));
+  SWIG_Python_SetConstant(d, "verify_result_sig_hashtype",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_sig_hashtype)));
   return SWIG_Py_Void();
 }
 
@@ -3635,7 +3635,7 @@ SWIGINTERN PyObject *verify_result_sig_der_swigconstant(PyObject *SWIGUNUSEDPARM
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_sig_der",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_sig_der)));
+  SWIG_Python_SetConstant(d, "verify_result_sig_der",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_sig_der)));
   return SWIG_Py_Void();
 }
 
@@ -3646,7 +3646,7 @@ SWIGINTERN PyObject *verify_result_minimaldata_swigconstant(PyObject *SWIGUNUSED
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_minimaldata",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_minimaldata)));
+  SWIG_Python_SetConstant(d, "verify_result_minimaldata",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_minimaldata)));
   return SWIG_Py_Void();
 }
 
@@ -3657,7 +3657,7 @@ SWIGINTERN PyObject *verify_result_sig_pushonly_swigconstant(PyObject *SWIGUNUSE
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_sig_pushonly",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_sig_pushonly)));
+  SWIG_Python_SetConstant(d, "verify_result_sig_pushonly",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_sig_pushonly)));
   return SWIG_Py_Void();
 }
 
@@ -3668,7 +3668,7 @@ SWIGINTERN PyObject *verify_result_sig_high_s_swigconstant(PyObject *SWIGUNUSEDP
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_sig_high_s",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_sig_high_s)));
+  SWIG_Python_SetConstant(d, "verify_result_sig_high_s",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_sig_high_s)));
   return SWIG_Py_Void();
 }
 
@@ -3679,7 +3679,7 @@ SWIGINTERN PyObject *verify_result_sig_nulldummy_swigconstant(PyObject *SWIGUNUS
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_sig_nulldummy",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_sig_nulldummy)));
+  SWIG_Python_SetConstant(d, "verify_result_sig_nulldummy",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_sig_nulldummy)));
   return SWIG_Py_Void();
 }
 
@@ -3690,7 +3690,7 @@ SWIGINTERN PyObject *verify_result_pubkeytype_swigconstant(PyObject *SWIGUNUSEDP
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_pubkeytype",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_pubkeytype)));
+  SWIG_Python_SetConstant(d, "verify_result_pubkeytype",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_pubkeytype)));
   return SWIG_Py_Void();
 }
 
@@ -3701,7 +3701,7 @@ SWIGINTERN PyObject *verify_result_cleanstack_swigconstant(PyObject *SWIGUNUSEDP
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_cleanstack",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_cleanstack)));
+  SWIG_Python_SetConstant(d, "verify_result_cleanstack",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_cleanstack)));
   return SWIG_Py_Void();
 }
 
@@ -3712,7 +3712,7 @@ SWIGINTERN PyObject *verify_result_minimalif_swigconstant(PyObject *SWIGUNUSEDPA
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_minimalif",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_minimalif)));
+  SWIG_Python_SetConstant(d, "verify_result_minimalif",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_minimalif)));
   return SWIG_Py_Void();
 }
 
@@ -3723,7 +3723,7 @@ SWIGINTERN PyObject *verify_result_sig_nullfail_swigconstant(PyObject *SWIGUNUSE
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_sig_nullfail",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_sig_nullfail)));
+  SWIG_Python_SetConstant(d, "verify_result_sig_nullfail",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_sig_nullfail)));
   return SWIG_Py_Void();
 }
 
@@ -3734,7 +3734,7 @@ SWIGINTERN PyObject *verify_result_discourage_upgradable_nops_swigconstant(PyObj
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_discourage_upgradable_nops",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_discourage_upgradable_nops)));
+  SWIG_Python_SetConstant(d, "verify_result_discourage_upgradable_nops",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_discourage_upgradable_nops)));
   return SWIG_Py_Void();
 }
 
@@ -3745,7 +3745,7 @@ SWIGINTERN PyObject *verify_result_discourage_upgradable_witness_program_swigcon
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_discourage_upgradable_witness_program",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_discourage_upgradable_witness_program)));
+  SWIG_Python_SetConstant(d, "verify_result_discourage_upgradable_witness_program",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_discourage_upgradable_witness_program)));
   return SWIG_Py_Void();
 }
 
@@ -3756,7 +3756,7 @@ SWIGINTERN PyObject *verify_result_op_return_swigconstant(PyObject *SWIGUNUSEDPA
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_op_return",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_op_return)));
+  SWIG_Python_SetConstant(d, "verify_result_op_return",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_op_return)));
   return SWIG_Py_Void();
 }
 
@@ -3767,7 +3767,7 @@ SWIGINTERN PyObject *verify_result_unknown_error_swigconstant(PyObject *SWIGUNUS
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_unknown_error",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_unknown_error)));
+  SWIG_Python_SetConstant(d, "verify_result_unknown_error",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_unknown_error)));
   return SWIG_Py_Void();
 }
 
@@ -3778,7 +3778,7 @@ SWIGINTERN PyObject *verify_result_witness_program_wrong_length_swigconstant(PyO
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_witness_program_wrong_length",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_witness_program_wrong_length)));
+  SWIG_Python_SetConstant(d, "verify_result_witness_program_wrong_length",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_witness_program_wrong_length)));
   return SWIG_Py_Void();
 }
 
@@ -3789,7 +3789,7 @@ SWIGINTERN PyObject *verify_result_witness_program_empty_witness_swigconstant(Py
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_witness_program_empty_witness",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_witness_program_empty_witness)));
+  SWIG_Python_SetConstant(d, "verify_result_witness_program_empty_witness",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_witness_program_empty_witness)));
   return SWIG_Py_Void();
 }
 
@@ -3800,7 +3800,7 @@ SWIGINTERN PyObject *verify_result_witness_program_mismatch_swigconstant(PyObjec
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_witness_program_mismatch",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_witness_program_mismatch)));
+  SWIG_Python_SetConstant(d, "verify_result_witness_program_mismatch",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_witness_program_mismatch)));
   return SWIG_Py_Void();
 }
 
@@ -3811,7 +3811,7 @@ SWIGINTERN PyObject *verify_result_witness_malleated_swigconstant(PyObject *SWIG
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_witness_malleated",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_witness_malleated)));
+  SWIG_Python_SetConstant(d, "verify_result_witness_malleated",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_witness_malleated)));
   return SWIG_Py_Void();
 }
 
@@ -3822,7 +3822,7 @@ SWIGINTERN PyObject *verify_result_witness_malleated_p2sh_swigconstant(PyObject 
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_witness_malleated_p2sh",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_witness_malleated_p2sh)));
+  SWIG_Python_SetConstant(d, "verify_result_witness_malleated_p2sh",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_witness_malleated_p2sh)));
   return SWIG_Py_Void();
 }
 
@@ -3833,7 +3833,7 @@ SWIGINTERN PyObject *verify_result_witness_unexpected_swigconstant(PyObject *SWI
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_witness_unexpected",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_witness_unexpected)));
+  SWIG_Python_SetConstant(d, "verify_result_witness_unexpected",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_witness_unexpected)));
   return SWIG_Py_Void();
 }
 
@@ -3844,7 +3844,7 @@ SWIGINTERN PyObject *verify_result_witness_pubkeytype_swigconstant(PyObject *SWI
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_witness_pubkeytype",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_witness_pubkeytype)));
+  SWIG_Python_SetConstant(d, "verify_result_witness_pubkeytype",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_witness_pubkeytype)));
   return SWIG_Py_Void();
 }
 
@@ -3855,7 +3855,7 @@ SWIGINTERN PyObject *verify_result_tx_invalid_swigconstant(PyObject *SWIGUNUSEDP
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_tx_invalid",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_tx_invalid)));
+  SWIG_Python_SetConstant(d, "verify_result_tx_invalid",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_tx_invalid)));
   return SWIG_Py_Void();
 }
 
@@ -3866,7 +3866,7 @@ SWIGINTERN PyObject *verify_result_tx_size_invalid_swigconstant(PyObject *SWIGUN
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_tx_size_invalid",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_tx_size_invalid)));
+  SWIG_Python_SetConstant(d, "verify_result_tx_size_invalid",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_tx_size_invalid)));
   return SWIG_Py_Void();
 }
 
@@ -3877,7 +3877,7 @@ SWIGINTERN PyObject *verify_result_tx_input_invalid_swigconstant(PyObject *SWIGU
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_tx_input_invalid",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_tx_input_invalid)));
+  SWIG_Python_SetConstant(d, "verify_result_tx_input_invalid",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_tx_input_invalid)));
   return SWIG_Py_Void();
 }
 
@@ -3888,7 +3888,7 @@ SWIGINTERN PyObject *verify_result_negative_locktime_swigconstant(PyObject *SWIG
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_negative_locktime",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_negative_locktime)));
+  SWIG_Python_SetConstant(d, "verify_result_negative_locktime",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_negative_locktime)));
   return SWIG_Py_Void();
 }
 
@@ -3899,7 +3899,7 @@ SWIGINTERN PyObject *verify_result_unsatisfied_locktime_swigconstant(PyObject *S
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_result_unsatisfied_locktime",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_result_unsatisfied_locktime)));
+  SWIG_Python_SetConstant(d, "verify_result_unsatisfied_locktime",SWIG_From_int(static_cast< int >(kth::consensus::verify_result_unsatisfied_locktime)));
   return SWIG_Py_Void();
 }
 
@@ -3910,7 +3910,7 @@ SWIGINTERN PyObject *verify_flags_none_swigconstant(PyObject *SWIGUNUSEDPARM(sel
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_none",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_none)));
+  SWIG_Python_SetConstant(d, "verify_flags_none",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_none)));
   return SWIG_Py_Void();
 }
 
@@ -3921,7 +3921,7 @@ SWIGINTERN PyObject *verify_flags_p2sh_swigconstant(PyObject *SWIGUNUSEDPARM(sel
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_p2sh",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_p2sh)));
+  SWIG_Python_SetConstant(d, "verify_flags_p2sh",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_p2sh)));
   return SWIG_Py_Void();
 }
 
@@ -3932,7 +3932,7 @@ SWIGINTERN PyObject *verify_flags_strictenc_swigconstant(PyObject *SWIGUNUSEDPAR
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_strictenc",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_strictenc)));
+  SWIG_Python_SetConstant(d, "verify_flags_strictenc",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_strictenc)));
   return SWIG_Py_Void();
 }
 
@@ -3943,7 +3943,7 @@ SWIGINTERN PyObject *verify_flags_dersig_swigconstant(PyObject *SWIGUNUSEDPARM(s
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_dersig",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_dersig)));
+  SWIG_Python_SetConstant(d, "verify_flags_dersig",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_dersig)));
   return SWIG_Py_Void();
 }
 
@@ -3954,7 +3954,7 @@ SWIGINTERN PyObject *verify_flags_low_s_swigconstant(PyObject *SWIGUNUSEDPARM(se
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_low_s",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_low_s)));
+  SWIG_Python_SetConstant(d, "verify_flags_low_s",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_low_s)));
   return SWIG_Py_Void();
 }
 
@@ -3965,7 +3965,7 @@ SWIGINTERN PyObject *verify_flags_nulldummy_swigconstant(PyObject *SWIGUNUSEDPAR
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_nulldummy",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_nulldummy)));
+  SWIG_Python_SetConstant(d, "verify_flags_nulldummy",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_nulldummy)));
   return SWIG_Py_Void();
 }
 
@@ -3976,7 +3976,7 @@ SWIGINTERN PyObject *verify_flags_sigpushonly_swigconstant(PyObject *SWIGUNUSEDP
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_sigpushonly",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_sigpushonly)));
+  SWIG_Python_SetConstant(d, "verify_flags_sigpushonly",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_sigpushonly)));
   return SWIG_Py_Void();
 }
 
@@ -3987,7 +3987,7 @@ SWIGINTERN PyObject *verify_flags_minimaldata_swigconstant(PyObject *SWIGUNUSEDP
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_minimaldata",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_minimaldata)));
+  SWIG_Python_SetConstant(d, "verify_flags_minimaldata",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_minimaldata)));
   return SWIG_Py_Void();
 }
 
@@ -3998,7 +3998,7 @@ SWIGINTERN PyObject *verify_flags_discourage_upgradable_nops_swigconstant(PyObje
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_discourage_upgradable_nops",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_discourage_upgradable_nops)));
+  SWIG_Python_SetConstant(d, "verify_flags_discourage_upgradable_nops",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_discourage_upgradable_nops)));
   return SWIG_Py_Void();
 }
 
@@ -4009,7 +4009,7 @@ SWIGINTERN PyObject *verify_flags_cleanstack_swigconstant(PyObject *SWIGUNUSEDPA
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_cleanstack",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_cleanstack)));
+  SWIG_Python_SetConstant(d, "verify_flags_cleanstack",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_cleanstack)));
   return SWIG_Py_Void();
 }
 
@@ -4020,7 +4020,7 @@ SWIGINTERN PyObject *verify_flags_checklocktimeverify_swigconstant(PyObject *SWI
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_checklocktimeverify",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_checklocktimeverify)));
+  SWIG_Python_SetConstant(d, "verify_flags_checklocktimeverify",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_checklocktimeverify)));
   return SWIG_Py_Void();
 }
 
@@ -4031,7 +4031,7 @@ SWIGINTERN PyObject *verify_flags_checksequenceverify_swigconstant(PyObject *SWI
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_checksequenceverify",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_checksequenceverify)));
+  SWIG_Python_SetConstant(d, "verify_flags_checksequenceverify",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_checksequenceverify)));
   return SWIG_Py_Void();
 }
 
@@ -4042,7 +4042,7 @@ SWIGINTERN PyObject *verify_flags_witness_swigconstant(PyObject *SWIGUNUSEDPARM(
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_witness",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_witness)));
+  SWIG_Python_SetConstant(d, "verify_flags_witness",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_witness)));
   return SWIG_Py_Void();
 }
 
@@ -4053,7 +4053,7 @@ SWIGINTERN PyObject *verify_flags_discourage_upgradable_witness_program_swigcons
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_discourage_upgradable_witness_program",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_discourage_upgradable_witness_program)));
+  SWIG_Python_SetConstant(d, "verify_flags_discourage_upgradable_witness_program",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_discourage_upgradable_witness_program)));
   return SWIG_Py_Void();
 }
 
@@ -4064,7 +4064,7 @@ SWIGINTERN PyObject *verify_flags_minimal_if_swigconstant(PyObject *SWIGUNUSEDPA
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_minimal_if",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_minimal_if)));
+  SWIG_Python_SetConstant(d, "verify_flags_minimal_if",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_minimal_if)));
   return SWIG_Py_Void();
 }
 
@@ -4075,7 +4075,7 @@ SWIGINTERN PyObject *verify_flags_null_fail_swigconstant(PyObject *SWIGUNUSEDPAR
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_null_fail",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_null_fail)));
+  SWIG_Python_SetConstant(d, "verify_flags_null_fail",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_null_fail)));
   return SWIG_Py_Void();
 }
 
@@ -4086,7 +4086,7 @@ SWIGINTERN PyObject *verify_flags_witness_public_key_compressed_swigconstant(PyO
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_witness_public_key_compressed",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_witness_public_key_compressed)));
+  SWIG_Python_SetConstant(d, "verify_flags_witness_public_key_compressed",SWIG_From_int(static_cast< int >(kth::consensus::verify_flags_witness_public_key_compressed)));
   return SWIG_Py_Void();
 }
 
@@ -4121,7 +4121,7 @@ SWIGINTERN PyObject *_wrap_verify_script(PyObject *SWIGUNUSEDPARM(self), PyObjec
   PyObject * obj4 = 0 ;
   PyObject * obj5 = 0 ;
   PyObject * obj6 = 0 ;
-  libbitcoin::consensus::verify_result_type result;
+  kth::consensus::verify_result_type result;
   
   if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:verify_script",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_unsigned_char, 0 |  0 );
@@ -4159,7 +4159,7 @@ SWIGINTERN PyObject *_wrap_verify_script(PyObject *SWIGUNUSEDPARM(self), PyObjec
     SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "verify_script" "', argument " "7"" of type '" "unsigned int""'");
   } 
   arg7 = static_cast< unsigned int >(val7);
-  result = (libbitcoin::consensus::verify_result_type)libbitcoin::consensus::verify_script((unsigned char const *)arg1,arg2,(unsigned char const *)arg3,arg4,arg5,arg6,arg7);
+  result = (kth::consensus::verify_result_type)kth::consensus::verify_script((unsigned char const *)arg1,arg2,(unsigned char const *)arg3,arg4,arg5,arg6,arg7);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
@@ -4242,26 +4242,26 @@ static PyMethodDef SwigMethods[] = {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_libbitcoin__consensus__verify_flags_type = {"_p_libbitcoin__consensus__verify_flags_type", "enum libbitcoin::consensus::verify_flags_type *|libbitcoin::consensus::verify_flags *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_libbitcoin__consensus__verify_result_type = {"_p_libbitcoin__consensus__verify_result_type", "enum libbitcoin::consensus::verify_result_type *|libbitcoin::consensus::verify_result *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_kth__consensus__verify_flags_type = {"_p_kth__consensus__verify_flags_type", "enum kth::consensus::verify_flags_type *|kth::consensus::verify_flags *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_kth__consensus__verify_result_type = {"_p_kth__consensus__verify_result_type", "enum kth::consensus::verify_result_type *|kth::consensus::verify_result *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
-  &_swigt__p_libbitcoin__consensus__verify_flags_type,
-  &_swigt__p_libbitcoin__consensus__verify_result_type,
+  &_swigt__p_kth__consensus__verify_flags_type,
+  &_swigt__p_kth__consensus__verify_result_type,
   &_swigt__p_unsigned_char,
 };
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_libbitcoin__consensus__verify_flags_type[] = {  {&_swigt__p_libbitcoin__consensus__verify_flags_type, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_libbitcoin__consensus__verify_result_type[] = {  {&_swigt__p_libbitcoin__consensus__verify_result_type, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_kth__consensus__verify_flags_type[] = {  {&_swigt__p_kth__consensus__verify_flags_type, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_kth__consensus__verify_result_type[] = {  {&_swigt__p_kth__consensus__verify_result_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
-  _swigc__p_libbitcoin__consensus__verify_flags_type,
-  _swigc__p_libbitcoin__consensus__verify_result_type,
+  _swigc__p_kth__consensus__verify_flags_type,
+  _swigc__p_kth__consensus__verify_result_type,
   _swigc__p_unsigned_char,
 };
 

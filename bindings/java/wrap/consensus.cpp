@@ -228,7 +228,7 @@ static void SWIGUNUSED SWIG_JavaThrowException(JNIEnv *jenv, SWIG_JavaExceptionC
 #define SWIG_contract_assert(nullreturn, expr, msg) if (!(expr)) {SWIG_JavaThrowException(jenv, SWIG_JavaIllegalArgumentException, msg); return nullreturn; } else
 
 
-#include <bitcoin/consensus.hpp>
+#include <kth/consensus.hpp>
 
 
 #ifdef __cplusplus
@@ -285,11 +285,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_KTH_1CONSENSUS_1PATCH_1VERSION_1get(JN
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1result_1eval_1false_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_result_type result;
+  kth::consensus::verify_result_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_result_type)libbitcoin::consensus::verify_result_eval_false;
+  result = (kth::consensus::verify_result_type)kth::consensus::verify_result_eval_false;
   jresult = (jint)result; 
   return jresult;
 }
@@ -297,11 +297,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1result_1eval_1false_1get(JNIEn
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1none_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_none;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_none;
   jresult = (jint)result; 
   return jresult;
 }
@@ -309,11 +309,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1none_1get(JNIEnv *jenv,
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1p2sh_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_p2sh;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_p2sh;
   jresult = (jint)result; 
   return jresult;
 }
@@ -321,11 +321,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1p2sh_1get(JNIEnv *jenv,
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1strictenc_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_strictenc;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_strictenc;
   jresult = (jint)result; 
   return jresult;
 }
@@ -333,11 +333,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1strictenc_1get(JNIEnv *
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1dersig_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_dersig;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_dersig;
   jresult = (jint)result; 
   return jresult;
 }
@@ -345,11 +345,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1dersig_1get(JNIEnv *jen
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1low_1s_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_low_s;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_low_s;
   jresult = (jint)result; 
   return jresult;
 }
@@ -357,11 +357,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1low_1s_1get(JNIEnv *jen
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1nulldummy_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_nulldummy;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_nulldummy;
   jresult = (jint)result; 
   return jresult;
 }
@@ -369,11 +369,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1nulldummy_1get(JNIEnv *
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1sigpushonly_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_sigpushonly;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_sigpushonly;
   jresult = (jint)result; 
   return jresult;
 }
@@ -381,11 +381,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1sigpushonly_1get(JNIEnv
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1minimaldata_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_minimaldata;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_minimaldata;
   jresult = (jint)result; 
   return jresult;
 }
@@ -393,11 +393,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1minimaldata_1get(JNIEnv
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1discourage_1upgradable_1nops_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_discourage_upgradable_nops;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_discourage_upgradable_nops;
   jresult = (jint)result; 
   return jresult;
 }
@@ -405,11 +405,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1discourage_1upgradable_
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1cleanstack_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_cleanstack;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_cleanstack;
   jresult = (jint)result; 
   return jresult;
 }
@@ -417,11 +417,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1cleanstack_1get(JNIEnv 
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1checklocktimeverify_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_checklocktimeverify;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_checklocktimeverify;
   jresult = (jint)result; 
   return jresult;
 }
@@ -429,11 +429,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1checklocktimeverify_1ge
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1checksequenceverify_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_checksequenceverify;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_checksequenceverify;
   jresult = (jint)result; 
   return jresult;
 }
@@ -441,11 +441,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1checksequenceverify_1ge
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1witness_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_witness;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_witness;
   jresult = (jint)result; 
   return jresult;
 }
@@ -453,11 +453,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1witness_1get(JNIEnv *je
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1discourage_1upgradable_1witness_1program_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_discourage_upgradable_witness_program;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_discourage_upgradable_witness_program;
   jresult = (jint)result; 
   return jresult;
 }
@@ -465,11 +465,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1discourage_1upgradable_
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1minimal_1if_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_minimal_if;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_minimal_if;
   jresult = (jint)result; 
   return jresult;
 }
@@ -477,11 +477,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1minimal_1if_1get(JNIEnv
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1null_1fail_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_null_fail;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_null_fail;
   jresult = (jint)result; 
   return jresult;
 }
@@ -489,11 +489,11 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1null_1fail_1get(JNIEnv 
 
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1witness_1public_1key_1compressed_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
+  kth::consensus::verify_flags_type result;
   
   (void)jenv;
   (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_witness_public_key_compressed;
+  result = (kth::consensus::verify_flags_type)kth::consensus::verify_flags_witness_public_key_compressed;
   jresult = (jint)result; 
   return jresult;
 }
@@ -508,7 +508,7 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1script(JNIEnv *jenv, jclass jc
   unsigned long long arg5 ;
   unsigned int arg6 ;
   unsigned int arg7 ;
-  libbitcoin::consensus::verify_result_type result;
+  kth::consensus::verify_result_type result;
   
   (void)jenv;
   (void)jcls;
@@ -541,7 +541,7 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1script(JNIEnv *jenv, jclass jc
   }
   arg6 = (unsigned int)jarg6; 
   arg7 = (unsigned int)jarg7; 
-  result = (libbitcoin::consensus::verify_result_type)libbitcoin::consensus::verify_script((unsigned char const *)arg1,arg2,(unsigned char const *)arg3,arg4,arg5,arg6,arg7);
+  result = (kth::consensus::verify_result_type)kth::consensus::verify_script((unsigned char const *)arg1,arg2,(unsigned char const *)arg3,arg4,arg5,arg6,arg7);
   jresult = (jint)result; 
   return jresult;
 }

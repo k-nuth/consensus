@@ -3,14 +3,14 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <stdint.h>
-#include <bitcoin/consensus.hpp>
+#include <kth/consensus.hpp>
 #include <boost/test/unit_test.hpp>
 
 // These give us test accesss to unpublished symbols.
 #include "consensus/consensus.hpp"
 #include "script/interpreter.h"
 
-using namespace libbitcoin::consensus;
+using namespace kth::consensus;
 
 BOOST_AUTO_TEST_SUITE(consensus__verify_flags_to_script_flags)
 

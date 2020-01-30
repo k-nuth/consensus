@@ -1,5 +1,8 @@
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2014-2015 libbitcoin-consensus developers (see COPYING).
 //
 //        GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 //
@@ -14,8 +17,8 @@
  * Maintainers: Do not include this header internal to this library.
  */
 
-#include <bitcoin/consensus/define.hpp>
-#include <bitcoin/consensus/export.hpp>
-#include <bitcoin/consensus/version.hpp>
+#include <kth/consensus/define.hpp>
+#include <kth/consensus/export.hpp>
+#include <kth/consensus/version.hpp>
 
 #endif

@@ -8,10 +8,10 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <bitcoin/consensus/define.hpp>
-#include <bitcoin/consensus/version.hpp>
+#include <kth/consensus/define.hpp>
+#include <kth/consensus/version.hpp>
 
-namespace libbitcoin {
+namespace kth {
 namespace consensus {
 
 /**

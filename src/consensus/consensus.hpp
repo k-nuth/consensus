@@ -6,11 +6,11 @@
 #define KTH_CONSENSUS_CONSENSUS_HPP
 
 #include <cstddef>
-#include <bitcoin/consensus/define.hpp>
-#include <bitcoin/consensus/export.hpp>
+#include <kth/consensus/define.hpp>
+#include <kth/consensus/export.hpp>
 #include "script/script_error.h"
 
-namespace libbitcoin {
+namespace kth {
 namespace consensus {
 
 // These are not published in the public header but are exposed here for test.

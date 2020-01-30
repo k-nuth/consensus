@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <bitcoin/consensus.hpp>
+#include <kth/consensus.hpp>
 #include <boost/test/unit_test.hpp>
 
 #ifdef KTH_CURRENCY_BCH
@@ -19,7 +19,7 @@
 
 BOOST_AUTO_TEST_SUITE(consensus__script_verify)
 
-using namespace libbitcoin::consensus;
+using namespace kth::consensus;
 
 typedef std::vector<uint8_t> data_chunk;
 
@@ -62,6 +62,7 @@ static bool decode_base16(data_chunk& out, const std::string& in)
     return true;
 }
 
+// TODO(kth): this is from the v2 to v3 merge
 // static verify_result test_verify(const std::string& transaction,
 // <<<<<<< HEAD
 //     const std::string& prevout_script, uint32_t tx_input_index=0,
