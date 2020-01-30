@@ -237,20 +237,20 @@ inline void SerializeTransaction(const TxType &tx, Stream &s) {
 class CTransaction {
 public:
     // Default transaction version.
-    static int const32_t CURRENT_VERSION = 2;
+    static int32_t const CURRENT_VERSION = 2;
 
     // Changing the default transaction version requires a two step process:
     // first adapting relay policy by bumping MAX_STANDARD_VERSION, and then
     // later date bumping the default CURRENT_VERSION at which point both
     // CURRENT_VERSION and MAX_STANDARD_VERSION will be equal.
-    static int const32_t MAX_STANDARD_VERSION = 2;
+    static int32_t const MAX_STANDARD_VERSION = 2;
 
     // The local variables are made const to prevent unintended modification
     // without updating the cached hash value. However, CTransaction is not
     // actually immutable; deserialization and assignment are implemented,
     // and bypass the constness. This is safe, as they update the entire
     // structure, including the hash.
-    int const32_t nVersion;
+    int32_t const nVersion;
     const std::vector<CTxIn> vin;
     const std::vector<CTxOut> vout;
     const uint32_t nLockTime;
