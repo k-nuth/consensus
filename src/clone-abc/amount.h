@@ -84,10 +84,10 @@ public:
     /**
      * Multiplication
      */
-    friend constexpr Amount operator*(const int64_t a, const Amount b) {
+    friend constexpr Amount operator*(int64_t const a, const Amount b) {
         return Amount(a * b.amount);
     }
-    friend constexpr Amount operator*(const int a, const Amount b) {
+    friend constexpr Amount operator*(int const a, const Amount b) {
         return Amount(a * b.amount);
     }
 
@@ -97,11 +97,11 @@ public:
     constexpr int64_t operator/(const Amount b) const {
         return amount / b.amount;
     }
-    constexpr Amount operator/(const int64_t b) const {
+    constexpr Amount operator/(int64_t const b) const {
         return Amount(amount / b);
     }
-    constexpr Amount operator/(const int b) const { return Amount(amount / b); }
-    Amount &operator/=(const int64_t n) {
+    constexpr Amount operator/(int const b) const { return Amount(amount / b); }
+    Amount &operator/=(int64_t const n) {
         amount /= n;
         return *this;
     }
@@ -112,10 +112,10 @@ public:
     constexpr Amount operator%(const Amount b) const {
         return Amount(amount % b.amount);
     }
-    constexpr Amount operator%(const int64_t b) const {
+    constexpr Amount operator%(int64_t const b) const {
         return Amount(amount % b);
     }
-    constexpr Amount operator%(const int b) const { return Amount(amount % b); }
+    constexpr Amount operator%(int const b) const { return Amount(amount % b); }
 
     /**
      * Do not implement double ops to get an error with double and ensure

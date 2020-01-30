@@ -1,21 +1,7 @@
-#
-# Copyright (c) 2017-2019 Knuth Project.
-#
-# This file is part of the Knuth Project.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+# Copyright (c) 2016-2020 Knuth Project developers.
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 
 branches:
   only:
@@ -99,7 +85,7 @@ for:
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       CONAN_VISUAL_VERSIONS: 16
       CONAN_VISUAL_RUNTIMES: MT
-      KNUTH_RUN_TESTS: true
+      KTH_RUN_TESTS: true
   -
     branches:
       only:
@@ -116,21 +102,21 @@ for:
         - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
           CONAN_VISUAL_VERSIONS: 16
           CONAN_VISUAL_RUNTIMES: MT
-          KNUTH_RUN_TESTS: true
+          KTH_RUN_TESTS: true
         - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
           CONAN_VISUAL_VERSIONS: 16
           CONAN_VISUAL_RUNTIMES: MD
-          KNUTH_RUN_TESTS: true
+          KTH_RUN_TESTS: true
 
         # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
         #   CONAN_VISUAL_VERSIONS: 15
         #   CONAN_VISUAL_RUNTIMES: MT
-        #   KNUTH_RUN_TESTS: true
+        #   KTH_RUN_TESTS: true
         #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
         # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
         #   CONAN_VISUAL_VERSIONS: 15
         #   CONAN_VISUAL_RUNTIMES: MD
-        #   KNUTH_RUN_TESTS: true
+        #   KTH_RUN_TESTS: true
         #   VS150COMNTOOLS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\"
         # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
         #   CONAN_VISUAL_VERSIONS: 14

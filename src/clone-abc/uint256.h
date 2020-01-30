@@ -80,14 +80,14 @@ public:
 
     uint8_t *end() { return &data[WIDTH]; }
 
-    const uint8_t *begin() const { return &data[0]; }
+    uint8_t const *begin() const { return &data[0]; }
 
-    const uint8_t *end() const { return &data[WIDTH]; }
+    uint8_t const *end() const { return &data[WIDTH]; }
 
     unsigned int size() const { return sizeof(data); }
 
     uint64_t GetUint64(int pos) const {
-        const uint8_t *ptr = data + pos * 8;
+        uint8_t const *ptr = data + pos * 8;
         return uint64_t(ptr[0]) | (uint64_t(ptr[1]) << 8) |
                (uint64_t(ptr[2]) << 16) | (uint64_t(ptr[3]) << 24) |
                (uint64_t(ptr[4]) << 32) | (uint64_t(ptr[5]) << 40) |

@@ -235,7 +235,7 @@ static void SWIGUNUSED SWIG_JavaThrowException(JNIEnv *jenv, SWIG_JavaExceptionC
 extern "C" {
 #endif
 
-SWIGEXPORT jstring JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1VERSION_1get(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jstring JNICALL Java_consensusJNI_KTH_1CONSENSUS_1VERSION_1get(JNIEnv *jenv, jclass jcls) {
   jstring jresult = 0 ;
   char *result = 0 ;
   
@@ -247,7 +247,7 @@ SWIGEXPORT jstring JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1VERSION_1get
 }
 
 
-SWIGEXPORT jint JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1MAJOR_1VERSION_1get(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_consensusJNI_KTH_1CONSENSUS_1MAJOR_1VERSION_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   int result;
   
@@ -259,7 +259,7 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1MAJOR_1VERSION_
 }
 
 
-SWIGEXPORT jint JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1MINOR_1VERSION_1get(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_consensusJNI_KTH_1CONSENSUS_1MINOR_1VERSION_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   int result;
   
@@ -271,7 +271,7 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1MINOR_1VERSION_
 }
 
 
-SWIGEXPORT jint JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1PATCH_1VERSION_1get(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_consensusJNI_KTH_1CONSENSUS_1PATCH_1VERSION_1get(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   int result;
   

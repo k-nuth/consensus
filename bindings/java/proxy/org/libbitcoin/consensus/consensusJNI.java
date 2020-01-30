@@ -8,10 +8,10 @@
 
 
 public class consensusJNI {
-  public final static native String LIBBITCOIN_CONSENSUS_VERSION_get();
-  public final static native int LIBBITCOIN_CONSENSUS_MAJOR_VERSION_get();
-  public final static native int LIBBITCOIN_CONSENSUS_MINOR_VERSION_get();
-  public final static native int LIBBITCOIN_CONSENSUS_PATCH_VERSION_get();
+  public final static native String KTH_CONSENSUS_VERSION_get();
+  public final static native int KTH_CONSENSUS_MAJOR_VERSION_get();
+  public final static native int KTH_CONSENSUS_MINOR_VERSION_get();
+  public final static native int KTH_CONSENSUS_PATCH_VERSION_get();
   public final static native int verify_result_eval_false_get();
   public final static native int verify_flags_none_get();
   public final static native int verify_flags_p2sh_get();

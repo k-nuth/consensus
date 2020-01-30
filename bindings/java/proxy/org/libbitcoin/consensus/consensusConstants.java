@@ -8,8 +8,8 @@
 
 
 public interface consensusConstants {
-  public final static String LIBBITCOIN_CONSENSUS_VERSION = consensusJNI.LIBBITCOIN_CONSENSUS_VERSION_get();
-  public final static int LIBBITCOIN_CONSENSUS_MAJOR_VERSION = consensusJNI.LIBBITCOIN_CONSENSUS_MAJOR_VERSION_get();
-  public final static int LIBBITCOIN_CONSENSUS_MINOR_VERSION = consensusJNI.LIBBITCOIN_CONSENSUS_MINOR_VERSION_get();
-  public final static int LIBBITCOIN_CONSENSUS_PATCH_VERSION = consensusJNI.LIBBITCOIN_CONSENSUS_PATCH_VERSION_get();
+  public final static String KTH_CONSENSUS_VERSION = consensusJNI.KTH_CONSENSUS_VERSION_get();
+  public final static int KTH_CONSENSUS_MAJOR_VERSION = consensusJNI.KTH_CONSENSUS_MAJOR_VERSION_get();
+  public final static int KTH_CONSENSUS_MINOR_VERSION = consensusJNI.KTH_CONSENSUS_MINOR_VERSION_get();
+  public final static int KTH_CONSENSUS_PATCH_VERSION = consensusJNI.KTH_CONSENSUS_PATCH_VERSION_get();
 }

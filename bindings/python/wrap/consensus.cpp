@@ -3376,46 +3376,46 @@ SWIG_AsVal_unsigned_SS_int (PyObject * obj, unsigned int *val)
 #ifdef __cplusplus
 extern "C" {
 #endif
-SWIGINTERN PyObject *LIBBITCOIN_CONSENSUS_VERSION_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *KTH_CONSENSUS_VERSION_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *module;
   PyObject *d;
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "LIBBITCOIN_CONSENSUS_VERSION",SWIG_FromCharPtr("3.3.0"));
+  SWIG_Python_SetConstant(d, "KTH_CONSENSUS_VERSION",SWIG_FromCharPtr("3.3.0"));
   return SWIG_Py_Void();
 }
 
 
-SWIGINTERN PyObject *LIBBITCOIN_CONSENSUS_MAJOR_VERSION_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *KTH_CONSENSUS_MAJOR_VERSION_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *module;
   PyObject *d;
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "LIBBITCOIN_CONSENSUS_MAJOR_VERSION",SWIG_From_int(static_cast< int >(3)));
+  SWIG_Python_SetConstant(d, "KTH_CONSENSUS_MAJOR_VERSION",SWIG_From_int(static_cast< int >(3)));
   return SWIG_Py_Void();
 }
 
 
-SWIGINTERN PyObject *LIBBITCOIN_CONSENSUS_MINOR_VERSION_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *KTH_CONSENSUS_MINOR_VERSION_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *module;
   PyObject *d;
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "LIBBITCOIN_CONSENSUS_MINOR_VERSION",SWIG_From_int(static_cast< int >(3)));
+  SWIG_Python_SetConstant(d, "KTH_CONSENSUS_MINOR_VERSION",SWIG_From_int(static_cast< int >(3)));
   return SWIG_Py_Void();
 }
 
 
-SWIGINTERN PyObject *LIBBITCOIN_CONSENSUS_PATCH_VERSION_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *KTH_CONSENSUS_PATCH_VERSION_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *module;
   PyObject *d;
   if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "LIBBITCOIN_CONSENSUS_PATCH_VERSION",SWIG_From_int(static_cast< int >(0)));
+  SWIG_Python_SetConstant(d, "KTH_CONSENSUS_PATCH_VERSION",SWIG_From_int(static_cast< int >(0)));
   return SWIG_Py_Void();
 }
 
@@ -4169,10 +4169,10 @@ fail:
 
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
-	 { (char *)"LIBBITCOIN_CONSENSUS_VERSION_swigconstant", LIBBITCOIN_CONSENSUS_VERSION_swigconstant, METH_VARARGS, NULL},
-	 { (char *)"LIBBITCOIN_CONSENSUS_MAJOR_VERSION_swigconstant", LIBBITCOIN_CONSENSUS_MAJOR_VERSION_swigconstant, METH_VARARGS, NULL},
-	 { (char *)"LIBBITCOIN_CONSENSUS_MINOR_VERSION_swigconstant", LIBBITCOIN_CONSENSUS_MINOR_VERSION_swigconstant, METH_VARARGS, NULL},
-	 { (char *)"LIBBITCOIN_CONSENSUS_PATCH_VERSION_swigconstant", LIBBITCOIN_CONSENSUS_PATCH_VERSION_swigconstant, METH_VARARGS, NULL},
+	 { (char *)"KTH_CONSENSUS_VERSION_swigconstant", KTH_CONSENSUS_VERSION_swigconstant, METH_VARARGS, NULL},
+	 { (char *)"KTH_CONSENSUS_MAJOR_VERSION_swigconstant", KTH_CONSENSUS_MAJOR_VERSION_swigconstant, METH_VARARGS, NULL},
+	 { (char *)"KTH_CONSENSUS_MINOR_VERSION_swigconstant", KTH_CONSENSUS_MINOR_VERSION_swigconstant, METH_VARARGS, NULL},
+	 { (char *)"KTH_CONSENSUS_PATCH_VERSION_swigconstant", KTH_CONSENSUS_PATCH_VERSION_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"verify_result_eval_false_swigconstant", verify_result_eval_false_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"verify_result_eval_true_swigconstant", verify_result_eval_true_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"verify_result_script_size_swigconstant", verify_result_script_size_swigconstant, METH_VARARGS, NULL},

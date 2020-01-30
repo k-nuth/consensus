@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef LIBBITCOIN_CONSENSUS_EXPORT_HPP
-#define LIBBITCOIN_CONSENSUS_EXPORT_HPP
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef KTH_CONSENSUS_EXPORT_HPP
+#define KTH_CONSENSUS_EXPORT_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -188,7 +174,7 @@ typedef enum verify_flags_type
      */
     verify_flags_checksequenceverify = (1U << 10)
 
-#if ! defined(KNUTH_CURRENCY_BCH)
+#if ! defined(KTH_CURRENCY_BCH)
     /**
      * SCRIPT_VERIFY_WITNESS (bip141).
      */
@@ -215,7 +201,7 @@ typedef enum verify_flags_type
     , verify_flags_witness_public_key_compressed = (1U << 15)
 #endif
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
     /**
      * SCRIPT_ENABLE_SIGHASH_FORKID (bitcoin-cash).
      */
@@ -260,7 +246,7 @@ typedef enum verify_flags_type
  * @returns                        A script verification result code.
  */
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
@@ -270,10 +256,10 @@ typedef enum verify_flags_type
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned long long prevout_value,
     unsigned int tx_input_index, unsigned int flags);
-#endif //KNUTH_CURRENCY_BCH
+#endif //KTH_CURRENCY_BCH
 
 
 } // namespace consensus
-} // namespace libbitcoin
+} // namespace kth
 
 #endif

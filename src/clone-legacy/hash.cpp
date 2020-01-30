@@ -20,11 +20,11 @@ unsigned int MurmurHash3(unsigned int nHashSeed, const std::vector<unsigned char
     const uint32_t c1 = 0xcc9e2d51;
     const uint32_t c2 = 0x1b873593;
 
-    const int nblocks = vDataToHash.size() / 4;
+    int const nblocks = vDataToHash.size() / 4;
 
     //----------
     // body
-    const uint8_t* blocks = vDataToHash.data();
+    uint8_t const* blocks = vDataToHash.data();
 
     for (int i = 0; i < nblocks; ++i) {
         uint32_t k1 = ReadLE32(blocks + i*4);
@@ -40,7 +40,7 @@ unsigned int MurmurHash3(unsigned int nHashSeed, const std::vector<unsigned char
 
     //----------
     // tail
-    const uint8_t* tail = vDataToHash.data() + nblocks * 4;
+    uint8_t const* tail = vDataToHash.data() + nblocks * 4;
 
     uint32_t k1 = 0;
 

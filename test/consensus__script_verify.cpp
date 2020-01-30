@@ -1,21 +1,7 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 //#include "script.hpp"
 
 #include <stdint.h>
@@ -25,11 +11,11 @@
 #include <bitcoin/consensus.hpp>
 #include <boost/test/unit_test.hpp>
 
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 #include <clone-abc/script/interpreter.h>
-#else // KNUTH_CURRENCY_BCH
+#else // KTH_CURRENCY_BCH
 #include <clone-legacy/script/interpreter.h>
-#endif // KNUTH_CURRENCY_BCH
+#endif // KTH_CURRENCY_BCH
 
 BOOST_AUTO_TEST_SUITE(consensus__script_verify)
 
@@ -98,7 +84,7 @@ static bool decode_base16(data_chunk& out, const std::string& in)
 //         tx_input_index, flags);
 // >>>>>>> libbitcoin/version3
 // }
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 static verify_result test_verify(const std::string& transaction,
     const std::string& prevout_script, uint32_t tx_input_index=0,
     const uint32_t flags=verify_flags_p2sh, int32_t tx_size_hack = 0, uint64_t amount = 0 )
@@ -165,7 +151,7 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_tx__tx_invalid)
     const verify_result result = test_verify("42", "42");
     BOOST_REQUIRE_EQUAL(result, verify_result_tx_invalid);
 }
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_input__tx_input_invalid)
 {
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 1);
@@ -207,7 +193,7 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true)
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT);
     BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
 }
-#ifdef KNUTH_CURRENCY_BCH
+#ifdef KTH_CURRENCY_BCH
 //TODO: just for Bitcoin Cash
 BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true__non_forkid)
 {
@@ -245,8 +231,8 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true__forkid_long_int)
 // TODO: BTC test
 BOOST_AUTO_TEST_CASE(consensus__script_verify__valid_nested_p2wpkh__true)
 {
-    static const auto index = 0u;
-    static const auto value = 500000u;
+    static auto const index = 0u;
+    static auto const value = 500000u;
     static const uint32_t flags =
         verify_flags_p2sh |
         verify_flags_dersig |

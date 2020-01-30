@@ -1142,7 +1142,7 @@ public:
 
 uint256 GetPrevoutHash(const CTransaction& txTo) {
     CHashWriter ss(SER_GETHASH, 0);
-    for (const auto& txin : txTo.vin) {
+    for (auto const& txin : txTo.vin) {
         ss << txin.prevout;
     }
     return ss.GetHash();
@@ -1150,7 +1150,7 @@ uint256 GetPrevoutHash(const CTransaction& txTo) {
 
 uint256 GetSequenceHash(const CTransaction& txTo) {
     CHashWriter ss(SER_GETHASH, 0);
-    for (const auto& txin : txTo.vin) {
+    for (auto const& txin : txTo.vin) {
         ss << txin.nSequence;
     }
     return ss.GetHash();
@@ -1158,7 +1158,7 @@ uint256 GetSequenceHash(const CTransaction& txTo) {
 
 uint256 GetOutputsHash(const CTransaction& txTo) {
     CHashWriter ss(SER_GETHASH, 0);
-    for (const auto& txout : txTo.vout) {
+    for (auto const& txout : txTo.vout) {
         ss << txout;
     }
     return ss.GetHash();
@@ -1309,7 +1309,7 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
 {
     // Relative lock times are supported by comparing the passed
     // in operand to the sequence number of the input.
-    const int64_t txToSequence = (int64_t)txTo->vin[nIn].nSequence;
+    int64_t const txToSequence = (int64_t)txTo->vin[nIn].nSequence;
 
     // Fail if the transaction's version number is not set high
     // enough to trigger BIP 68 rules.
@@ -1326,7 +1326,7 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
     // Mask off any bits that do not have consensus-enforced meaning
     // before doing the integer comparisons
     const uint32_t nLockTimeMask = CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG | CTxIn::SEQUENCE_LOCKTIME_MASK;
-    const int64_t txToSequenceMasked = txToSequence & nLockTimeMask;
+    int64_t const txToSequenceMasked = txToSequence & nLockTimeMask;
     const CScriptNum nSequenceMasked = nSequence & nLockTimeMask;
 
     // There are two kinds of nSequence: lock-by-blockheight

@@ -19,7 +19,7 @@ public:
     static const size_t OUTPUT_SIZE = 64;
 
     CSHA512();
-    CSHA512 &Write(const uint8_t *data, size_t len);
+    CSHA512 &Write(uint8_t const *data, size_t len);
     void Finalize(uint8_t hash[OUTPUT_SIZE]);
     CSHA512 &Reset();
 };

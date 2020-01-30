@@ -1542,7 +1542,7 @@ bool TransactionSignatureChecker::CheckSequence(
     const CScriptNum &nSequence) const {
     // Relative lock times are supported by comparing the passed in operand to
     // the sequence number of the input.
-    const int64_t txToSequence = int64_t(txTo->vin[nIn].nSequence);
+    int64_t const txToSequence = int64_t(txTo->vin[nIn].nSequence);
 
     // Fail if the transaction's version number is not set high enough to
     // trigger BIP 68 rules.
@@ -1562,7 +1562,7 @@ bool TransactionSignatureChecker::CheckSequence(
     // doing the integer comparisons
     const uint32_t nLockTimeMask =
         CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG | CTxIn::SEQUENCE_LOCKTIME_MASK;
-    const int64_t txToSequenceMasked = txToSequence & nLockTimeMask;
+    int64_t const txToSequenceMasked = txToSequence & nLockTimeMask;
     const CScriptNum nSequenceMasked = nSequence & nLockTimeMask;
 
     // There are two kinds of nSequence: lock-by-blockheight and

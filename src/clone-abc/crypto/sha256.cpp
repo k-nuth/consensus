@@ -13,17 +13,17 @@
 #if defined(USE_ASM)
 #include <cpuid.h>
 namespace sha256_sse4 {
-void Transform(uint32_t *s, const uint8_t *chunk, size_t blocks);
+void Transform(uint32_t *s, uint8_t const *chunk, size_t blocks);
 }
 #endif
 #endif
 
 namespace sha256d64_sse41 {
-void Transform_4way(uint8_t *out, const uint8_t *in);
+void Transform_4way(uint8_t *out, uint8_t const *in);
 }
 
 namespace sha256d64_avx2 {
-void Transform_8way(uint8_t *out, const uint8_t *in);
+void Transform_8way(uint8_t *out, uint8_t const *in);
 }
 
 namespace sha256d64_shani {
@@ -82,7 +82,7 @@ namespace sha256 {
     /**
      * Perform a number of SHA-256 transformations, processing 64-byte chunks.
      */
-    void Transform(uint32_t *s, const uint8_t *chunk, size_t blocks) {
+    void Transform(uint32_t *s, uint8_t const *chunk, size_t blocks) {
         while (blocks--) {
             uint32_t a = s[0], b = s[1], c = s[2], d = s[3], e = s[4], f = s[5],
                      g = s[6], h = s[7];
@@ -233,7 +233,7 @@ namespace sha256 {
         }
     }
 
-    void TransformD64(uint8_t *out, const uint8_t *in) {
+    void TransformD64(uint8_t *out, uint8_t const *in) {
         // Transform 1
         uint32_t a = 0x6a09e667ul;
         uint32_t b = 0xbb67ae85ul;
@@ -576,13 +576,13 @@ namespace sha256 {
 
 } // namespace sha256
 
-typedef void (*TransformType)(uint32_t *, const uint8_t *, size_t);
-typedef void (*TransformD64Type)(uint8_t *, const uint8_t *);
+typedef void (*TransformType)(uint32_t *, uint8_t const *, size_t);
+typedef void (*TransformD64Type)(uint8_t *, uint8_t const *);
 
 template <TransformType tr>
-void TransformD64Wrapper(uint8_t *out, const uint8_t *in) {
+void TransformD64Wrapper(uint8_t *out, uint8_t const *in) {
     uint32_t s[8];
-    static const uint8_t padding1[64] = {
+    static uint8_t const padding1[64] = {
         0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0};
@@ -625,7 +625,7 @@ bool SelfTest() {
                                      0xa54ff53aul, 0x510e527ful, 0x9b05688cul,
                                      0x1f83d9abul, 0x5be0cd19ul};
     // Some random input data to test with
-    static const uint8_t data[641] =
+    static uint8_t const data[641] =
         "-" // Intentionally not aligned
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
         "eiusmod tempor incididunt ut labore et dolore magna aliqua. Et m"
@@ -659,7 +659,7 @@ bool SelfTest() {
     };
     // Expected output for each of the individual 8 64-byte messages under full
     // double SHA256 (including padding).
-    static const uint8_t result_d64[256] = {
+    static uint8_t const result_d64[256] = {
         0x09, 0x3a, 0xc4, 0xd0, 0x0f, 0xf7, 0x57, 0xe1, 0x72, 0x85, 0x79, 0x42,
         0xfe, 0xe7, 0xe0, 0xa0, 0xfc, 0x52, 0xd7, 0xdb, 0x07, 0x63, 0x45, 0xfb,
         0x53, 0x14, 0x7d, 0x17, 0x22, 0x86, 0xf0, 0x52, 0x48, 0xb6, 0x11, 0x9e,
@@ -819,8 +819,8 @@ CSHA256::CSHA256() : bytes(0) {
     sha256::Initialize(s);
 }
 
-CSHA256 &CSHA256::Write(const uint8_t *data, size_t len) {
-    const uint8_t *end = data + len;
+CSHA256 &CSHA256::Write(uint8_t const *data, size_t len) {
+    uint8_t const *end = data + len;
     size_t bufsize = bytes % 64;
     if (bufsize && bufsize + len >= 64) {
         // Fill the buffer, and process it.
@@ -845,7 +845,7 @@ CSHA256 &CSHA256::Write(const uint8_t *data, size_t len) {
 }
 
 void CSHA256::Finalize(uint8_t hash[OUTPUT_SIZE]) {
-    static const uint8_t pad[64] = {0x80};
+    static uint8_t const pad[64] = {0x80};
     uint8_t sizedesc[8];
     WriteBE64(sizedesc, bytes << 3);
     Write(pad, 1 + ((119 - (bytes % 64)) % 64));
@@ -866,7 +866,7 @@ CSHA256 &CSHA256::Reset() {
     return *this;
 }
 
-void SHA256D64(uint8_t *out, const uint8_t *in, size_t blocks) {
+void SHA256D64(uint8_t *out, uint8_t const *in, size_t blocks) {
     if (TransformD64_8way) {
         while (blocks >= 8) {
             TransformD64_8way(out, in);

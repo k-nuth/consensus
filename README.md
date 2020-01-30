@@ -1,14 +1,14 @@
-# Knuth Consensus <a target="_blank" href="http://semver.org">![Version][badge.version]</a> <a target="_blank" href="https://travis-ci.org/k-nuth/kth-consensus">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/k-nuth/kth-consensus">![Appveyor status][badge.Appveyor]</a> <a target="_blank" href="https://gitter.im/k-nuth/Lobby">![Gitter Chat][badge.Gitter]</a>
+# Knuth Consensus <a target="_blank" href="http://semver.org">![Version][badge.version]</a> <a target="_blank" href="https://travis-ci.org/k-nuth/consensus">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/k-nuth/consensus">![Appveyor status][badge.Appveyor]</a> <a target="_blank" href="https://gitter.im/k-nuth/Lobby">![Gitter Chat][badge.Gitter]</a>
 
 > Cryptocurrencies consensus library
 
 
 ## Installation
-Make sure you have installed [kth-core](https://github.com/k-nuth/kth-core) beforehand according to its respective build instructions.
+Make sure you have installed [domain](https://github.com/k-nuth/domain) beforehand according to its respective build instructions.
 
 ```
-$ git clone https://github.com/k-nuth/kth-consensus.git
-$ cd kth-consensus
+$ git clone https://github.com/k-nuth/consensus.git
+$ cd consensus
 $ mkdir build
 $ cd build
 $ cmake .. -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-std=c++11"
@@ -16,7 +16,7 @@ $ make -j2
 $ sudo make install
 ```
 
-`kth-consensus` is now installed in `/usr/local/`.
+`consensus` is now installed in `/usr/local/`.
 
 # About
 
@@ -60,14 +60,14 @@ script/script_error.h
 
 # Knuth Integration
 
-Knuth natively implements consensus checks that are redundant with `kth-consensus`. Knuth includes a full bitcoin client and server SDK. This includes the full node implementation [kth-node](https://github.com/k-nuth/kth-node), which builds on [kth-core](https://github.com/k-nuth/kth-core) and [kth-blockchain](https://github.com/k-nuth/kth-blockchain).
+Knuth natively implements consensus checks that are redundant with `consensus`. Knuth includes a full bitcoin client and server SDK. This includes the full node implementation [node](https://github.com/k-nuth/node), which builds on [domain](https://github.com/k-nuth/domain) and [blockchain](https://github.com/k-nuth/blockchain).
 
-The `kth-blockchain` configuration provides the `--with-consensus` option. This allows the developer to select either `kth-core` native or `kth-consensus` checks. The option defaults to `yes` so that by default all `kth-node` and `kth-server` builds use the same consensus checks as a Satoshi node.
+The `blockchain` configuration provides the `--with-consensus` option. This allows the developer to select either `domain` native or `consensus` checks. The option defaults to `yes` so that by default all `node` and `server` builds use the same consensus checks as a Satoshi node.
 
 
 <!-- Links -->
-[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/k-nuth/kth-consensus?svg=true&branch=dev
+[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/k-nuth/consensus?svg=true&branch=dev
 [badge.Gitter]: https://img.shields.io/badge/gitter-join%20chat-blue.svg
-[badge.Travis]: https://travis-ci.org/k-nuth/kth-consensus.svg?branch=master
-[badge.version]: https://badge.fury.io/gh/k-nuth%2Fkth-consensus.svg
+[badge.Travis]: https://travis-ci.org/k-nuth/consensus.svg?branch=master
+[badge.version]: https://badge.fury.io/gh/k-nuth%2Fconsensus.svg
 

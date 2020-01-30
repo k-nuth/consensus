@@ -26,7 +26,7 @@ secp256k1_context *secp256k1_context_verify = nullptr;
  */
 static int ecdsa_signature_parse_der_lax(const secp256k1_context *ctx,
                                          secp256k1_ecdsa_signature *sig,
-                                         const uint8_t *input,
+                                         uint8_t const *input,
                                          size_t inputlen) {
     size_t rpos, rlen, spos, slen;
     size_t pos = 0;
@@ -305,7 +305,7 @@ void CExtPubKey::Encode(uint8_t code[BIP32_EXTKEY_SIZE]) const {
     memcpy(code + 41, pubkey.begin(), 33);
 }
 
-void CExtPubKey::Decode(const uint8_t code[BIP32_EXTKEY_SIZE]) {
+void CExtPubKey::Decode(uint8_t const code[BIP32_EXTKEY_SIZE]) {
     nDepth = code[0];
     memcpy(vchFingerprint, code + 1, 4);
     nChild = (code[5] << 24) | (code[6] << 16) | (code[7] << 8) | code[8];
