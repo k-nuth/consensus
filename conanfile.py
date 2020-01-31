@@ -19,9 +19,6 @@ class KnuthConsensusConan(KnuthConanFile):
     description = "Bitcoin Consensus Library"
     settings = "os", "compiler", "build_type", "arch"
 
-    # if Version(conan_version) < Version(get_conan_req_version()):
-    #     raise Exception ("Conan version should be greater or equal than %s. Detected: %s." % (get_conan_req_version(), conan_version))
-
     options = {"shared": [True, False],
                "fPIC": [True, False],
                "with_tests": [True, False],
