@@ -346,8 +346,6 @@ if (${CURRENCY} STREQUAL "BCH")
     src/clone-abc/tinyformat.h
     src/clone-abc/uint256.cpp
     src/clone-abc/uint256.h
-    src/clone-abc/utilstrencodings.cpp
-    src/clone-abc/utilstrencodings.h
     src/clone-abc/version.h
     src/clone-abc/compat/byteswap.h
     src/clone-abc/compat/endian.h
