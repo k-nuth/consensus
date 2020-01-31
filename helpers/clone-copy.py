@@ -20,9 +20,9 @@ for dp, f in result:
     source_file = os.path.join(SOURCE_PATH, x[len(PATH):])   
     print(source_file)
     # print(os.path.isfile(source_file))
-
     # print(x)
 
-
-
-    copyfile(source_file, x)
+    if os.path.isfile(source_file): 
+        copyfile(source_file, x)
+    else:
+        os.remove(x) 
