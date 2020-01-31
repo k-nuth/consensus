@@ -6,8 +6,6 @@
 #ifndef BITCOIN_UINT256_H
 #define BITCOIN_UINT256_H
 
-#include "crypto/common.h"
-
 #include <cassert>
 #include <cstdint>
 #include <cstring>
@@ -80,14 +78,14 @@ public:
 
     uint8_t *end() { return &data[WIDTH]; }
 
-    uint8_t const *begin() const { return &data[0]; }
+    const uint8_t *begin() const { return &data[0]; }
 
-    uint8_t const *end() const { return &data[WIDTH]; }
+    const uint8_t *end() const { return &data[WIDTH]; }
 
     unsigned int size() const { return sizeof(data); }
 
     uint64_t GetUint64(int pos) const {
-        uint8_t const *ptr = data + pos * 8;
+        const uint8_t *ptr = data + pos * 8;
         return uint64_t(ptr[0]) | (uint64_t(ptr[1]) << 8) |
                (uint64_t(ptr[2]) << 16) | (uint64_t(ptr[3]) << 24) |
                (uint64_t(ptr[4]) << 32) | (uint64_t(ptr[5]) << 40) |
@@ -111,7 +109,6 @@ public:
 class uint160 : public base_blob<160> {
 public:
     uint160() {}
-    explicit uint160(const base_blob<160> &b) : base_blob<160>(b) {}
     explicit uint160(const std::vector<uint8_t> &vch) : base_blob<160>(vch) {}
 };
 
@@ -124,16 +121,7 @@ public:
 class uint256 : public base_blob<256> {
 public:
     uint256() {}
-    explicit uint256(const base_blob<256> &b) : base_blob<256>(b) {}
     explicit uint256(const std::vector<uint8_t> &vch) : base_blob<256>(vch) {}
-
-    /**
-     * A cheap hash function that just returns 64 bits from the result, it can
-     * be used when the contents are considered uniformly random. It is not
-     * appropriate when the value can easily be influenced from outside as e.g.
-     * a network adversary could provide values to trigger worst-case behavior.
-     */
-    uint64_t GetCheapHash() const { return ReadLE64(data); }
 };
 
 /**

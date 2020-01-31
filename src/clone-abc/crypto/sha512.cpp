@@ -2,9 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "crypto/sha512.h"
+#include <crypto/sha512.h>
 
-#include "crypto/common.h"
+#include <crypto/common.h>
 
 #include <cstring>
 
@@ -54,7 +54,7 @@ namespace sha512 {
     }
 
     /** Perform one SHA-512 transformation, processing a 128-byte chunk. */
-    void Transform(uint64_t *s, uint8_t const *chunk) {
+    void Transform(uint64_t *s, const uint8_t *chunk) {
         uint64_t a = s[0], b = s[1], c = s[2], d = s[3], e = s[4], f = s[5],
                  g = s[6], h = s[7];
         uint64_t w0, w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13,
@@ -245,8 +245,8 @@ CSHA512::CSHA512() : bytes(0) {
     sha512::Initialize(s);
 }
 
-CSHA512 &CSHA512::Write(uint8_t const *data, size_t len) {
-    uint8_t const *end = data + len;
+CSHA512 &CSHA512::Write(const uint8_t *data, size_t len) {
+    const uint8_t *end = data + len;
     size_t bufsize = bytes % 128;
     if (bufsize && bufsize + len >= 128) {
         // Fill the buffer, and process it.
@@ -256,7 +256,7 @@ CSHA512 &CSHA512::Write(uint8_t const *data, size_t len) {
         sha512::Transform(s, buf);
         bufsize = 0;
     }
-    while (end >= data + 128) {
+    while (end - data >= 128) {
         // Process full chunks directly from the source.
         sha512::Transform(s, data);
         data += 128;
@@ -271,7 +271,7 @@ CSHA512 &CSHA512::Write(uint8_t const *data, size_t len) {
 }
 
 void CSHA512::Finalize(uint8_t hash[OUTPUT_SIZE]) {
-    static uint8_t const pad[128] = {0x80};
+    static const uint8_t pad[128] = {0x80};
     uint8_t sizedesc[16] = {0x00};
     WriteBE64(sizedesc + 8, bytes << 3);
     Write(pad, 1 + ((239 - (bytes % 128)) % 128));

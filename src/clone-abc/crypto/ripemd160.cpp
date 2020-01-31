@@ -2,9 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "crypto/ripemd160.h"
+#include <crypto/ripemd160.h>
 
-#include "crypto/common.h"
+#include <crypto/common.h>
 
 #include <cstring>
 
@@ -88,7 +88,7 @@ namespace ripemd160 {
     }
 
     /** Perform a RIPEMD-160 transformation, processing a 64-byte chunk. */
-    void Transform(uint32_t *s, uint8_t const *chunk) {
+    void Transform(uint32_t *s, const uint8_t *chunk) {
         uint32_t a1 = s[0], b1 = s[1], c1 = s[2], d1 = s[3], e1 = s[4];
         uint32_t a2 = a1, b2 = b1, c2 = c1, d2 = d1, e2 = e1;
         uint32_t w0 = ReadLE32(chunk + 0), w1 = ReadLE32(chunk + 4),
@@ -283,8 +283,8 @@ CRIPEMD160::CRIPEMD160() : bytes(0) {
     ripemd160::Initialize(s);
 }
 
-CRIPEMD160 &CRIPEMD160::Write(uint8_t const *data, size_t len) {
-    uint8_t const *end = data + len;
+CRIPEMD160 &CRIPEMD160::Write(const uint8_t *data, size_t len) {
+    const uint8_t *end = data + len;
     size_t bufsize = bytes % 64;
     if (bufsize && bufsize + len >= 64) {
         // Fill the buffer, and process it.
@@ -294,7 +294,7 @@ CRIPEMD160 &CRIPEMD160::Write(uint8_t const *data, size_t len) {
         ripemd160::Transform(s, buf);
         bufsize = 0;
     }
-    while (end >= data + 64) {
+    while (end - data >= 64) {
         // Process full chunks directly from the source.
         ripemd160::Transform(s, data);
         bytes += 64;
@@ -309,7 +309,7 @@ CRIPEMD160 &CRIPEMD160::Write(uint8_t const *data, size_t len) {
 }
 
 void CRIPEMD160::Finalize(uint8_t hash[OUTPUT_SIZE]) {
-    static uint8_t const pad[64] = {0x80};
+    static const uint8_t pad[64] = {0x80};
     uint8_t sizedesc[8];
     WriteLE64(sizedesc, bytes << 3);
     Write(pad, 1 + ((119 - (bytes % 64)) % 64));

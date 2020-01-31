@@ -7,7 +7,7 @@
 #ifndef BITCOIN_AMOUNT_H
 #define BITCOIN_AMOUNT_H
 
-#include "serialize.h"
+#include <serialize.h>
 
 #include <cstdlib>
 #include <ostream>
@@ -20,10 +20,19 @@ private:
 
 public:
     constexpr Amount() : amount(0) {}
-    constexpr Amount(const Amount &_camount) : amount(_camount.amount) {}
-
+    constexpr Amount(const Amount &other) : amount(other.amount) {}
+    
     // NOTE (knuth): it needs to be public to work with `verify_script`
     explicit constexpr Amount(int64_t _amount) : amount(_amount) {}
+
+
+    /**
+     * Assignement operator.
+     */
+    constexpr Amount &operator=(const Amount &other) {
+        amount = other.amount;
+        return *this;
+    }
 
     static constexpr Amount zero() { return Amount(0); }
     static constexpr Amount satoshi() { return Amount(1); }
@@ -84,10 +93,10 @@ public:
     /**
      * Multiplication
      */
-    friend constexpr Amount operator*(int64_t const a, const Amount b) {
+    friend constexpr Amount operator*(const int64_t a, const Amount b) {
         return Amount(a * b.amount);
     }
-    friend constexpr Amount operator*(int const a, const Amount b) {
+    friend constexpr Amount operator*(const int a, const Amount b) {
         return Amount(a * b.amount);
     }
 
@@ -97,11 +106,11 @@ public:
     constexpr int64_t operator/(const Amount b) const {
         return amount / b.amount;
     }
-    constexpr Amount operator/(int64_t const b) const {
+    constexpr Amount operator/(const int64_t b) const {
         return Amount(amount / b);
     }
-    constexpr Amount operator/(int const b) const { return Amount(amount / b); }
-    Amount &operator/=(int64_t const n) {
+    constexpr Amount operator/(const int b) const { return Amount(amount / b); }
+    Amount &operator/=(const int64_t n) {
         amount /= n;
         return *this;
     }
@@ -112,10 +121,10 @@ public:
     constexpr Amount operator%(const Amount b) const {
         return Amount(amount % b.amount);
     }
-    constexpr Amount operator%(int64_t const b) const {
+    constexpr Amount operator%(const int64_t b) const {
         return Amount(amount % b);
     }
-    constexpr Amount operator%(int const b) const { return Amount(amount % b); }
+    constexpr Amount operator%(const int b) const { return Amount(amount % b); }
 
     /**
      * Do not implement double ops to get an error with double and ensure
@@ -163,4 +172,4 @@ inline bool MoneyRange(const Amount nValue) {
     return nValue >= Amount::zero() && nValue <= MAX_MONEY;
 }
 
-#endif //  BITCOIN_AMOUNT_H
+#endif // BITCOIN_AMOUNT_H

@@ -6,27 +6,27 @@
 #define BITCOIN_CRYPTO_COMMON_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include <config/bitcoin-config.h>
 #endif
 
 #include <cstdint>
 #include <cstring>
 
-#include "compat/endian.h"
+#include <compat/endian.h>
 
-static inline uint16_t ReadLE16(uint8_t const *ptr) {
+static inline uint16_t ReadLE16(const uint8_t *ptr) {
     uint16_t x;
     memcpy((char *)&x, ptr, 2);
     return le16toh(x);
 }
 
-static inline uint32_t ReadLE32(uint8_t const *ptr) {
+static inline uint32_t ReadLE32(const uint8_t *ptr) {
     uint32_t x;
     memcpy((char *)&x, ptr, 4);
     return le32toh(x);
 }
 
-static inline uint64_t ReadLE64(uint8_t const *ptr) {
+static inline uint64_t ReadLE64(const uint8_t *ptr) {
     uint64_t x;
     memcpy((char *)&x, ptr, 8);
     return le64toh(x);
@@ -47,13 +47,13 @@ static inline void WriteLE64(uint8_t *ptr, uint64_t x) {
     memcpy(ptr, (char *)&v, 8);
 }
 
-static inline uint32_t ReadBE32(uint8_t const *ptr) {
+static inline uint32_t ReadBE32(const uint8_t *ptr) {
     uint32_t x;
     memcpy((char *)&x, ptr, 4);
     return be32toh(x);
 }
 
-static inline uint64_t ReadBE64(uint8_t const *ptr) {
+static inline uint64_t ReadBE64(const uint8_t *ptr) {
     uint64_t x;
     memcpy((char *)&x, ptr, 8);
     return be64toh(x);
