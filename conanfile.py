@@ -25,8 +25,9 @@ class KnuthConsensusConan(KnuthConanFile):
                "with_java": [True, False],
                "with_python": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
-               "microarchitecture": "ANY", #["x86_64", "haswell", "ivybridge", "sandybridge", "bulldozer", ...]
+               "microarchitecture": "ANY",
                "fix_march": [True, False],
+               "march_id": "ANY",
                "verbose": [True, False],
                "cxxflags": "ANY",
                "cflags": "ANY",
@@ -41,6 +42,7 @@ class KnuthConsensusConan(KnuthConanFile):
         "currency=BCH", \
         "microarchitecture=_DUMMY_",  \
         "fix_march=False", \
+        "march_id=_DUMMY_",  \
         "verbose=False", \
         "cxxflags=_DUMMY_", \
         "cflags=_DUMMY_", \
