@@ -363,6 +363,8 @@ if (${CURRENCY} STREQUAL "BCH")
     src/clone-abc/primitives/transaction.cpp
     src/clone-abc/primitives/transaction.h
     src/clone-abc/primitives/txid.h
+    src/clone-abc/script/bitfield.cpp
+    src/clone-abc/script/bitfield.h
     src/clone-abc/script/interpreter.cpp
     src/clone-abc/script/interpreter.h
     src/clone-abc/script/script.cpp
@@ -371,6 +373,8 @@ if (${CURRENCY} STREQUAL "BCH")
     src/clone-abc/script/script_error.h
     src/clone-abc/script/sigencoding.h
     src/clone-abc/script/sigencoding.cpp
+    src/clone-abc/util/strencodings.cpp
+    src/clone-abc/util/strencodings.h
   )
 
 else()

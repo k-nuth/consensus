@@ -39,14 +39,17 @@ def replace(kth_files):
 # # print(kth_files)
 
 missing_files = [
-    ('/Users/fernando/dev/kth/consensus/src/clone-abc/', 'span.h'),
-    ('/Users/fernando/dev/kth/consensus/src/clone-abc/util/', 'strencodings.h'),
-    ('/Users/fernando/dev/kth/consensus/src/clone-abc/', 'attributes.h'),
-    ('/Users/fernando/dev/kth/consensus/src/clone-abc/script/', 'script_metrics.h'),
-    ('/Users/fernando/dev/kth/consensus/src/clone-abc/script/', 'bitfield.h'),
-    ('/Users/fernando/dev/kth/consensus/src/clone-abc/util/', 'bitmanip.h'),
-    ('/Users/fernando/dev/kth/consensus/src/clone-abc/script/', 'bitfield.cpp'),
+    # ('/Users/fernando/dev/kth/consensus/src/clone-abc/', 'span.h'),
+    # ('/Users/fernando/dev/kth/consensus/src/clone-abc/util/', 'strencodings.h'),
+    # ('/Users/fernando/dev/kth/consensus/src/clone-abc/', 'attributes.h'),
+    # ('/Users/fernando/dev/kth/consensus/src/clone-abc/script/', 'script_metrics.h'),
+    # ('/Users/fernando/dev/kth/consensus/src/clone-abc/script/', 'bitfield.h'),
+    # ('/Users/fernando/dev/kth/consensus/src/clone-abc/util/', 'bitmanip.h'),
+    # ('/Users/fernando/dev/kth/consensus/src/clone-abc/script/', 'bitfield.cpp'),
+    ('/Users/fernando/dev/kth/consensus/src/clone-abc/util/', 'strencodings.cpp'),
 ]
+
+
     # ('/Users/fernando/dev/kth/consensus/src/clone-abc/config/', 'bitcoin-config.h'),
 
 # print(missing_files)
