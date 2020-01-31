@@ -60,7 +60,6 @@ class KnuthConsensusConan(KnuthConanFile):
         self.requires("boost/1.72.0@kth/stable")
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
 
-
     def config_options(self):
         KnuthConanFile.config_options(self)
 
