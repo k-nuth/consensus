@@ -101,6 +101,12 @@ BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__witness_public_key
     BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_witness_public_key_compressed), (uint32_t)SCRIPT_VERIFY_WITNESS_PUBKEYTYPE);
 }
 
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__const_scriptcode__SCRIPTCODE)
+{
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_const_scriptcode), (uint32_t)SCRIPT_VERIFY_CONST_SCRIPTCODE);
+}
+
+
 BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
 {
     const uint32_t all_verify_flags =

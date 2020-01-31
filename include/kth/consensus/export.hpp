@@ -17,8 +17,7 @@ namespace consensus {
 /**
  * Result values from calling verify_script.
  */
-typedef enum verify_result_type
-{
+typedef enum verify_result_type {
     // Logical result
     verify_result_eval_false = 0,
     verify_result_eval_true,
@@ -51,7 +50,11 @@ typedef enum verify_result_type
     verify_result_minimaldata,
     verify_result_sig_pushonly,
     verify_result_sig_high_s,
+
+#if ! defined(KTH_CURRENCY_BCH)
     verify_result_sig_nulldummy,
+#endif
+
     verify_result_pubkeytype,
     verify_result_cleanstack,
     verify_result_minimalif,
@@ -59,12 +62,16 @@ typedef enum verify_result_type
 
     // Softfork safeness
     verify_result_discourage_upgradable_nops,
+
+#if ! defined(KTH_CURRENCY_BCH)    
     verify_result_discourage_upgradable_witness_program,
+#endif
 
     // Other
     verify_result_op_return,
     verify_result_unknown_error,
 
+#if ! defined(KTH_CURRENCY_BCH)
     // Segregated witness
     verify_result_witness_program_wrong_length,
     verify_result_witness_program_empty_witness,
@@ -73,6 +80,7 @@ typedef enum verify_result_type
     verify_result_witness_malleated_p2sh,
     verify_result_witness_unexpected,
     verify_result_witness_pubkeytype,
+#endif
 
     // augmention codes for tx deserialization
     verify_result_tx_invalid,
@@ -87,8 +95,7 @@ typedef enum verify_result_type
 /**
  * Flags to use when calling verify_script.
  */
-typedef enum verify_flags_type
-{
+typedef enum verify_flags_type {
     /**
      * Set no flags.
      */
@@ -121,11 +128,13 @@ typedef enum verify_flags_type
      */
     verify_flags_low_s = (1U << 3),
 
+#if ! defined(KTH_CURRENCY_BCH)
     /**
      * verify dummy stack item consumed by CHECKMULTISIG is of zero-length
      * (softfork safe, BIP62 rule 7, BIP147).
      */
     verify_flags_nulldummy = (1U << 4),
+#endif
 
     /**
      * Using a non-push operator in the scriptSig causes script failure
@@ -199,34 +208,54 @@ typedef enum verify_flags_type
      * SCRIPT_VERIFY_WITNESS_PUBKEYTYPE (bip141/bip143 p2wsh/p2wpkh policy).
      */
     , verify_flags_witness_public_key_compressed = (1U << 15)
+
+    /**
+     * SCRIPT_VERIFY_CONST_SCRIPTCODE
+     */
+    , verify_flags_const_scriptcode = (1U << 16)
+
 #endif
 
 #ifdef KTH_CURRENCY_BCH
     /**
-     * SCRIPT_ENABLE_SIGHASH_FORKID (bitcoin-cash).
+     * SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE (BCH).
+     */
+    , verify_flags_script_verify_compressed_pubkeytype = (1U << 15)
+
+    /**
+     * SCRIPT_ENABLE_SIGHASH_FORKID (BCH).
      */
     , verify_flags_script_enable_sighash_forkid = (1U << 16)
 
     /**
-     * SCRIPT_ENABLE_REPLAY_PROTECTION (bitcoin-cash).
+     * SCRIPT_ENABLE_REPLAY_PROTECTION (BCH).
      */
     , verify_flags_script_enable_replay_protection = (1U << 17)
 
     /**
-     * SCRIPT_ENABLE_CHECKDATASIG (bitcoin-cash).
+     * SCRIPT_VERIFY_CHECKDATASIG_SIGOPS (BCH).
      */
-    , verify_flags_script_enable_checkdatasig = (1U << 18)
+    , verify_flags_script_enable_checkdatasig_sigops = (1U << 18)
 
     /**
-     * SCRIPT_ENABLE_SCHNORR (bitcoin-cash).
+     * SCRIPT_DISALLOW_SEGWIT_RECOVERY (BCH).
      */
-    , verify_flags_script_enable_schnorr = (1U << 19)
+    , verify_flags_script_disallow_segwit_recovery = (1U << 20)
 
     /**
-     * SCRIPT_ALLOW_SEGWIT_RECOVERY (bitcoin-cash).
+     * SCRIPT_ENABLE_SCHNORR_MULTISIG (BCH).
      */
-    , verify_flags_script_enable_segwit_recovery = (1U << 20)
+    , verify_flags_script_script_enable_schnorr_multisig = (1U << 21)
 
+    /**
+     * SCRIPT_VERIFY_INPUT_SIGCHECKS (BCH).
+     */
+    , verify_flags_script_verify_input_sigchecks = (1U << 22)
+
+    /**
+     * SCRIPT_REPORT_SIGCHECKS (BCH).
+     */
+    , verify_flags_script_report_sigchecks = (1U << 31)
 #endif
 
 } verify_flags;

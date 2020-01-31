@@ -69,8 +69,96 @@ private:
 // This mapping decouples the consensus API from the satoshi implementation
 // files. We prefer to keep our copies of consensus files isomorphic.
 // This function is not published (but non-static for testability).
-verify_result_type script_error_to_verify_result(ScriptError_t code)
-{
+
+#if defined(KTH_CURRENCY_BCH)
+verify_result_type script_error_to_verify_result(ScriptError code) {
+    switch (code)
+    {
+        // Logical result
+        case ScriptError::OK:
+            return verify_result_eval_true;
+        case ScriptError::EVAL_FALSE:
+            return verify_result_eval_false;
+
+        // Max size errors
+        case ScriptError::SCRIPT_SIZE:
+            return verify_result_script_size;
+        case ScriptError::PUSH_SIZE:
+            return verify_result_push_size;
+        case ScriptError::OP_COUNT:
+            return verify_result_op_count;
+        case ScriptError::STACK_SIZE:
+            return verify_result_stack_size;
+        case ScriptError::SIG_COUNT:
+            return verify_result_sig_count;
+        case ScriptError::PUBKEY_COUNT:
+            return verify_result_pubkey_count;
+
+        // Failed verify operations
+        case ScriptError::VERIFY:
+            return verify_result_verify;
+        case ScriptError::EQUALVERIFY:
+            return verify_result_equalverify;
+        case ScriptError::CHECKMULTISIGVERIFY:
+            return verify_result_checkmultisigverify;
+        case ScriptError::CHECKSIGVERIFY:
+            return verify_result_checksigverify;
+        case ScriptError::NUMEQUALVERIFY:
+            return verify_result_numequalverify;
+
+        // Logical/Format/Canonical errors
+        case ScriptError::BAD_OPCODE:
+            return verify_result_bad_opcode;
+        case ScriptError::DISABLED_OPCODE:
+            return verify_result_disabled_opcode;
+        case ScriptError::INVALID_STACK_OPERATION:
+            return verify_result_invalid_stack_operation;
+        case ScriptError::INVALID_ALTSTACK_OPERATION:
+            return verify_result_invalid_altstack_operation;
+        case ScriptError::UNBALANCED_CONDITIONAL:
+            return verify_result_unbalanced_conditional;
+
+        // BIP65/BIP112 (shared codes)
+        case ScriptError::NEGATIVE_LOCKTIME:
+            return verify_result_negative_locktime;
+        case ScriptError::UNSATISFIED_LOCKTIME:
+            return verify_result_unsatisfied_locktime;
+
+        // BIP62
+        case ScriptError::SIG_HASHTYPE:
+            return verify_result_sig_hashtype;
+        case ScriptError::SIG_DER:
+            return verify_result_sig_der;
+        case ScriptError::MINIMALDATA:
+            return verify_result_minimaldata;
+        case ScriptError::SIG_PUSHONLY:
+            return verify_result_sig_pushonly;
+        case ScriptError::SIG_HIGH_S:
+            return verify_result_sig_high_s;
+        case ScriptError::PUBKEYTYPE:
+            return verify_result_pubkeytype;
+        case ScriptError::CLEANSTACK:
+            return verify_result_cleanstack;
+        case ScriptError::MINIMALIF:
+            return verify_result_minimalif;
+        case ScriptError::SIG_NULLFAIL:
+            return verify_result_sig_nullfail;
+
+        // Softfork safeness
+        case ScriptError::DISCOURAGE_UPGRADABLE_NOPS:
+            return verify_result_discourage_upgradable_nops;
+
+        // Other
+        case ScriptError::OP_RETURN:
+            return verify_result_op_return;
+        case ScriptError::UNKNOWN:
+        case ScriptError::ERROR_COUNT:
+        default:
+            return verify_result_unknown_error;
+    }
+}
+#else
+verify_result_type script_error_to_verify_result(ScriptError_t code) {
     switch (code)
     {
         // Logical result
@@ -149,7 +237,7 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS:
             return verify_result_discourage_upgradable_nops;
 
-#if ! defined(KTH_CURRENCY_BCH)
+// #if ! defined(KTH_CURRENCY_BCH)
         // Softfork safeness
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM:
             return verify_result_discourage_upgradable_witness_program;
@@ -169,7 +257,7 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
             return verify_result_witness_unexpected;
         case SCRIPT_ERR_WITNESS_PUBKEYTYPE:
             return verify_result_witness_pubkeytype;
-#endif //! defined(KTH_CURRENCY_BCH)
+// #endif //! defined(KTH_CURRENCY_BCH)
 
         // Other
         case SCRIPT_ERR_OP_RETURN:
@@ -180,12 +268,12 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
             return verify_result_unknown_error;
     }
 }
+#endif
 
 // This mapping decouples the consensus API from the satoshi implementation
 // files. We prefer to keep our copies of consensus files isomorphic.
 // This function is not published (but non-static for testability).
-unsigned int verify_flags_to_script_flags(unsigned int flags)
-{
+unsigned int verify_flags_to_script_flags(unsigned int flags) {
     unsigned int script_flags = SCRIPT_VERIFY_NONE;
 
     if ((flags & verify_flags_p2sh) != 0)
@@ -196,8 +284,12 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
         script_flags |= SCRIPT_VERIFY_DERSIG;
     if ((flags & verify_flags_low_s) != 0)
         script_flags |= SCRIPT_VERIFY_LOW_S;
+
+#if ! defined(KTH_CURRENCY_BCH)        
     if ((flags & verify_flags_nulldummy) != 0)
         script_flags |= SCRIPT_VERIFY_NULLDUMMY;
+#endif
+
     if ((flags & verify_flags_sigpushonly) != 0)
         script_flags |= SCRIPT_VERIFY_SIGPUSHONLY;
     if ((flags & verify_flags_minimaldata) != 0)
@@ -222,23 +314,36 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
         script_flags |= SCRIPT_VERIFY_NULLFAIL;
     if ((flags & verify_flags_witness_public_key_compressed) != 0)
         script_flags |= SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
+
+    if ((flags & verify_flags_const_scriptcode) != 0)
+        script_flags |= SCRIPT_VERIFY_CONST_SCRIPTCODE;
 #endif //! defined(KTH_CURRENCY_BCH)
 
 #if defined(KTH_CURRENCY_BCH)
+
+    if ((flags & verify_flags_script_verify_compressed_pubkeytype) != 0)
+        script_flags |= SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE;
+
     if ((flags & verify_flags_script_enable_sighash_forkid) != 0)
         script_flags |= SCRIPT_ENABLE_SIGHASH_FORKID;
 
     if ((flags & verify_flags_script_enable_replay_protection) != 0)
         script_flags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
 
-    if ((flags & verify_flags_script_enable_checkdatasig) != 0)
-        script_flags |= SCRIPT_ENABLE_CHECKDATASIG;
+    if ((flags & verify_flags_script_enable_checkdatasig_sigops) != 0)
+        script_flags |= SCRIPT_VERIFY_CHECKDATASIG_SIGOPS;
 
-    if ((flags & verify_flags_script_enable_schnorr) != 0)
-        script_flags |= SCRIPT_ENABLE_SCHNORR;
+    if ((flags & verify_flags_script_disallow_segwit_recovery) != 0)
+        script_flags |= SCRIPT_DISALLOW_SEGWIT_RECOVERY;
 
-    if ((flags & verify_flags_script_enable_segwit_recovery) != 0)
-        script_flags |= SCRIPT_ALLOW_SEGWIT_RECOVERY;
+    if ((flags & verify_flags_script_script_enable_schnorr_multisig) != 0)
+        script_flags |= SCRIPT_ENABLE_SCHNORR_MULTISIG;
+
+    if ((flags & verify_flags_script_verify_input_sigchecks) != 0)
+        script_flags |= SCRIPT_VERIFY_INPUT_SIGCHECKS;
+
+    if ((flags & verify_flags_script_report_sigchecks) != 0)
+        script_flags |= SCRIPT_REPORT_SIGCHECKS;
 #endif
 
     return script_flags;
@@ -276,10 +381,10 @@ verify_result_type verify_script(const unsigned char* transaction,
     if (tx_input_index >= tx->vin.size())
         return verify_result_tx_input_invalid;
 
-    if (GetSerializeSize(*tx, SER_NETWORK, PROTOCOL_VERSION) != transaction_size)
+    if (GetSerializeSize(*tx, PROTOCOL_VERSION) != transaction_size)
         return verify_result_tx_size_invalid;
 
-    ScriptError_t error;
+    ScriptError error;
     auto const& tx_ref = *tx;
     Amount am(amount);
     TransactionSignatureChecker checker(&tx_ref, tx_input_index, am);
@@ -328,7 +433,7 @@ verify_result_type verify_script(const unsigned char* transaction,
     if (tx_input_index >= tx->vin.size())
         return verify_result_tx_input_invalid;
 
-    if (GetSerializeSize(*tx, SER_NETWORK, PROTOCOL_VERSION) != transaction_size)
+    if (GetSerializeSize(*tx, PROTOCOL_VERSION) != transaction_size)
         return verify_result_tx_size_invalid;
 
     ScriptError_t error;
