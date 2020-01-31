@@ -1,30 +1,16 @@
-/**
- * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
- *
- * This file is part of libbitcoin.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <stdint.h>
-#include <bitcoin/consensus.hpp>
+#include <kth/consensus.hpp>
 #include <boost/test/unit_test.hpp>
 
 // These give us test accesss to unpublished symbols.
 #include "consensus/consensus.hpp"
 #include "script/interpreter.h"
 
-using namespace libbitcoin::consensus;
+using namespace kth::consensus;
 
 BOOST_AUTO_TEST_SUITE(consensus__verify_flags_to_script_flags)
 
@@ -114,6 +100,12 @@ BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__witness_public_key
 {
     BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_witness_public_key_compressed), (uint32_t)SCRIPT_VERIFY_WITNESS_PUBKEYTYPE);
 }
+
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__const_scriptcode__SCRIPTCODE)
+{
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_const_scriptcode), (uint32_t)SCRIPT_VERIFY_CONST_SCRIPTCODE);
+}
+
 
 BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
 {

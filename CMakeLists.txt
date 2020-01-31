@@ -1,21 +1,7 @@
-#
-# Copyright (c) 2017-2019 Knuth Project.
-#
-# This file is part of the Knuth Project.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+# Copyright (c) 2016-2020 Knuth Project developers.
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 
 cmake_minimum_required(VERSION 3.4)
 
@@ -31,7 +17,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Check for baseline language coverage in the compiler for the C++14 standard.
 #------------------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Implement --use-conan
@@ -76,24 +62,30 @@ endif()
 
 
 
-set(KNUTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
-# message(${KNUTH_PROJECT_VERSION})
+set(KTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
+# message(${KTH_PROJECT_VERSION})
 
 
 set(MICROARCHITECTURE "x86_64" CACHE STRING "Specify the Cryptocurrency (x86_64|...).")
 message( STATUS "Knuth: Compiling for ${MICROARCHITECTURE}")
-# add_definitions(-DKNUTH_MICROARCHITECTURE=${MICROARCHITECTURE})
-# add_definitions(-DKNUTH_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
+# add_definitions(-DKTH_MICROARCHITECTURE=${MICROARCHITECTURE})
+# add_definitions(-DKTH_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
+
+set(MARCH_ID "" CACHE STRING "Specify the Microarchitecture ID (x86_64|...).")
+message( STATUS "Knuth: Compiling for Microarchitecture ID ${MARCH_ID}")
+
+message( STATUS "Knuth: CONAN_CXX_FLAGS ${CONAN_CXX_FLAGS}")
+message( STATUS "Knuth: CONAN_C_FLAGS ${CONAN_C_FLAGS}")
 
 
 set(CURRENCY "BCH" CACHE STRING "Specify the Cryptocurrency (BCH|BTC|LTC).")
 
 if (${CURRENCY} STREQUAL "BCH")
-  add_definitions(-DKNUTH_CURRENCY_BCH)
+  add_definitions(-DKTH_CURRENCY_BCH)
 elseif (${CURRENCY} STREQUAL "BTC")
-  add_definitions(-DKNUTH_CURRENCY_BTC)
+  add_definitions(-DKTH_CURRENCY_BTC)
 elseif (${CURRENCY} STREQUAL "LTC")
-  add_definitions(-DKNUTH_CURRENCY_LTC)
+  add_definitions(-DKTH_CURRENCY_LTC)
 else()
   message(FATAL_ERROR "Invalid Cryptocurrency: ${CURRENCY}")
 endif()
@@ -360,8 +352,6 @@ if (${CURRENCY} STREQUAL "BCH")
     src/clone-abc/tinyformat.h
     src/clone-abc/uint256.cpp
     src/clone-abc/uint256.h
-    src/clone-abc/utilstrencodings.cpp
-    src/clone-abc/utilstrencodings.h
     src/clone-abc/version.h
     src/clone-abc/compat/byteswap.h
     src/clone-abc/compat/endian.h
@@ -379,6 +369,8 @@ if (${CURRENCY} STREQUAL "BCH")
     src/clone-abc/primitives/transaction.cpp
     src/clone-abc/primitives/transaction.h
     src/clone-abc/primitives/txid.h
+    src/clone-abc/script/bitfield.cpp
+    src/clone-abc/script/bitfield.h
     src/clone-abc/script/interpreter.cpp
     src/clone-abc/script/interpreter.h
     src/clone-abc/script/script.cpp
@@ -387,45 +379,47 @@ if (${CURRENCY} STREQUAL "BCH")
     src/clone-abc/script/script_error.h
     src/clone-abc/script/sigencoding.h
     src/clone-abc/script/sigencoding.cpp
+    src/clone-abc/util/strencodings.cpp
+    src/clone-abc/util/strencodings.h
   )
 
 else()
 #message("clone BTC")
 
   add_library(kth-consensus-clone OBJECT
-    src/clone-legacy/amount.h
-    src/clone-legacy/hash.cpp
-    src/clone-legacy/hash.h
-    src/clone-legacy/prevector.h
-    src/clone-legacy/pubkey.cpp
-    src/clone-legacy/pubkey.h
-    src/clone-legacy/serialize.h
-    src/clone-legacy/tinyformat.h
-    src/clone-legacy/uint256.cpp
-    src/clone-legacy/uint256.h
-    src/clone-legacy/utilstrencodings.cpp
-    src/clone-legacy/utilstrencodings.h
-    src/clone-legacy/version.h
-    src/clone-legacy/compat/byteswap.h
-    src/clone-legacy/compat/endian.h
-    src/clone-legacy/crypto/common.h
-    src/clone-legacy/crypto/hmac_sha512.cpp
-    src/clone-legacy/crypto/hmac_sha512.h
-    src/clone-legacy/crypto/ripemd160.cpp
-    src/clone-legacy/crypto/ripemd160.h
-    src/clone-legacy/crypto/sha1.cpp
-    src/clone-legacy/crypto/sha1.h
-    src/clone-legacy/crypto/sha256.cpp
-    src/clone-legacy/crypto/sha256.h
-    src/clone-legacy/crypto/sha512.cpp
-    src/clone-legacy/crypto/sha512.h
-    src/clone-legacy/primitives/transaction.cpp
-    src/clone-legacy/primitives/transaction.h
-    src/clone-legacy/script/interpreter.cpp
-    src/clone-legacy/script/interpreter.h
-    src/clone-legacy/script/script.cpp
-    src/clone-legacy/script/script.h
-    src/clone-legacy/script/script_error.h
+    src/clone-core/amount.h
+    src/clone-core/hash.cpp
+    src/clone-core/hash.h
+    src/clone-core/prevector.h
+    src/clone-core/pubkey.cpp
+    src/clone-core/pubkey.h
+    src/clone-core/serialize.h
+    src/clone-core/tinyformat.h
+    src/clone-core/uint256.cpp
+    src/clone-core/uint256.h
+    src/clone-core/utilstrencodings.cpp
+    src/clone-core/utilstrencodings.h
+    src/clone-core/version.h
+    src/clone-core/compat/byteswap.h
+    src/clone-core/compat/endian.h
+    src/clone-core/crypto/common.h
+    src/clone-core/crypto/hmac_sha512.cpp
+    src/clone-core/crypto/hmac_sha512.h
+    src/clone-core/crypto/ripemd160.cpp
+    src/clone-core/crypto/ripemd160.h
+    src/clone-core/crypto/sha1.cpp
+    src/clone-core/crypto/sha1.h
+    src/clone-core/crypto/sha256.cpp
+    src/clone-core/crypto/sha256.h
+    src/clone-core/crypto/sha512.cpp
+    src/clone-core/crypto/sha512.h
+    src/clone-core/primitives/transaction.cpp
+    src/clone-core/primitives/transaction.h
+    src/clone-core/script/interpreter.cpp
+    src/clone-core/script/interpreter.h
+    src/clone-core/script/script.cpp
+    src/clone-core/script/script.h
+    src/clone-core/script/script_error.h
   )
 endif()
 
@@ -442,10 +436,10 @@ if (${CURRENCY} STREQUAL "BCH")
   target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
 else()
 #message("clone BTC 2")
-  target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
+  target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core)
 endif()
 
-target_compile_definitions(kth-consensus-clone PUBLIC -DKNUTH_PROJECT_VERSION="\\"${KNUTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
+target_compile_definitions(kth-consensus-clone PUBLIC -DKTH_PROJECT_VERSION="\\"${KTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
   
 
 if (NOT USE_CONAN)
@@ -463,7 +457,7 @@ if (${CURRENCY} STREQUAL "BCH")
 else()
 #message("clone BTC 3")
 
-_group_sources(kth-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy")
+_group_sources(kth-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core")
 endif()
 
 
@@ -490,7 +484,7 @@ target_include_directories(kth-consensus PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_compile_definitions(kth-consensus PUBLIC -DKNUTH_PROJECT_VERSION="\\"${KNUTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
+target_compile_definitions(kth-consensus PUBLIC -DKTH_PROJECT_VERSION="\\"${KTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
 
 
 if (NOT ENABLE_SHARED)
@@ -511,7 +505,7 @@ else()
 
   target_include_directories(kth-consensus PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core)
 endif()
 
 
@@ -560,7 +554,7 @@ if (WITH_TESTS)
   #message("clone BTC 5")
     target_include_directories(knuth_consensus_test PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-legacy)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core)
   endif()
   
 
@@ -588,11 +582,11 @@ install(TARGETS kth-consensus
 
 set(_knuth_headers
   # include_bitcoin_HEADERS =
-  bitcoin/consensus.hpp
+  kth/consensus.hpp
   # include_bitcoin_consensus_HEADERS =
-  bitcoin/consensus/define.hpp
-  bitcoin/consensus/export.hpp
-  bitcoin/consensus/version.hpp)
+  kth/consensus/define.hpp
+  kth/consensus/export.hpp
+  kth/consensus/version.hpp)
 foreach (_header ${_knuth_headers})
   get_filename_component(_directory "${_header}" DIRECTORY)
   install(FILES "include/${_header}" DESTINATION "include/${_directory}")

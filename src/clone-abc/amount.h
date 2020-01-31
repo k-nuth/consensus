@@ -7,7 +7,7 @@
 #ifndef BITCOIN_AMOUNT_H
 #define BITCOIN_AMOUNT_H
 
-#include "serialize.h"
+#include <serialize.h>
 
 #include <cstdlib>
 #include <ostream>
@@ -20,10 +20,19 @@ private:
 
 public:
     constexpr Amount() : amount(0) {}
-    constexpr Amount(const Amount &_camount) : amount(_camount.amount) {}
-
+    constexpr Amount(const Amount &other) : amount(other.amount) {}
+    
     // NOTE (knuth): it needs to be public to work with `verify_script`
     explicit constexpr Amount(int64_t _amount) : amount(_amount) {}
+
+
+    /**
+     * Assignement operator.
+     */
+    constexpr Amount &operator=(const Amount &other) {
+        amount = other.amount;
+        return *this;
+    }
 
     static constexpr Amount zero() { return Amount(0); }
     static constexpr Amount satoshi() { return Amount(1); }
@@ -163,4 +172,4 @@ inline bool MoneyRange(const Amount nValue) {
     return nValue >= Amount::zero() && nValue <= MAX_MONEY;
 }
 
-#endif //  BITCOIN_AMOUNT_H
+#endif // BITCOIN_AMOUNT_H

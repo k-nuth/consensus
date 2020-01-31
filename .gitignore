@@ -12,7 +12,6 @@
 /libtool
 Makefile
 Makefile.in
-libbitcoin-consensus.pc
 
 # IDE's and editors:
 *~
