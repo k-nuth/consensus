@@ -7,7 +7,7 @@
 #define BITCOIN_COMPAT_H
 
 #if defined(HAVE_CONFIG_H)
-#include <config/bitcoin-config.h>
+#include <config/bitcoin-config.h>  //TODO(fernando): implement this
 #endif
 
 #ifdef WIN32

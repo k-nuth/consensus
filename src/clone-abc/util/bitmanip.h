@@ -6,7 +6,7 @@
 #define BITCOIN_UTIL_BITMANIP_H
 
 #if defined(HAVE_CONFIG_H)
-#include <config/bitcoin-config.h>
+#include <config/bitcoin-config.h>  //TODO(fernando): implement this
 #endif
 
 #include <cstdint>

@@ -6,9 +6,9 @@ from shutil import copyfile
 PATH = '/Users/fernando/dev/kth/consensus/src/clone-abc/'
 SOURCE_PATH = '/Users/fernando/dev/abc/bitcoin-abc/src/'
 
-# Core
-PATH = '/Users/fernando/dev/kth/consensus/src/clone-core/'
-SOURCE_PATH = '/Users/fernando/dev/bitcoin-core/bitcoin/src/'
+# # Core
+# PATH = '/Users/fernando/dev/kth/consensus/src/clone-core/'
+# SOURCE_PATH = '/Users/fernando/dev/bitcoin-core/bitcoin/src/'
 
 def replace(kth_files):
     for dp, f in kth_files:
@@ -33,21 +33,24 @@ def replace(kth_files):
 
 # kth_files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames if os.path.splitext(f)[1] == '.txt']
 # kth_files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames]
-kth_files = [(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames]
-replace(kth_files)
-# print(kth_files)
 
-# missing_files = [
-#     ('/Users/fernando/dev/kth/consensus/src/clone-abc/', 'span.h'),
-#     ('/Users/fernando/dev/kth/consensus/src/clone-abc/util/', 'strencodings.h'),
-#     ('/Users/fernando/dev/kth/consensus/src/clone-abc/', 'attributes.h'),
-#     ('/Users/fernando/dev/kth/consensus/src/clone-abc/script/', 'script_metrics.h'),
-#     ('/Users/fernando/dev/kth/consensus/src/clone-abc/script/', 'bitfield.h'),
-#     ('/Users/fernando/dev/kth/consensus/src/clone-abc/util/', 'bitmanip.h'),
-#     ('/Users/fernando/dev/kth/consensus/src/clone-abc/config/', 'bitcoin-config.h'),
-# ]
-# # print(missing_files)
-# replace(missing_files)
+# kth_files = [(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames]
+# replace(kth_files)
+# # print(kth_files)
+
+missing_files = [
+    ('/Users/fernando/dev/kth/consensus/src/clone-abc/', 'span.h'),
+    ('/Users/fernando/dev/kth/consensus/src/clone-abc/util/', 'strencodings.h'),
+    ('/Users/fernando/dev/kth/consensus/src/clone-abc/', 'attributes.h'),
+    ('/Users/fernando/dev/kth/consensus/src/clone-abc/script/', 'script_metrics.h'),
+    ('/Users/fernando/dev/kth/consensus/src/clone-abc/script/', 'bitfield.h'),
+    ('/Users/fernando/dev/kth/consensus/src/clone-abc/util/', 'bitmanip.h'),
+    ('/Users/fernando/dev/kth/consensus/src/clone-abc/script/', 'bitfield.cpp'),
+]
+    # ('/Users/fernando/dev/kth/consensus/src/clone-abc/config/', 'bitcoin-config.h'),
+
+# print(missing_files)
+replace(missing_files)
 
 # ------------------------------------------------------------------------------------------
 
