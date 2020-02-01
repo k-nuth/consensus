@@ -32,7 +32,7 @@ public:
         sha.Reset().Write(buf, CSHA256::OUTPUT_SIZE).Finalize(hash);
     }
 
-    CHash256 &Write(const uint8_t *data, size_t len) {
+    CHash256 &Write(uint8_t const *data, size_t len) {
         sha.Write(data, len);
         return *this;
     }
@@ -57,7 +57,7 @@ public:
         CRIPEMD160().Write(buf, CSHA256::OUTPUT_SIZE).Finalize(hash);
     }
 
-    CHash160 &Write(const uint8_t *data, size_t len) {
+    CHash160 &Write(uint8_t const *data, size_t len) {
         sha.Write(data, len);
         return *this;
     }
@@ -70,10 +70,10 @@ public:
 
 /** Compute the 256-bit hash of an object. */
 template <typename T1> inline uint256 Hash(const T1 pbegin, const T1 pend) {
-    static const uint8_t pblank[1] = {};
+    static uint8_t const pblank[1] = {};
     uint256 result;
     CHash256()
-        .Write(pbegin == pend ? pblank : (const uint8_t *)&pbegin[0],
+        .Write(pbegin == pend ? pblank : (uint8_t const *)&pbegin[0],
                (pend - pbegin) * sizeof(pbegin[0]))
         .Finalize((uint8_t *)&result);
     return result;
@@ -83,12 +83,12 @@ template <typename T1> inline uint256 Hash(const T1 pbegin, const T1 pend) {
 template <typename T1, typename T2>
 inline uint256 Hash(const T1 p1begin, const T1 p1end, const T2 p2begin,
                     const T2 p2end) {
-    static const uint8_t pblank[1] = {};
+    static uint8_t const pblank[1] = {};
     uint256 result;
     CHash256()
-        .Write(p1begin == p1end ? pblank : (const uint8_t *)&p1begin[0],
+        .Write(p1begin == p1end ? pblank : (uint8_t const *)&p1begin[0],
                (p1end - p1begin) * sizeof(p1begin[0]))
-        .Write(p2begin == p2end ? pblank : (const uint8_t *)&p2begin[0],
+        .Write(p2begin == p2end ? pblank : (uint8_t const *)&p2begin[0],
                (p2end - p2begin) * sizeof(p2begin[0]))
         .Finalize((uint8_t *)&result);
     return result;
@@ -99,7 +99,7 @@ template <typename T1> inline uint160 Hash160(const T1 pbegin, const T1 pend) {
     static uint8_t pblank[1] = {};
     uint160 result;
     CHash160()
-        .Write(pbegin == pend ? pblank : (const uint8_t *)&pbegin[0],
+        .Write(pbegin == pend ? pblank : (uint8_t const *)&pbegin[0],
                (pend - pbegin) * sizeof(pbegin[0]))
         .Finalize((uint8_t *)&result);
     return result;
@@ -121,8 +121,8 @@ class CHashWriter {
 private:
     CHash256 ctx;
 
-    const int nType;
-    const int nVersion;
+    int const nType;
+    int const nVersion;
 
 public:
     CHashWriter(int nTypeIn, int nVersionIn)
@@ -132,7 +132,7 @@ public:
     int GetVersion() const { return nVersion; }
 
     void write(const char *pch, size_t size) {
-        ctx.Write((const uint8_t *)pch, size);
+        ctx.Write((uint8_t const *)pch, size);
     }
 
     // invalidates the object
@@ -204,6 +204,6 @@ uint32_t MurmurHash3(uint32_t nHashSeed,
                      const std::vector<uint8_t> &vDataToHash);
 
 void BIP32Hash(const ChainCode &chainCode, uint32_t nChild, uint8_t header,
-               const uint8_t data[32], uint8_t output[64]);
+               uint8_t const data[32], uint8_t output[64]);
 
 #endif // BITCOIN_HASH_H

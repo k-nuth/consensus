@@ -20,11 +20,6 @@ if __name__ == "__main__":
             if os.getenv('KTH_RUN_TESTS', 'false') == 'true':
                 options["%s:with_tests" % name] = "True"
 
-            # if full_build:
-            #     marchs = filter_valid_exts(str(platform.system()), str(settings["compiler"]), float(str(settings["compiler.version"])), ['x86-64', 'haswell', 'skylake'])
-            # else:
-            #     marchs = ["x86-64"]
-            # marchs = ["x86-64"]
             march_ids = get_base_march_ids()
 
             opts_bch = copy.deepcopy(options)
@@ -38,10 +33,6 @@ if __name__ == "__main__":
             # opts_bch_new = copy.deepcopy(opts_bch)
             # opts_bch_new["%s:use_domain" % name] = "True"
 
-
-            # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_bch, env_vars, build_requires)
-            # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_btc, env_vars, build_requires)
-            # # handle_microarchs("%s:microarchitecture" % name, marchs, filtered_builds, settings, opts_ltc, env_vars, build_requires)
 
             handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, opts_bch, env_vars, build_requires)
             handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, opts_btc, env_vars, build_requires)

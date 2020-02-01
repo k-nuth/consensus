@@ -119,8 +119,8 @@ class CHashWriter
 private:
     CHash256 ctx;
 
-    const int nType;
-    const int nVersion;
+    int const nType;
+    int const nVersion;
 public:
 
     CHashWriter(int nTypeIn, int nVersionIn) : nType(nTypeIn), nVersion(nVersionIn) {}

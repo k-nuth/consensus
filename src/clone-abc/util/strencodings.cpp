@@ -133,7 +133,7 @@ void SplitHostPort(std::string in, int &portOut, std::string &hostOut) {
     }
 }
 
-std::string EncodeBase64(const uint8_t *pch, size_t len) {
+std::string EncodeBase64(uint8_t const *pch, size_t len) {
     static const char *pbase64 =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -141,7 +141,7 @@ std::string EncodeBase64(const uint8_t *pch, size_t len) {
     strRet.reserve((len + 2) / 3 * 4);
 
     int mode = 0, left = 0;
-    const uint8_t *pchEnd = pch + len;
+    uint8_t const *pchEnd = pch + len;
 
     while (pch < pchEnd) {
         int enc = *(pch++);
@@ -178,11 +178,11 @@ std::string EncodeBase64(const uint8_t *pch, size_t len) {
 }
 
 std::string EncodeBase64(const std::string &str) {
-    return EncodeBase64((const uint8_t *)str.c_str(), str.size());
+    return EncodeBase64((uint8_t const *)str.c_str(), str.size());
 }
 
 std::vector<uint8_t> DecodeBase64(const char *p, bool *pfInvalid) {
-    static const int decode64_table[256] = {
+    static int const decode64_table[256] = {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57,
@@ -273,14 +273,14 @@ std::string DecodeBase64(const std::string &str) {
     return std::string((const char *)vchRet.data(), vchRet.size());
 }
 
-std::string EncodeBase32(const uint8_t *pch, size_t len) {
+std::string EncodeBase32(uint8_t const *pch, size_t len) {
     static const char *pbase32 = "abcdefghijklmnopqrstuvwxyz234567";
 
     std::string strRet;
     strRet.reserve((len + 4) / 5 * 8);
 
     int mode = 0, left = 0;
-    const uint8_t *pchEnd = pch + len;
+    uint8_t const *pchEnd = pch + len;
 
     while (pch < pchEnd) {
         int enc = *(pch++);
@@ -318,7 +318,7 @@ std::string EncodeBase32(const uint8_t *pch, size_t len) {
         }
     }
 
-    static const int nPadding[5] = {0, 6, 4, 3, 1};
+    static int const nPadding[5] = {0, 6, 4, 3, 1};
     if (mode) {
         strRet += pbase32[left];
         for (int n = 0; n < nPadding[mode]; n++) {
@@ -330,11 +330,11 @@ std::string EncodeBase32(const uint8_t *pch, size_t len) {
 }
 
 std::string EncodeBase32(const std::string &str) {
-    return EncodeBase32((const uint8_t *)str.c_str(), str.size());
+    return EncodeBase32((uint8_t const *)str.c_str(), str.size());
 }
 
 std::vector<uint8_t> DecodeBase32(const char *p, bool *pfInvalid) {
-    static const int decode32_table[256] = {
+    static int const decode32_table[256] = {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29,
@@ -661,7 +661,7 @@ int atoi(const std::string &str) {
  *  9223372036854775807  (1<<63)-1  (max int64_t)
  *  9999999999999999999  1^19-1     (would overflow)
  */
-static const int64_t UPPER_BOUND = 1000000000000000000LL - 1LL;
+static int64_t const UPPER_BOUND = 1000000000000000000LL - 1LL;
 
 /** Helper function for ParseFixedPoint */
 static inline bool ProcessMantissaDigit(char ch, int64_t &mantissa,
