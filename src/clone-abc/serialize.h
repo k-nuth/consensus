@@ -232,7 +232,7 @@ template <typename Stream> inline void Serialize(Stream &s, double a) {
     ser_writedata64(s, ser_double_to_uint64(a));
 }
 template <typename Stream, size_t N>
-inline void Serialize(Stream &s, int const8_t (&a)[N]) {
+inline void Serialize(Stream &s, int8_t const (&a)[N]) {
     s.write(a, N);
 }
 template <typename Stream, size_t N>
