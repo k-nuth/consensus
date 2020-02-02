@@ -396,8 +396,6 @@ else()
     src/clone-core/tinyformat.h
     src/clone-core/uint256.cpp
     src/clone-core/uint256.h
-    src/clone-core/utilstrencodings.cpp
-    src/clone-core/utilstrencodings.h
     src/clone-core/version.h
     src/clone-core/compat/byteswap.h
     src/clone-core/compat/endian.h
@@ -419,6 +417,8 @@ else()
     src/clone-core/script/script.cpp
     src/clone-core/script/script.h
     src/clone-core/script/script_error.h
+    src/clone-abc/util/strencodings.cpp
+    src/clone-abc/util/strencodings.h
   )
 endif()
 
