@@ -19,11 +19,11 @@ uint32_t MurmurHash3(uint32_t nHashSeed,
     const uint32_t c1 = 0xcc9e2d51;
     const uint32_t c2 = 0x1b873593;
 
-    const int nblocks = vDataToHash.size() / 4;
+    int const nblocks = vDataToHash.size() / 4;
 
     //----------
     // body
-    const uint8_t *blocks = vDataToHash.data();
+    uint8_t const *blocks = vDataToHash.data();
 
     for (int i = 0; i < nblocks; ++i) {
         uint32_t k1 = ReadLE32(blocks + i * 4);
@@ -39,7 +39,7 @@ uint32_t MurmurHash3(uint32_t nHashSeed,
 
     //----------
     // tail
-    const uint8_t *tail = vDataToHash.data() + nblocks * 4;
+    uint8_t const *tail = vDataToHash.data() + nblocks * 4;
 
     uint32_t k1 = 0;
 
@@ -71,7 +71,7 @@ uint32_t MurmurHash3(uint32_t nHashSeed,
 }
 
 void BIP32Hash(const ChainCode &chainCode, uint32_t nChild, uint8_t header,
-               const uint8_t data[32], uint8_t output[64]) {
+               uint8_t const data[32], uint8_t output[64]) {
     uint8_t num[4];
     num[0] = (nChild >> 24) & 0xFF;
     num[1] = (nChild >> 16) & 0xFF;

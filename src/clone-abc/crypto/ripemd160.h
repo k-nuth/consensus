@@ -19,7 +19,7 @@ public:
     static const size_t OUTPUT_SIZE = 20;
 
     CRIPEMD160();
-    CRIPEMD160 &Write(const uint8_t *data, size_t len);
+    CRIPEMD160 &Write(uint8_t const *data, size_t len);
     void Finalize(uint8_t hash[OUTPUT_SIZE]);
     CRIPEMD160 &Reset();
 };

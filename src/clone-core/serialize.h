@@ -873,7 +873,7 @@ template<typename Stream, typename K, typename T, typename Pred, typename A>
 void Serialize(Stream& os, const std::map<K, T, Pred, A>& m)
 {
     WriteCompactSize(os, m.size());
-    for (const auto& entry : m)
+    for (auto const& entry : m)
         Serialize(os, entry);
 }
 
@@ -989,7 +989,7 @@ class CSizeComputer
 protected:
     size_t nSize;
 
-    const int nVersion;
+    int const nVersion;
 public:
     explicit CSizeComputer(int nVersionIn) : nSize(0), nVersion(nVersionIn) {}
 

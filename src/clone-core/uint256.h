@@ -78,7 +78,7 @@ public:
 
     uint64_t GetUint64(int pos) const
     {
-        const uint8_t* ptr = data + pos * 8;
+        uint8_t const* ptr = data + pos * 8;
         return ((uint64_t)ptr[0]) | \
                ((uint64_t)ptr[1]) << 8 | \
                ((uint64_t)ptr[2]) << 16 | \

@@ -2,7 +2,6 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-
 cmake_minimum_required(VERSION 3.4)
 
 # kth-consensus
@@ -64,9 +63,9 @@ endif()
 
 set(KTH_PROJECT_VERSION "-" CACHE STRING "Specify the Knuth Project Version.")
 # message(${KTH_PROJECT_VERSION})
+message( STATUS "Knuth: Compiling version ${KTH_PROJECT_VERSION}")
 
-
-set(MICROARCHITECTURE "x86_64" CACHE STRING "Specify the Cryptocurrency (x86_64|...).")
+set(MICROARCHITECTURE "x86_64" CACHE STRING "Specify the Microarchitecture (x86_64|...).")
 message( STATUS "Knuth: Compiling for ${MICROARCHITECTURE}")
 # add_definitions(-DKTH_MICROARCHITECTURE=${MICROARCHITECTURE})
 # add_definitions(-DKTH_MICROARCHITECTURE_STR="${MICROARCHITECTURE}")
@@ -397,8 +396,6 @@ else()
     src/clone-core/tinyformat.h
     src/clone-core/uint256.cpp
     src/clone-core/uint256.h
-    src/clone-core/utilstrencodings.cpp
-    src/clone-core/utilstrencodings.h
     src/clone-core/version.h
     src/clone-core/compat/byteswap.h
     src/clone-core/compat/endian.h
@@ -420,6 +417,8 @@ else()
     src/clone-core/script/script.cpp
     src/clone-core/script/script.h
     src/clone-core/script/script_error.h
+    src/clone-abc/util/strencodings.cpp
+    src/clone-abc/util/strencodings.h
   )
 endif()
 

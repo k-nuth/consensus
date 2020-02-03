@@ -13,7 +13,7 @@
 #include <script/script.h>
 #include <serialize.h>
 
-static const int SERIALIZE_TRANSACTION = 0x00;
+static int const SERIALIZE_TRANSACTION = 0x00;
 
 /**
  * An outpoint - a combination of a transaction hash and an index n into its
@@ -102,7 +102,7 @@ public:
      * seconds is performed by multiplying by 512 = 2^9, or equivalently
      * shifting up by 9 bits.
      */
-    static const int SEQUENCE_LOCKTIME_GRANULARITY = 9;
+    static int const SEQUENCE_LOCKTIME_GRANULARITY = 9;
 
     CTxIn() { nSequence = SEQUENCE_FINAL; }
 
@@ -209,13 +209,13 @@ inline void SerializeTransaction(const TxType &tx, Stream &s) {
 class CTransaction {
 public:
     // Default transaction version.
-    static const int32_t CURRENT_VERSION = 2;
+    static int32_t const CURRENT_VERSION = 2;
 
     // Changing the default transaction version requires a two step process:
     // first adapting relay policy by bumping MAX_STANDARD_VERSION, and then
     // later date bumping the default CURRENT_VERSION at which point both
     // CURRENT_VERSION and MAX_STANDARD_VERSION will be equal.
-    static const int32_t MAX_STANDARD_VERSION = 2;
+    static int32_t const MAX_STANDARD_VERSION = 2;
 
     // The local variables are made const to prevent unintended modification
     // without updating the cached hash value. However, CTransaction is not
@@ -224,7 +224,7 @@ public:
     // structure, including the hash.
     const std::vector<CTxIn> vin;
     const std::vector<CTxOut> vout;
-    const int32_t nVersion;
+    int32_t const nVersion;
     const uint32_t nLockTime;
 
 private:

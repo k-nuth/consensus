@@ -73,7 +73,7 @@ CTransaction::CTransaction(CMutableTransaction &&tx)
 
 Amount CTransaction::GetValueOut() const {
     Amount nValueOut = Amount::zero();
-    for (const auto &tx_out : vout) {
+    for (auto const &tx_out : vout) {
         nValueOut += tx_out.nValue;
         if (!MoneyRange(tx_out.nValue) || !MoneyRange(nValueOut)) {
             throw std::runtime_error(std::string(__func__) +
@@ -93,10 +93,10 @@ std::string CTransaction::ToString() const {
                      "nLockTime=%u)\n",
                      GetId().ToString().substr(0, 10), nVersion, vin.size(),
                      vout.size(), nLockTime);
-    for (const auto &nVin : vin) {
+    for (auto const &nVin : vin) {
         str += "    " + nVin.ToString() + "\n";
     }
-    for (const auto &nVout : vout) {
+    for (auto const &nVout : vout) {
         str += "    " + nVout.ToString() + "\n";
     }
     return str;
