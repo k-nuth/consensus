@@ -92,6 +92,51 @@ typedef enum verify_result_type {
     verify_result_unsatisfied_locktime
 } verify_result;
 
+
+// ABC Flags
+// SCRIPT_VERIFY_NONE = 0,
+// SCRIPT_VERIFY_P2SH = (1U << 0),
+// SCRIPT_VERIFY_STRICTENC = (1U << 1),
+// SCRIPT_VERIFY_DERSIG = (1U << 2),
+// SCRIPT_VERIFY_LOW_S = (1U << 3),
+// SCRIPT_VERIFY_SIGPUSHONLY = (1U << 5),
+// SCRIPT_VERIFY_MINIMALDATA = (1U << 6),
+// SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS = (1U << 7),
+// SCRIPT_VERIFY_CLEANSTACK = (1U << 8),
+// SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY = (1U << 9),
+// SCRIPT_VERIFY_CHECKSEQUENCEVERIFY = (1U << 10),
+// SCRIPT_VERIFY_MINIMALIF = (1U << 13),
+// SCRIPT_VERIFY_NULLFAIL = (1U << 14),
+// SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE = (1U << 15),
+// SCRIPT_ENABLE_SIGHASH_FORKID = (1U << 16),
+// SCRIPT_ENABLE_REPLAY_PROTECTION = (1U << 17),
+// SCRIPT_VERIFY_CHECKDATASIG_SIGOPS = (1U << 18),
+// SCRIPT_DISALLOW_SEGWIT_RECOVERY = (1U << 20),
+// SCRIPT_ENABLE_SCHNORR_MULTISIG = (1U << 21),
+// SCRIPT_VERIFY_INPUT_SIGCHECKS = (1U << 22),
+// SCRIPT_REPORT_SIGCHECKS = (1U << 31),
+
+// Core Flags
+// SCRIPT_VERIFY_NONE = 0,
+// SCRIPT_VERIFY_P2SH = (1U << 0),
+// SCRIPT_VERIFY_STRICTENC = (1U << 1),
+// SCRIPT_VERIFY_DERSIG = (1U << 2),
+// SCRIPT_VERIFY_LOW_S = (1U << 3),
+// SCRIPT_VERIFY_NULLDUMMY = (1U << 4),
+// SCRIPT_VERIFY_SIGPUSHONLY = (1U << 5),
+// SCRIPT_VERIFY_MINIMALDATA = (1U << 6),
+// SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS = (1U << 7),
+// SCRIPT_VERIFY_CLEANSTACK = (1U << 8),
+// SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY = (1U << 9),
+// SCRIPT_VERIFY_CHECKSEQUENCEVERIFY = (1U << 10),
+// SCRIPT_VERIFY_WITNESS = (1U << 11),
+// SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM = (1U << 12),
+// SCRIPT_VERIFY_MINIMALIF = (1U << 13),
+// SCRIPT_VERIFY_NULLFAIL = (1U << 14),
+// SCRIPT_VERIFY_WITNESS_PUBKEYTYPE = (1U << 15),
+// SCRIPT_VERIFY_CONST_SCRIPTCODE = (1U << 16),
+
+
 /**
  * Flags to use when calling verify_script.
  */
@@ -183,7 +228,63 @@ typedef enum verify_flags_type {
      */
     verify_flags_checksequenceverify = (1U << 10)
 
-#if ! defined(KTH_CURRENCY_BCH)
+    /**
+     * SCRIPT_VERIFY_MINIMALIF (bip141 p2wsh policy).
+     */
+    , verify_flags_minimal_if = (1U << 13)
+
+    /**
+     * SCRIPT_VERIFY_NULLFAIL (bip141 global policy, bip146 soft fork).
+     */
+    , verify_flags_null_fail = (1U << 14)
+
+
+#ifdef KTH_CURRENCY_BCH
+    // BCH only flags
+
+    /**
+     * SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE (BCH).
+     */
+    , verify_flags_compressed_pubkeytype = (1U << 15)
+
+    /**
+     * SCRIPT_ENABLE_SIGHASH_FORKID (BCH).
+     */
+    , verify_flags_enable_sighash_forkid = (1U << 16)
+
+    /**
+     * SCRIPT_ENABLE_REPLAY_PROTECTION (BCH).
+     */
+    , verify_flags_enable_replay_protection = (1U << 17)
+
+    /**
+     * SCRIPT_VERIFY_CHECKDATASIG_SIGOPS (BCH).
+     */
+    , verify_flags_enable_checkdatasig_sigops = (1U << 18)
+
+    /**
+     * SCRIPT_DISALLOW_SEGWIT_RECOVERY (BCH).
+     */
+    , verify_flags_disallow_segwit_recovery = (1U << 20)
+
+    /**
+     * SCRIPT_ENABLE_SCHNORR_MULTISIG (BCH).
+     */
+    , verify_flags_enable_schnorr_multisig = (1U << 21)
+
+    /**
+     * SCRIPT_VERIFY_INPUT_SIGCHECKS (BCH).
+     */
+    , verify_flags_input_sigchecks = (1U << 22)
+
+    /**
+     * SCRIPT_REPORT_SIGCHECKS (BCH).
+     */
+    , verify_flags_report_sigchecks = (1U << 31)
+
+#else
+    // BTC only flags
+
     /**
      * SCRIPT_VERIFY_WITNESS (bip141).
      */
@@ -195,16 +296,6 @@ typedef enum verify_flags_type {
     , verify_flags_discourage_upgradable_witness_program = (1U << 12)
 
     /**
-     * SCRIPT_VERIFY_MINIMALIF (bip141 p2wsh policy).
-     */
-    , verify_flags_minimal_if = (1U << 13)
-
-    /**
-     * SCRIPT_VERIFY_NULLFAIL (bip141 global policy, bip146 soft fork).
-     */
-    , verify_flags_null_fail = (1U << 14)
-
-    /**
      * SCRIPT_VERIFY_WITNESS_PUBKEYTYPE (bip141/bip143 p2wsh/p2wpkh policy).
      */
     , verify_flags_witness_public_key_compressed = (1U << 15)
@@ -213,51 +304,7 @@ typedef enum verify_flags_type {
      * SCRIPT_VERIFY_CONST_SCRIPTCODE
      */
     , verify_flags_const_scriptcode = (1U << 16)
-
 #endif
-
-#ifdef KTH_CURRENCY_BCH
-    /**
-     * SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE (BCH).
-     */
-    , verify_flags_script_verify_compressed_pubkeytype = (1U << 15)
-
-    /**
-     * SCRIPT_ENABLE_SIGHASH_FORKID (BCH).
-     */
-    , verify_flags_script_enable_sighash_forkid = (1U << 16)
-
-    /**
-     * SCRIPT_ENABLE_REPLAY_PROTECTION (BCH).
-     */
-    , verify_flags_script_enable_replay_protection = (1U << 17)
-
-    /**
-     * SCRIPT_VERIFY_CHECKDATASIG_SIGOPS (BCH).
-     */
-    , verify_flags_script_enable_checkdatasig_sigops = (1U << 18)
-
-    /**
-     * SCRIPT_DISALLOW_SEGWIT_RECOVERY (BCH).
-     */
-    , verify_flags_script_disallow_segwit_recovery = (1U << 20)
-
-    /**
-     * SCRIPT_ENABLE_SCHNORR_MULTISIG (BCH).
-     */
-    , verify_flags_script_script_enable_schnorr_multisig = (1U << 21)
-
-    /**
-     * SCRIPT_VERIFY_INPUT_SIGCHECKS (BCH).
-     */
-    , verify_flags_script_verify_input_sigchecks = (1U << 22)
-
-    /**
-     * SCRIPT_REPORT_SIGCHECKS (BCH).
-     */
-    , verify_flags_script_report_sigchecks = (1U << 31)
-#endif
-
 } verify_flags;
 
 /**
