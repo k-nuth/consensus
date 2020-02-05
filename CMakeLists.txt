@@ -573,7 +573,6 @@ endif()
 
 # Install
 #==============================================================================
-# install(TARGETS kth-consensus kth-consensus-requester kth-consensus-replier
 install(TARGETS kth-consensus 
   EXPORT kth-consensus
   ARCHIVE DESTINATION lib

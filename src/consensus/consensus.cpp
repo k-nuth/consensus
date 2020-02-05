@@ -72,8 +72,7 @@ private:
 
 #if defined(KTH_CURRENCY_BCH)
 verify_result_type script_error_to_verify_result(ScriptError code) {
-    switch (code)
-    {
+    switch (code) {
         // Logical result
         case ScriptError::OK:
             return verify_result_eval_true;
@@ -157,10 +156,11 @@ verify_result_type script_error_to_verify_result(ScriptError code) {
             return verify_result_unknown_error;
     }
 }
+
 #else
+
 verify_result_type script_error_to_verify_result(ScriptError_t code) {
-    switch (code)
-    {
+    switch (code) {
         // Logical result
         case SCRIPT_ERR_OK:
             return verify_result_eval_true;
@@ -276,73 +276,101 @@ verify_result_type script_error_to_verify_result(ScriptError_t code) {
 unsigned int verify_flags_to_script_flags(unsigned int flags) {
     unsigned int script_flags = SCRIPT_VERIFY_NONE;
 
-    if ((flags & verify_flags_p2sh) != 0)
+    if ((flags & verify_flags_p2sh) != 0) {
         script_flags |= SCRIPT_VERIFY_P2SH;
-    if ((flags & verify_flags_strictenc) != 0)
+    }
+    
+    if ((flags & verify_flags_strictenc) != 0) {
         script_flags |= SCRIPT_VERIFY_STRICTENC;
-    if ((flags & verify_flags_dersig) != 0)
+    }
+    
+    if ((flags & verify_flags_dersig) != 0) {
         script_flags |= SCRIPT_VERIFY_DERSIG;
-    if ((flags & verify_flags_low_s) != 0)
+    }
+    
+    if ((flags & verify_flags_low_s) != 0) {
         script_flags |= SCRIPT_VERIFY_LOW_S;
+    }
 
 #if ! defined(KTH_CURRENCY_BCH)        
-    if ((flags & verify_flags_nulldummy) != 0)
+    if ((flags & verify_flags_nulldummy) != 0) {
         script_flags |= SCRIPT_VERIFY_NULLDUMMY;
+    }
 #endif
 
-    if ((flags & verify_flags_sigpushonly) != 0)
+    if ((flags & verify_flags_sigpushonly) != 0) {
         script_flags |= SCRIPT_VERIFY_SIGPUSHONLY;
-    if ((flags & verify_flags_minimaldata) != 0)
+    }
+    
+    if ((flags & verify_flags_minimaldata) != 0) {
         script_flags |= SCRIPT_VERIFY_MINIMALDATA;
-    if ((flags & verify_flags_discourage_upgradable_nops) != 0)
+    }
+    
+    if ((flags & verify_flags_discourage_upgradable_nops) != 0) {
         script_flags |= SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS;
-    if ((flags & verify_flags_cleanstack) != 0)
+    }
+    
+    if ((flags & verify_flags_cleanstack) != 0) {
         script_flags |= SCRIPT_VERIFY_CLEANSTACK;
-    if ((flags & verify_flags_checklocktimeverify) != 0)
+    }
+    
+    if ((flags & verify_flags_checklocktimeverify) != 0) {
         script_flags |= SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
-    if ((flags & verify_flags_checksequenceverify) != 0)
+    }
+    
+    if ((flags & verify_flags_checksequenceverify) != 0) {
         script_flags |= SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
+    }
 
 #if ! defined(KTH_CURRENCY_BCH)
-    if ((flags & verify_flags_witness) != 0)
+    if ((flags & verify_flags_witness) != 0) {
         script_flags |= SCRIPT_VERIFY_WITNESS;
-    if ((flags & verify_flags_discourage_upgradable_witness_program) != 0)
-        script_flags |= SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM;
-    if ((flags & verify_flags_minimal_if) != 0)
-        script_flags |= SCRIPT_VERIFY_MINIMALIF;
-    if ((flags & verify_flags_null_fail) != 0)
-        script_flags |= SCRIPT_VERIFY_NULLFAIL;
-    if ((flags & verify_flags_witness_public_key_compressed) != 0)
-        script_flags |= SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
+    }
 
-    if ((flags & verify_flags_const_scriptcode) != 0)
+    if ((flags & verify_flags_discourage_upgradable_witness_program) != 0) {
+        script_flags |= SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM;
+    }
+
+    if ((flags & verify_flags_minimal_if) != 0) {
+        script_flags |= SCRIPT_VERIFY_MINIMALIF;
+    }
+
+    if ((flags & verify_flags_null_fail) != 0) {
+        script_flags |= SCRIPT_VERIFY_NULLFAIL;
+    }
+
+    if ((flags & verify_flags_witness_public_key_compressed) != 0) {
+        script_flags |= SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
+    }
+
+    if ((flags & verify_flags_const_scriptcode) != 0) {
         script_flags |= SCRIPT_VERIFY_CONST_SCRIPTCODE;
+    }
 #endif //! defined(KTH_CURRENCY_BCH)
 
 #if defined(KTH_CURRENCY_BCH)
-
-    if ((flags & verify_flags_script_verify_compressed_pubkeytype) != 0)
+    if ((flags & verify_flags_compressed_pubkeytype) != 0)
         script_flags |= SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE;
 
-    if ((flags & verify_flags_script_enable_sighash_forkid) != 0)
+    if ((flags & verify_flags_enable_sighash_forkid) != 0)
         script_flags |= SCRIPT_ENABLE_SIGHASH_FORKID;
 
-    if ((flags & verify_flags_script_enable_replay_protection) != 0)
+    if ((flags & verify_flags_enable_replay_protection) != 0)
         script_flags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
 
-    if ((flags & verify_flags_script_enable_checkdatasig_sigops) != 0)
+    if ((flags & verify_flags_enable_checkdatasig_sigops) != 0)
         script_flags |= SCRIPT_VERIFY_CHECKDATASIG_SIGOPS;
 
-    if ((flags & verify_flags_script_disallow_segwit_recovery) != 0)
+    if ((flags & verify_flags_disallow_segwit_recovery) != 0)
         script_flags |= SCRIPT_DISALLOW_SEGWIT_RECOVERY;
 
-    if ((flags & verify_flags_script_script_enable_schnorr_multisig) != 0)
+    if ((flags & verify_flags_enable_schnorr_multisig) != 0)
         script_flags |= SCRIPT_ENABLE_SCHNORR_MULTISIG;
 
-    if ((flags & verify_flags_script_verify_input_sigchecks) != 0)
+    if ((flags & verify_flags_input_sigchecks) != 0)
         script_flags |= SCRIPT_VERIFY_INPUT_SIGCHECKS;
 
-    if ((flags & verify_flags_script_report_sigchecks) != 0)
+    if ((flags & verify_flags_report_sigchecks) != 0)
         script_flags |= SCRIPT_REPORT_SIGCHECKS;
 #endif
 
