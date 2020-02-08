@@ -2,7 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.8)
 
 # kth-consensus
 #==============================================================================
@@ -44,7 +44,7 @@ option(ENABLE_POSITION_INDEPENDENT_CODE "Enable POSITION_INDEPENDENT_CODE proper
 option(WITH_TESTS "Compile with unit tests." ON)
 
 
-#TODO(fernando): check libbitcoin for with_java and with_python parameters
+#TODO(fernando): check Legacy for with_java and with_python parameters
 # Implement --with-java and declare WITH_JAVA.
 #------------------------------------------------------------------------------
 option(WITH_JAVA "Compile the Java bindings." OFF)

@@ -71,7 +71,7 @@ static bool decode_base16(data_chunk& out, const std::string& in)
 //     const std::string& prevout_script, uint64_t prevout_value=0,
 //     uint32_t tx_input_index=0, const uint32_t flags=verify_flags_p2sh,
 //     int32_t tx_size_hack=0)
-// >>>>>>> libbitcoin/version3
+// >>>>>>> legacy/version3
 // {
 //     data_chunk tx_data, prevout_script_data;
 //     BOOST_REQUIRE(decode_base16(tx_data, transaction));
@@ -83,7 +83,7 @@ static bool decode_base16(data_chunk& out, const std::string& in)
 // =======
 //         &prevout_script_data[0], prevout_script_data.size(), prevout_value,
 //         tx_input_index, flags);
-// >>>>>>> libbitcoin/version3
+// >>>>>>> legacy/version3
 // }
 #ifdef KTH_CURRENCY_BCH
 static verify_result test_verify(const std::string& transaction,
