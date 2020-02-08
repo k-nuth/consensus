@@ -1,44 +1,44 @@
-# Knuth Consensus <a target="_blank" href="http://semver.org">![Version][badge.version]</a> <a target="_blank" href="https://travis-ci.org/knuth/consensus">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/knuth/consensus">![Appveyor status][badge.Appveyor]</a> <a target="_blank" href="https://gitter.im/knuth/Lobby">![Gitter Chat][badge.Gitter]</a>
+<!-- <a target="_blank" href="http://semver.org">![Version][badge.version]</a> -->
+<!-- <a target="_blank" href="https://cirrus-ci.com/github/k-nuth/consensus">![Build Status][badge.Cirrus]</a> -->
+
+# Knuth Consensus <a target="_blank" href="https://github.com/k-nuth/consensus/releases">![Github Releases][badge.release]</a> <a target="_blank" href="https://travis-ci.org/k-nuth/consensus">![Build status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/projects/k-nuth/consensus">![Build Status][badge.Appveyor]</a> <a target="_blank" href="https://t.me/knuth_cash">![Telegram][badge.telegram]</a> <a target="_blank" href="https://k-nuth.slack.com/">![Slack][badge.slack]</a>
 
 > Consensus code
 
-
-## Installation Requirements
-
-- 64-bit machine.
-- Python PIP.
-
-## Installation Procedure
+Build steps
+-----------
 
 The *Knuth* libraries can be installed on Linux, macOS, FreeBSD, Windows and others. These binaries are pre-built for the most usual operating system/compiler combinations and hosted in an online repository. If there are no pre-built binaries for your platform, a build from source will be attempted.
 
 So, for any platform, an installation can be performed in 2 simple steps:
 
-1. Install our build system helpers:
+1. Install the Knuth build helper:
 ```
-pip install kthbuild
+pip install kthbuild --user --upgrade
 ```
 
-2. Install the library:
+2. Configure the Conan remote:
+```
+conan remote add kth https://api.bintray.com/conan/k-nuth/kth
+```
+
+3. Install the appropriate library:
 
 ```
 conan install consensus/0.X@kth/stable 
 ```
 
-In you want to tune the installation for better performance, please refer to [this](https://knuth.github.io/docfx/content/user_guide/installation.html#advanced-installation).
+In you want to tune the installation for better performance, please refer to the [documentation](https://kth.github.io/docfx/content/user_guide/installation.html#advanced-installation).
 
 
 <!-- Links -->
-[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/knuth/consensus?svg=true&branch=dev
-[badge.Gitter]: https://img.shields.io/badge/gitter-join%20chat-blue.svg
-[badge.Travis]: https://travis-ci.org/knuth/consensus.svg?branch=master
-[badge.version]: https://badge.fury.io/gh/knuth%2Fconsensus.svg
+[badge.Travis]: https://travis-ci.org/k-nuth/consensus.svg?branch=master
+[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/k-nuth/consensus?svg=true&branch=master
+[badge.Cirrus]: https://api.cirrus-ci.com/github/k-nuth/consensus.svg?branch=master
+[badge.version]: https://badge.fury.io/gh/k-nuth%2Fconsensus.svg
+[badge.release]: https://img.shields.io/github/release/k-nuth/consensus.svg
 
-[CMake]: http://www.cmake.org
-[Doxygen]: http://www.doxygen.org
-[eRuby]: http://en.wikipedia.org/wiki/ERuby
-[Hana.docs]: http://boostorg.github.io/hana
-[Hana.wiki]: https://github.com/boostorg/hana/wiki
-[Homebrew formula]: https://github.com/Homebrew/homebrew-consensus/blob/master/Formula/hana.rb
+[badge.telegram]: https://img.shields.io/badge/telegram-badge-blue.svg?logo=telegram
+[badge.slack]: https://img.shields.io/badge/slack-badge-orange.svg?logo=slack
 
-
+<!-- [badge.Gitter]: https://img.shields.io/badge/gitter-join%20chat-blue.svg -->
