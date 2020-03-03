@@ -253,11 +253,10 @@ endif()
 # message(${USE_CONAN})
 
 if (NOT USE_CONAN)
-#   message("Entro!!!")
-  # Require kth-core of at least version 0 and output ${knuth_core_CPPFLAGS/LIBS/PKG}.
+  # Require kth-domain of at least version 0 and output ${knuth_domain_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
-  if (NOT TARGET kth-core)
-    find_package(kth-core 0 REQUIRED)
+  if (NOT TARGET kth-domain)
+    find_package(kth-domain 0 REQUIRED)
   endif()
 
   # Require secp256k1 of at least version 0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
@@ -417,8 +416,8 @@ else()
     src/clone-core/script/script.cpp
     src/clone-core/script/script.h
     src/clone-core/script/script_error.h
-    src/clone-abc/util/strencodings.cpp
-    src/clone-abc/util/strencodings.h
+    src/clone-core/util/strencodings.cpp
+    src/clone-core/util/strencodings.h
   )
 endif()
 
@@ -511,7 +510,7 @@ endif()
 if (NOT NO_CONAN_AT_ALL)
   target_link_libraries(kth-consensus PUBLIC ${CONAN_LIBS})
 else()
-  target_link_libraries(kth-consensus secp256k1 kth-core)
+  target_link_libraries(kth-consensus secp256k1 kth-domain)
 endif()
 
 
