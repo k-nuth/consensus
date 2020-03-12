@@ -437,7 +437,8 @@ else()
   target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core)
 endif()
 
-target_compile_definitions(kth-consensus-clone PUBLIC -DKTH_PROJECT_VERSION="\\"${KTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
+# target_compile_definitions(kth-consensus-clone PUBLIC -DKTH_PROJECT_VERSION="\\"${KTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
+target_compile_definitions(kth-consensus-clone PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
   
 
 if (NOT USE_CONAN)
@@ -482,7 +483,8 @@ target_include_directories(kth-consensus PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_compile_definitions(kth-consensus PUBLIC -DKTH_PROJECT_VERSION="\\"${KTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
+# target_compile_definitions(kth-consensus PUBLIC -DKTH_PROJECT_VERSION="\\"${KTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
+target_compile_definitions(kth-consensus PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
 
 
 if (NOT ENABLE_SHARED)
