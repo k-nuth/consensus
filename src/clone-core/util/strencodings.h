@@ -34,32 +34,32 @@ enum SafeChars
 * @param[in] rule   The set of safe chars to choose (default: least restrictive)
 * @return           A new string without unsafe chars
 */
-std::string SanitizeString(const std::string& str, int rule = SAFE_CHARS_DEFAULT);
+std::string SanitizeString(std::string const& str, int rule = SAFE_CHARS_DEFAULT);
 std::vector<unsigned char> ParseHex(const char* psz);
-std::vector<unsigned char> ParseHex(const std::string& str);
+std::vector<unsigned char> ParseHex(std::string const& str);
 signed char HexDigit(char c);
 /* Returns true if each character in str is a hex character, and has an even
  * number of hex digits.*/
-bool IsHex(const std::string& str);
+bool IsHex(std::string const& str);
 /**
 * Return true if the string is a hex number, optionally prefixed with "0x"
 */
-bool IsHexNumber(const std::string& str);
+bool IsHexNumber(std::string const& str);
 std::vector<unsigned char> DecodeBase64(const char* p, bool* pf_invalid = nullptr);
-std::string DecodeBase64(const std::string& str, bool* pf_invalid = nullptr);
+std::string DecodeBase64(std::string const& str, bool* pf_invalid = nullptr);
 std::string EncodeBase64(const unsigned char* pch, size_t len);
-std::string EncodeBase64(const std::string& str);
+std::string EncodeBase64(std::string const& str);
 std::vector<unsigned char> DecodeBase32(const char* p, bool* pf_invalid = nullptr);
-std::string DecodeBase32(const std::string& str, bool* pf_invalid = nullptr);
+std::string DecodeBase32(std::string const& str, bool* pf_invalid = nullptr);
 std::string EncodeBase32(const unsigned char* pch, size_t len);
-std::string EncodeBase32(const std::string& str);
+std::string EncodeBase32(std::string const& str);
 
 void SplitHostPort(std::string in, int &portOut, std::string &hostOut);
 std::string i64tostr(int64_t n);
 std::string itostr(int n);
 int64_t atoi64(const char* psz);
-int64_t atoi64(const std::string& str);
-int atoi(const std::string& str);
+int64_t atoi64(std::string const& str);
+int atoi(std::string const& str);
 
 /**
  * Tests if the given character is a decimal digit.
@@ -91,35 +91,35 @@ constexpr inline bool IsSpace(char c) noexcept {
  * @returns true if the entire string could be parsed as valid integer,
  *   false if not the entire string could be parsed or when overflow or underflow occurred.
  */
-NODISCARD bool ParseInt32(const std::string& str, int32_t *out);
+NODISCARD bool ParseInt32(std::string const& str, int32_t *out);
 
 /**
  * Convert string to signed 64-bit integer with strict parse error feedback.
  * @returns true if the entire string could be parsed as valid integer,
  *   false if not the entire string could be parsed or when overflow or underflow occurred.
  */
-NODISCARD bool ParseInt64(const std::string& str, int64_t *out);
+NODISCARD bool ParseInt64(std::string const& str, int64_t *out);
 
 /**
  * Convert decimal string to unsigned 32-bit integer with strict parse error feedback.
  * @returns true if the entire string could be parsed as valid integer,
  *   false if not the entire string could be parsed or when overflow or underflow occurred.
  */
-NODISCARD bool ParseUInt32(const std::string& str, uint32_t *out);
+NODISCARD bool ParseUInt32(std::string const& str, uint32_t *out);
 
 /**
  * Convert decimal string to unsigned 64-bit integer with strict parse error feedback.
  * @returns true if the entire string could be parsed as valid integer,
  *   false if not the entire string could be parsed or when overflow or underflow occurred.
  */
-NODISCARD bool ParseUInt64(const std::string& str, uint64_t *out);
+NODISCARD bool ParseUInt64(std::string const& str, uint64_t *out);
 
 /**
  * Convert string to double with strict parse error feedback.
  * @returns true if the entire string could be parsed as valid double,
  *   false if not the entire string could be parsed or when overflow or underflow occurred.
  */
-NODISCARD bool ParseDouble(const std::string& str, double *out);
+NODISCARD bool ParseDouble(std::string const& str, double *out);
 
 template<typename T>
 std::string HexStr(const T itbegin, const T itend)
@@ -147,7 +147,7 @@ inline std::string HexStr(const T& vch)
  * Format a paragraph of text to a fixed width, adding spaces for
  * indentation to any added line.
  */
-std::string FormatParagraph(const std::string& in, size_t width = 79, size_t indent = 0);
+std::string FormatParagraph(std::string const& in, size_t width = 79, size_t indent = 0);
 
 /**
  * Timing-attack-resistant comparison.
@@ -219,7 +219,7 @@ constexpr char ToLower(char c)
  * @param[in] str   the string to convert to lowercase.
  * @returns         lowercased equivalent of str
  */
-std::string ToLower(const std::string& str);
+std::string ToLower(std::string const& str);
 
 /**
  * Converts the given character to its uppercase equivalent.
@@ -245,7 +245,7 @@ constexpr char ToUpper(char c)
  * @param[in] str   the string to convert to uppercase.
  * @returns         UPPERCASED EQUIVALENT OF str
  */
-std::string ToUpper(const std::string& str);
+std::string ToUpper(std::string const& str);
 
 /**
  * Capitalizes the first character of the given string.

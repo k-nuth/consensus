@@ -48,7 +48,7 @@ static bool decode_base16_private(uint8_t* out, size_t size, const char* in)
     return true;
 }
 
-static bool decode_base16(data_chunk& out, const std::string& in)
+static bool decode_base16(data_chunk& out, std::string const& in)
 {
     // This prevents a last odd character from being ignored:
     if (in.size() % 2 != 0)
@@ -63,12 +63,12 @@ static bool decode_base16(data_chunk& out, const std::string& in)
 }
 
 // TODO(kth): this is from the v2 to v3 merge
-// static verify_result test_verify(const std::string& transaction,
+// static verify_result test_verify(std::string const& transaction,
 // <<<<<<< HEAD
-//     const std::string& prevout_script, uint32_t tx_input_index=0,
+//     std::string const& prevout_script, uint32_t tx_input_index=0,
 //     const uint32_t flags=verify_flags_p2sh, int32_t tx_size_hack = 0, uint64_t amount = 0 )
 // =======
-//     const std::string& prevout_script, uint64_t prevout_value=0,
+//     std::string const& prevout_script, uint64_t prevout_value=0,
 //     uint32_t tx_input_index=0, const uint32_t flags=verify_flags_p2sh,
 //     int32_t tx_size_hack=0)
 // >>>>>>> legacy/version3
@@ -86,8 +86,8 @@ static bool decode_base16(data_chunk& out, const std::string& in)
 // >>>>>>> legacy/version3
 // }
 #ifdef KTH_CURRENCY_BCH
-static verify_result test_verify(const std::string& transaction,
-    const std::string& prevout_script, uint32_t tx_input_index=0,
+static verify_result test_verify(std::string const& transaction,
+    std::string const& prevout_script, uint32_t tx_input_index=0,
     const uint32_t flags=verify_flags_p2sh, int32_t tx_size_hack = 0, uint64_t amount = 0 )
 {
     data_chunk tx_data, prevout_script_data;
@@ -98,8 +98,8 @@ static verify_result test_verify(const std::string& transaction,
         flags, amount);
 }
 #else
-static verify_result test_verify(const std::string& transaction,
-    const std::string& prevout_script, uint64_t prevout_value=0,
+static verify_result test_verify(std::string const& transaction,
+    std::string const& prevout_script, uint64_t prevout_value=0,
     uint32_t tx_input_index=0, const uint32_t flags=verify_flags_p2sh,
     int32_t tx_size_hack=0)
 {

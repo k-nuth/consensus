@@ -198,7 +198,7 @@ const char* GetOpName(opcodetype opcode);
 class scriptnum_error : public std::runtime_error
 {
 public:
-    explicit scriptnum_error(const std::string& str) : std::runtime_error(str) {}
+    explicit scriptnum_error(std::string const& str) : std::runtime_error(str) {}
 };
 
 class CScriptNum

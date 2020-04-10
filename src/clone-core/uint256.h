@@ -48,7 +48,7 @@ public:
 
     std::string GetHex() const;
     void SetHex(const char* psz);
-    void SetHex(const std::string& str);
+    void SetHex(std::string const& str);
     std::string ToString() const;
 
     unsigned char* begin()
@@ -137,7 +137,7 @@ inline uint256 uint256S(const char *str)
  * This is a separate function because the constructor uint256(const std::string &str) can result
  * in dangerously catching uint256(0) via std::string(const char*).
  */
-inline uint256 uint256S(const std::string& str)
+inline uint256 uint256S(std::string const& str)
 {
     uint256 rv;
     rv.SetHex(str);
