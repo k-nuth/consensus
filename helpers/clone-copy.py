@@ -60,8 +60,9 @@ missing_files = [
     # ('/Users/fernando/dev/kth/consensus/src/clone-core/util/', 'bitmanip.h'),
     # ('/Users/fernando/dev/kth/consensus/src/clone-core/script/', 'bitfield.cpp'),
     # ('/Users/fernando/dev/kth/consensus/src/clone-core/util/', 'strencodings.cpp'),
+    ('/Users/fernando/dev/kth/consensus/src/clone-core/util/', 'string.h'),
 
-    ('/Users/fernando/dev/kth/consensus/src/clone-core/compat/', 'cpuid.h'),
+    # ('/Users/fernando/dev/kth/consensus/src/clone-core/compat/', 'cpuid.h'),
 ]
 
 
