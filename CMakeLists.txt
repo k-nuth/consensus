@@ -337,87 +337,87 @@ if (${CURRENCY} STREQUAL "BCH")
 #message("clone BCH")
 
   add_library(kth-consensus-clone OBJECT
-    src/clone-abc/amount.h
-    src/clone-abc/amount.cpp
-    src/clone-abc/hash.cpp
-    src/clone-abc/hash.h
-    src/clone-abc/prevector.h
-    src/clone-abc/pubkey.cpp
-    src/clone-abc/pubkey.h
-    src/clone-abc/feerate.cpp
-    src/clone-abc/feerate.h
-    src/clone-abc/serialize.h
-    src/clone-abc/tinyformat.h
-    src/clone-abc/uint256.cpp
-    src/clone-abc/uint256.h
-    src/clone-abc/version.h
-    src/clone-abc/compat/byteswap.h
-    src/clone-abc/compat/endian.h
-    src/clone-abc/crypto/common.h
-    src/clone-abc/crypto/hmac_sha512.cpp
-    src/clone-abc/crypto/hmac_sha512.h
-    src/clone-abc/crypto/ripemd160.cpp
-    src/clone-abc/crypto/ripemd160.h
-    src/clone-abc/crypto/sha1.cpp
-    src/clone-abc/crypto/sha1.h
-    src/clone-abc/crypto/sha256.cpp
-    src/clone-abc/crypto/sha256.h
-    src/clone-abc/crypto/sha512.cpp
-    src/clone-abc/crypto/sha512.h
-    src/clone-abc/primitives/transaction.cpp
-    src/clone-abc/primitives/transaction.h
-    src/clone-abc/primitives/txid.h
-    src/clone-abc/script/bitfield.cpp
-    src/clone-abc/script/bitfield.h
-    src/clone-abc/script/interpreter.cpp
-    src/clone-abc/script/interpreter.h
-    src/clone-abc/script/script.cpp
-    src/clone-abc/script/script.h
-    src/clone-abc/script/script_flags.h
-    src/clone-abc/script/script_error.h
-    src/clone-abc/script/sigencoding.h
-    src/clone-abc/script/sigencoding.cpp
-    src/clone-abc/util/strencodings.cpp
-    src/clone-abc/util/strencodings.h
+    src/bch-rules/amount.h
+    src/bch-rules/amount.cpp
+    src/bch-rules/hash.cpp
+    src/bch-rules/hash.h
+    src/bch-rules/prevector.h
+    src/bch-rules/pubkey.cpp
+    src/bch-rules/pubkey.h
+    src/bch-rules/feerate.cpp
+    src/bch-rules/feerate.h
+    src/bch-rules/serialize.h
+    src/bch-rules/tinyformat.h
+    src/bch-rules/uint256.cpp
+    src/bch-rules/uint256.h
+    src/bch-rules/version.h
+    src/bch-rules/compat/byteswap.h
+    src/bch-rules/compat/endian.h
+    src/bch-rules/crypto/common.h
+    src/bch-rules/crypto/hmac_sha512.cpp
+    src/bch-rules/crypto/hmac_sha512.h
+    src/bch-rules/crypto/ripemd160.cpp
+    src/bch-rules/crypto/ripemd160.h
+    src/bch-rules/crypto/sha1.cpp
+    src/bch-rules/crypto/sha1.h
+    src/bch-rules/crypto/sha256.cpp
+    src/bch-rules/crypto/sha256.h
+    src/bch-rules/crypto/sha512.cpp
+    src/bch-rules/crypto/sha512.h
+    src/bch-rules/primitives/transaction.cpp
+    src/bch-rules/primitives/transaction.h
+    src/bch-rules/primitives/txid.h
+    src/bch-rules/script/bitfield.cpp
+    src/bch-rules/script/bitfield.h
+    src/bch-rules/script/interpreter.cpp
+    src/bch-rules/script/interpreter.h
+    src/bch-rules/script/script.cpp
+    src/bch-rules/script/script.h
+    src/bch-rules/script/script_flags.h
+    src/bch-rules/script/script_error.h
+    src/bch-rules/script/sigencoding.h
+    src/bch-rules/script/sigencoding.cpp
+    src/bch-rules/util/strencodings.cpp
+    src/bch-rules/util/strencodings.h
   )
 
 else()
 #message("clone BTC")
 
   add_library(kth-consensus-clone OBJECT
-    src/clone-core/amount.h
-    src/clone-core/hash.cpp
-    src/clone-core/hash.h
-    src/clone-core/prevector.h
-    src/clone-core/pubkey.cpp
-    src/clone-core/pubkey.h
-    src/clone-core/serialize.h
-    src/clone-core/tinyformat.h
-    src/clone-core/uint256.cpp
-    src/clone-core/uint256.h
-    src/clone-core/version.h
-    src/clone-core/compat/byteswap.h
-    src/clone-core/compat/endian.h
-    src/clone-core/crypto/common.h
-    src/clone-core/crypto/hmac_sha512.cpp
-    src/clone-core/crypto/hmac_sha512.h
-    src/clone-core/crypto/ripemd160.cpp
-    src/clone-core/crypto/ripemd160.h
-    src/clone-core/crypto/sha1.cpp
-    src/clone-core/crypto/sha1.h
-    src/clone-core/crypto/sha256.cpp
-    src/clone-core/crypto/sha256.h
-    src/clone-core/crypto/sha512.cpp
-    src/clone-core/crypto/sha512.h
-    src/clone-core/primitives/transaction.cpp
-    src/clone-core/primitives/transaction.h
-    src/clone-core/script/interpreter.cpp
-    src/clone-core/script/interpreter.h
-    src/clone-core/script/script.cpp
-    src/clone-core/script/script.h
-    src/clone-core/script/script_error.h
-    src/clone-core/util/strencodings.cpp
-    src/clone-core/util/strencodings.h
+    src/btc-rules/amount.h
+    src/btc-rules/hash.cpp
+    src/btc-rules/hash.h
+    src/btc-rules/prevector.h
+    src/btc-rules/pubkey.cpp
+    src/btc-rules/pubkey.h
+    src/btc-rules/serialize.h
+    src/btc-rules/tinyformat.h
+    src/btc-rules/uint256.cpp
+    src/btc-rules/uint256.h
+    src/btc-rules/version.h
+    src/btc-rules/compat/byteswap.h
+    src/btc-rules/compat/endian.h
+    src/btc-rules/crypto/common.h
+    src/btc-rules/crypto/hmac_sha512.cpp
+    src/btc-rules/crypto/hmac_sha512.h
+    src/btc-rules/crypto/ripemd160.cpp
+    src/btc-rules/crypto/ripemd160.h
+    src/btc-rules/crypto/sha1.cpp
+    src/btc-rules/crypto/sha1.h
+    src/btc-rules/crypto/sha256.cpp
+    src/btc-rules/crypto/sha256.h
+    src/btc-rules/crypto/sha512.cpp
+    src/btc-rules/crypto/sha512.h
+    src/btc-rules/primitives/transaction.cpp
+    src/btc-rules/primitives/transaction.h
+    src/btc-rules/script/interpreter.cpp
+    src/btc-rules/script/interpreter.h
+    src/btc-rules/script/script.cpp
+    src/btc-rules/script/script.h
+    src/btc-rules/script/script_error.h
+    src/btc-rules/util/strencodings.cpp
+    src/btc-rules/util/strencodings.h
   )
 endif()
 
@@ -431,10 +431,10 @@ endif(ENABLE_POSITION_INDEPENDENT_CODE)
 
 if (${CURRENCY} STREQUAL "BCH")
 #message("clone BCH 2")
-  target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
+  target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/bch-rules)
 else()
 #message("clone BTC 2")
-  target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core)
+  target_include_directories(kth-consensus-clone PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/btc-rules)
 endif()
 
 # target_compile_definitions(kth-consensus-clone PUBLIC -DKTH_PROJECT_VERSION="\\"${KTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
@@ -452,11 +452,11 @@ endif()
 if (${CURRENCY} STREQUAL "BCH")
 #message("clone BCH 3")
 
-  _group_sources(kth-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc")
+  _group_sources(kth-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/bch-rules")
 else()
 #message("clone BTC 3")
 
-_group_sources(kth-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core")
+_group_sources(kth-consensus-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/btc-rules")
 endif()
 
 
@@ -499,13 +499,13 @@ if (${CURRENCY} STREQUAL "BCH")
 
   target_include_directories(kth-consensus PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/bch-rules)
 else()
 #message("clone BTC 4")
 
   target_include_directories(kth-consensus PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core)
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/btc-rules)
 endif()
 
 
@@ -549,12 +549,12 @@ if (WITH_TESTS)
 
     target_include_directories(knuth_consensus_test PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-abc)
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/bch-rules)
   else()
   #message("clone BTC 5")
     target_include_directories(knuth_consensus_test PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/clone-core)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/btc-rules)
   endif()
   
 

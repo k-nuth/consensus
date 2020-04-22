@@ -12,9 +12,9 @@
 #include <boost/test/unit_test.hpp>
 
 #ifdef KTH_CURRENCY_BCH
-#include <clone-abc/script/interpreter.h>
+#include <bch-rules/script/interpreter.h>
 #else
-#include <clone-core/script/interpreter.h>
+#include <btc-rules/script/interpreter.h>
 #endif // KTH_CURRENCY_BCH
 
 BOOST_AUTO_TEST_SUITE(consensus__script_verify)
