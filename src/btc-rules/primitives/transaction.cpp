@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2018 The Bitcoin Core developers
+// Copyright (c) 2009-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,6 +8,8 @@
 #include <hash.h>
 #include <tinyformat.h>
 #include <util/strencodings.h>
+
+#include <assert.h>
 
 std::string COutPoint::ToString() const
 {
@@ -83,11 +85,12 @@ CTransaction::CTransaction(CMutableTransaction&& tx) : vin(std::move(tx.vin)), v
 CAmount CTransaction::GetValueOut() const
 {
     CAmount nValueOut = 0;
-    for (auto const& tx_out : vout) {
-        nValueOut += tx_out.nValue;
-        if (!MoneyRange(tx_out.nValue) || !MoneyRange(nValueOut))
+    for (const auto& tx_out : vout) {
+        if (!MoneyRange(tx_out.nValue) || !MoneyRange(nValueOut + tx_out.nValue))
             throw std::runtime_error(std::string(__func__) + ": value out of range");
+        nValueOut += tx_out.nValue;
     }
+    assert(MoneyRange(nValueOut));
     return nValueOut;
 }
 
@@ -105,11 +108,11 @@ std::string CTransaction::ToString() const
         vin.size(),
         vout.size(),
         nLockTime);
-    for (auto const& tx_in : vin)
+    for (const auto& tx_in : vin)
         str += "    " + tx_in.ToString() + "\n";
-    for (auto const& tx_in : vin)
+    for (const auto& tx_in : vin)
         str += "    " + tx_in.scriptWitness.ToString() + "\n";
-    for (auto const& tx_out : vout)
+    for (const auto& tx_out : vout)
         str += "    " + tx_out.ToString() + "\n";
     return str;
 }
