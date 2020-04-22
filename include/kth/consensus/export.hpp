@@ -11,8 +11,7 @@
 #include <kth/consensus/define.hpp>
 #include <kth/consensus/version.hpp>
 
-namespace kth {
-namespace consensus {
+namespace kth::consensus {
 
 /**
  * Result values from calling verify_script.
@@ -334,8 +333,6 @@ typedef enum verify_flags_type {
     unsigned int tx_input_index, unsigned int flags);
 #endif //KTH_CURRENCY_BCH
 
-
-} // namespace consensus
-} // namespace kth
+} // namespace kth::consensus
 
 #endif

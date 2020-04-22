@@ -19,45 +19,39 @@
 #include "script/script_error.h"
 #include "version.h"
 
-namespace kth {
-namespace consensus {
+namespace kth::consensus {
 
 // Initialize libsecp256k1 context.
 static auto secp256k1_context = ECCVerifyHandle();
 
 // Helper class, not published. This is tested internal to verify_script.
-class transaction_istream
-{
+class transaction_istream {
 public:
     template<typename Type>
-    transaction_istream& operator>>(Type& instance)
-    {
+    transaction_istream& operator>>(Type& instance) {
         ::Unserialize(*this, instance);
         return *this;
     }
 
     transaction_istream(uint8_t const* transaction, size_t size)
-      : source_(transaction), remaining_(size)
-    {
-    }
+        : source_(transaction), remaining_(size)
+    {}
 
-    void read(char* destination, size_t size)
-    {
-        if (size > remaining_)
+    void read(char* destination, size_t size) {
+        if (size > remaining_) {
             throw std::ios_base::failure("end of data");
+        }
 
         memcpy(destination, source_, size);
         remaining_ -= size;
         source_ += size;
     }
 
-    int GetType() const
-    {
+    int GetType() const {
         return SER_NETWORK;
     }
 
-    int GetVersion() const
-    {
+    int GetVersion() const {
         return PROTOCOL_VERSION;
     }
 
@@ -383,8 +377,7 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
 verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags, int64_t amount /* = 0 */)
-{
+    unsigned int flags, int64_t amount /* = 0 */) {
     if (amount > INT64_MAX)
         throw std::invalid_argument("value");
 
@@ -396,13 +389,11 @@ verify_result_type verify_script(const unsigned char* transaction,
 
     std::shared_ptr<CTransaction> tx;
 
-    try
-    {
+    try {
         transaction_istream stream(transaction, transaction_size);
         tx = std::make_shared<CTransaction>(deserialize, stream);
     }
-    catch (const std::exception&)
-    {
+    catch (const std::exception&) {
         return verify_result_tx_invalid;
     }
 
@@ -435,8 +426,8 @@ verify_result_type verify_script(const unsigned char* transaction,
 verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned long long prevout_value,
-    unsigned int tx_input_index, unsigned int flags)
-{
+    unsigned int tx_input_index, unsigned int flags) {
+
     if (prevout_value > INT64_MAX)
         throw std::invalid_argument("value");
 
@@ -448,13 +439,11 @@ verify_result_type verify_script(const unsigned char* transaction,
 
     std::shared_ptr<CTransaction> tx;
 
-    try
-    {
+    try {
         transaction_istream stream(transaction, transaction_size);
         tx = std::make_shared<CTransaction>(deserialize, stream);
     }
-    catch (const std::exception&)
-    {
+    catch (const std::exception&) {
         return verify_result_tx_invalid;
     }
 
@@ -476,8 +465,7 @@ verify_result_type verify_script(const unsigned char* transaction,
     // See blockchain : validate_input.cpp :
     // bc::blockchain::validate_input::verify_script(const transaction& tx,
     //     uint32_t input_index, uint32_t forks, bool use_libconsensus)...
-    VerifyScript(input_script, output_script, witness_stack, script_flags,
-        checker, &error);
+    VerifyScript(input_script, output_script, witness_stack, script_flags, checker, &error);
 
     return script_error_to_verify_result(error);
 }
@@ -487,5 +475,4 @@ char const* version() {
     return KTH_CONSENSUS_VERSION;
 }
 
-} // namespace consensus
-} // namespace kth
+} // namespace kth::consensus

@@ -10,8 +10,7 @@
 #include <kth/consensus/export.hpp>
 #include "script/script_error.h"
 
-namespace kth {
-namespace consensus {
+namespace kth::consensus {
 
 // These are not published in the public header but are exposed here for test.
 #if defined(KTH_CURRENCY_BCH)
@@ -24,7 +23,6 @@ BCK_API unsigned int verify_flags_to_script_flags(unsigned int flags);
 
 char const* version(); //TODO(knuth): use BCK_API and simililars in the rest of the projects
 
-} // namespace consensus
-} // namespace kth
+} // namespace kth::consensus
 
 #endif

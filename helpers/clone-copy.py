@@ -53,7 +53,8 @@ replace(kth_files)
 # #     # ('/Users/fernando/dev/kth/consensus/src/bch-rules/script/', 'bitfield.h'),
 # #     # ('/Users/fernando/dev/kth/consensus/src/bch-rules/util/', 'bitmanip.h'),
 # #     # ('/Users/fernando/dev/kth/consensus/src/bch-rules/script/', 'bitfield.cpp'),
-# #     ('/Users/fernando/dev/kth/consensus/src/bch-rules/util/', 'strencodings.cpp'),
+# #     # ('/Users/fernando/dev/kth/consensus/src/bch-rules/util/', 'strencodings.cpp'),
+# #     ('/Users/fernando/dev/kth/consensus/src/bch-rules/util/', 'string.h'),
 # # ]
 #     # ('/Users/fernando/dev/kth/consensus/src/bch-rules/config/', 'bitcoin-config.h'),
 
@@ -67,7 +68,7 @@ replace(kth_files)
 #     # ('/Users/fernando/dev/kth/consensus/src/btc-rules/util/', 'bitmanip.h'),
 #     # ('/Users/fernando/dev/kth/consensus/src/btc-rules/script/', 'bitfield.cpp'),
 #     # ('/Users/fernando/dev/kth/consensus/src/btc-rules/util/', 'strencodings.cpp'),
-
+#     # ('/Users/fernando/dev/kth/consensus/src/btc-rules/util/', 'string.h'),
 #     ('/Users/fernando/dev/kth/consensus/src/btc-rules/compat/', 'cpuid.h'),
 # ]
 
