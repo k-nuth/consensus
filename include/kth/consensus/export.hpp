@@ -62,6 +62,8 @@ typedef enum verify_result_type {
     // Softfork safeness
     verify_result_discourage_upgradable_nops,
 
+    //TODO(hardfork): update this with src/bch-rules/script/script_error.h
+
 #if ! defined(KTH_CURRENCY_BCH)    
     verify_result_discourage_upgradable_witness_program,
 #endif
@@ -106,14 +108,24 @@ typedef enum verify_result_type {
 // SCRIPT_VERIFY_CHECKSEQUENCEVERIFY = (1U << 10),
 // SCRIPT_VERIFY_MINIMALIF = (1U << 13),
 // SCRIPT_VERIFY_NULLFAIL = (1U << 14),
+
+// Removed
 // SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE = (1U << 15),
+
 // SCRIPT_ENABLE_SIGHASH_FORKID = (1U << 16),
 // SCRIPT_ENABLE_REPLAY_PROTECTION = (1U << 17),
 // SCRIPT_VERIFY_CHECKDATASIG_SIGOPS = (1U << 18),
 // SCRIPT_DISALLOW_SEGWIT_RECOVERY = (1U << 20),
 // SCRIPT_ENABLE_SCHNORR_MULTISIG = (1U << 21),
 // SCRIPT_VERIFY_INPUT_SIGCHECKS = (1U << 22),
+// May 2020 HF
+// SCRIPT_ENABLE_OP_REVERSEBYTES = (1U << 23),
+// May 2020 HF
+// SCRIPT_ZERO_SIGOPS = (1U << 30),
 // SCRIPT_REPORT_SIGCHECKS = (1U << 31),
+
+
+
 
 // Core Flags
 // SCRIPT_VERIFY_NONE = 0,
@@ -134,7 +146,6 @@ typedef enum verify_result_type {
 // SCRIPT_VERIFY_NULLFAIL = (1U << 14),
 // SCRIPT_VERIFY_WITNESS_PUBKEYTYPE = (1U << 15),
 // SCRIPT_VERIFY_CONST_SCRIPTCODE = (1U << 16),
-
 
 /**
  * Flags to use when calling verify_script.
@@ -241,10 +252,11 @@ typedef enum verify_flags_type {
 #ifdef KTH_CURRENCY_BCH
     // BCH only flags
 
-    /**
-     * SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE (BCH).
-     */
-    , verify_flags_compressed_pubkeytype = (1U << 15)
+    // // Removed
+    // /**
+    //  * SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE (BCH).
+    //  */
+    // , verify_flags_compressed_pubkeytype = (1U << 15)
 
     /**
      * SCRIPT_ENABLE_SIGHASH_FORKID (BCH).
@@ -275,6 +287,16 @@ typedef enum verify_flags_type {
      * SCRIPT_VERIFY_INPUT_SIGCHECKS (BCH).
      */
     , verify_flags_input_sigchecks = (1U << 22)
+
+    /**
+     * SCRIPT_ENABLE_OP_REVERSEBYTES (BCH, May 2020 HF).
+     */
+    , verify_flags_enable_op_reversebytes = (1U << 23)
+
+    /**
+     * SCRIPT_ZERO_SIGOPS (BCH, May 2020 HF).
+     */
+    , verify_flags_zero_sigops = (1U << 30)
 
     /**
      * SCRIPT_REPORT_SIGCHECKS (BCH).

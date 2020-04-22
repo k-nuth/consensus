@@ -343,8 +343,9 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
 #endif //! defined(KTH_CURRENCY_BCH)
 
 #if defined(KTH_CURRENCY_BCH)
-    if ((flags & verify_flags_compressed_pubkeytype) != 0)
-        script_flags |= SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE;
+    // Removed
+    // if ((flags & verify_flags_compressed_pubkeytype) != 0)
+    //     script_flags |= SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE;
 
     if ((flags & verify_flags_enable_sighash_forkid) != 0)
         script_flags |= SCRIPT_ENABLE_SIGHASH_FORKID;
@@ -363,6 +364,12 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
 
     if ((flags & verify_flags_input_sigchecks) != 0)
         script_flags |= SCRIPT_VERIFY_INPUT_SIGCHECKS;
+
+    if ((flags & verify_flags_enable_op_reversebytes) != 0)
+        script_flags |= SCRIPT_ENABLE_OP_REVERSEBYTES;
+
+    if ((flags & verify_flags_zero_sigops) != 0)
+        script_flags |= SCRIPT_ZERO_SIGOPS;
 
     if ((flags & verify_flags_report_sigchecks) != 0)
         script_flags |= SCRIPT_REPORT_SIGCHECKS;
