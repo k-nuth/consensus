@@ -249,7 +249,7 @@ typedef enum verify_flags_type {
     , verify_flags_null_fail = (1U << 14)
 
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
     // BCH only flags
 
     // // Removed
