@@ -6,13 +6,13 @@ from shutil import copyfile
 # PATH = '/Users/fernando/dev/kth/kth/consensus/src/bch-rules/'
 # SOURCE_PATH = '/Users/fernando/dev/abc/bitcoin-abc/src/'
 
-# #  BCHN
-# PATH = '/Users/fernando/dev/kth/kth/consensus/src/bch-rules/'
-# SOURCE_PATH = '/Users/fernando/dev/bitcoin-cash-node/src/'
+#  BCHN
+PATH = '/Users/fernando/dev/kth/kth/consensus/src/bch-rules/'
+SOURCE_PATH = '/Users/fernando/dev/bitcoin-cash-node/src/'
 
-# Core
-PATH = '/Users/fernando/dev/kth/kth/consensus/src/btc-rules/'
-SOURCE_PATH = '/Users/fernando/dev/bitcoin-core/bitcoin/src/'
+# # Core
+# PATH = '/Users/fernando/dev/kth/kth/consensus/src/btc-rules/'
+# SOURCE_PATH = '/Users/fernando/dev/bitcoin-core/bitcoin/src/'
 
 def replace(kth_files):
     for dp, f in kth_files:

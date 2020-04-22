@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
-// Copyright (c) 2017-2018 The Bitcoin developers
+// Copyright (c) 2017-2020 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -80,10 +80,6 @@ enum {
     //
     SCRIPT_VERIFY_NULLFAIL = (1U << 14),
 
-    // Public keys in scripts must be compressed
-    //
-    SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE = (1U << 15),
-
     // Do we accept signature using SIGHASH_FORKID
     //
     SCRIPT_ENABLE_SIGHASH_FORKID = (1U << 16),
@@ -93,9 +89,8 @@ enum {
     SCRIPT_ENABLE_REPLAY_PROTECTION = (1U << 17),
 
     // Count sigops for OP_CHECKDATASIG and variant. The interpreter treats
-    // OP_CHECKDATASIG(VERIFY) as always valid, this flag only affects sigops
-    // counting.
-    //
+    // OP_CHECKDATASIG(VERIFY) as always valid. This flag only affects sigops
+    // counting, and will be removed during cleanup of the SigChecks upgrade.
     SCRIPT_VERIFY_CHECKDATASIG_SIGOPS = (1U << 18),
 
     // The exception to CLEANSTACK and P2SH for the recovery of coins sent
@@ -111,6 +106,14 @@ enum {
     // Note: The Segwit Recovery feature is a (currently moot) exception to
     // VERIFY_INPUT_SIGCHECKS
     SCRIPT_VERIFY_INPUT_SIGCHECKS = (1U << 22),
+
+    // Whether the new OP_REVERSEBYTES opcode can be used.
+    SCRIPT_ENABLE_OP_REVERSEBYTES = (1U << 23),
+
+    // Setting this flag zeroes sigops counting and thus results in the removal
+    // of all sigop limits. This flag only affects sigops counting, and will be
+    // removed during cleanup of the SigChecks upgrade.
+    SCRIPT_ZERO_SIGOPS = (1U << 30),
 
     // A utility flag to decide whether VerifyScript should output the correct
     // sigchecks value or to report zero.

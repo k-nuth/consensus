@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
-// Copyright (c) 2017-2018 The Bitcoin developers
+// Copyright (c) 2017-2020 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1235,6 +1235,21 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                         stacktop(-1) = std::move(n2);
                     } break;
 
+                    case OP_REVERSEBYTES: {
+                        if (!(flags & SCRIPT_ENABLE_OP_REVERSEBYTES)) {
+                            return set_error(serror, ScriptError::BAD_OPCODE);
+                        }
+
+                        // (in -- out)
+                        if (stack.size() < 1) {
+                            return set_error(
+                                serror, ScriptError::INVALID_STACK_OPERATION);
+                        }
+
+                        valtype &data = stacktop(-1);
+                        std::reverse(data.begin(), data.end());
+                    } break;
+
                     //
                     // Conversion operations
                     //
@@ -1329,13 +1344,13 @@ namespace {
  */
 template <class T> class CTransactionSignatureSerializer {
 private:
-    //!< reference to the spending transaction (the one being serialized)
+    //! reference to the spending transaction (the one being serialized)
     const T &txTo;
-    //!< output script being consumed
+    //! output script being consumed
     const CScript &scriptCode;
-    //!< input index of txTo being signed
+    //! input index of txTo being signed
     const unsigned int nIn;
-    //!< container for hashtype flags
+    //! container for hashtype flags
     const SigHashType sigHashType;
 
 public:

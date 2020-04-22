@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
-// Copyright (c) 2017-2018 The Bitcoin developers
+// Copyright (c) 2017-2019 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,7 +21,7 @@ private:
 public:
     constexpr Amount() : amount(0) {}
     constexpr Amount(const Amount &other) : amount(other.amount) {}
-    
+
     // NOTE (knuth): it needs to be public to work with `verify_script`
     explicit constexpr Amount(int64_t _amount) : amount(_amount) {}
 
