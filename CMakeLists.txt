@@ -238,12 +238,12 @@ if (NO_CONAN_AT_ALL)
   if (MSVC)
     find_package(
       Boost 1.56.0 REQUIRED
-      COMPONENTS atomic chrono date_time filesystem iostreams locale log log_setup program_options regex system thread unit_test_framework
+      COMPONENTS atomic chrono date_time filesystem iostreams locale program_options regex system thread unit_test_framework
     )
   else()
     find_package(
       Boost 1.56.0 REQUIRED
-      COMPONENTS chrono date_time filesystem iostreams locale log program_options regex system thread unit_test_framework
+      COMPONENTS chrono date_time filesystem iostreams locale program_options regex system thread unit_test_framework
     )
   endif()
 endif()
