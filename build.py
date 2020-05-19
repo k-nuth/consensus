@@ -23,11 +23,11 @@ if __name__ == "__main__":
             march_ids = get_base_march_ids()
 
             opts_bch = copy.deepcopy(options)
-            opts_btc = copy.deepcopy(options)
+            # opts_btc = copy.deepcopy(options)
             # opts_ltc = copy.deepcopy(options)
 
             opts_bch["%s:currency" % name] = "BCH"
-            opts_btc["%s:currency" % name] = "BTC"
+            # opts_btc["%s:currency" % name] = "BTC"
             # opts_ltc["%s:currency" % name] = "LTC"
             
             # opts_bch_new = copy.deepcopy(opts_bch)
@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
 
             handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, opts_bch, env_vars, build_requires)
-            handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, opts_btc, env_vars, build_requires)
+            # handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, opts_btc, env_vars, build_requires)
             # handle_microarchs("%s:march_id" % name, march_ids, filtered_builds, settings, opts_ltc, env_vars, build_requires)
 
             filter_marchs_tests(name, filtered_builds, ["%s:tests" % name])
