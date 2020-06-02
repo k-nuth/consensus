@@ -253,7 +253,7 @@ endif()
 # message(${USE_CONAN})
 
 if (NOT USE_CONAN)
-  # Require kth-domain of at least version 0 and output ${knuth_domain_CPPFLAGS/LIBS/PKG}.
+  # Require kth-domain of at least version 0 and output ${kth_domain_CPPFLAGS/LIBS/PKG}.
   #------------------------------------------------------------------------------
   if (NOT TARGET kth-domain)
     find_package(kth-domain 0 REQUIRED)
