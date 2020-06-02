@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 #include <kth/consensus.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 // These give us test accesss to unpublished symbols.
 #include "consensus/consensus.hpp"
