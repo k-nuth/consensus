@@ -531,44 +531,45 @@ if (WITH_TESTS)
   enable_testing()
 endif()
 
-# local: test/knuth_consensus_test
+# local: test/kth_consensus_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
  
-  add_executable(knuth_consensus_test
-    # test/consensus__script_error_to_verify_result.cpp
+  add_executable(kth_consensus_test
+    test/consensus__script_error_to_verify_result.cpp
     test/consensus__script_verify.cpp
-    # test/consensus__verify_flags_to_script_flags.cpp
+    test/consensus__verify_flags_to_script_flags.cpp
     test/main.cpp
     test/script.hpp)
  
- 
-
   if (${CURRENCY} STREQUAL "BCH")
-  #message("clone BCH 5")
-
-    target_include_directories(knuth_consensus_test PRIVATE
+    target_include_directories(kth_consensus_test PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
       ${CMAKE_CURRENT_SOURCE_DIR}/src/bch-rules)
   else()
-  #message("clone BTC 5")
-    target_include_directories(knuth_consensus_test PRIVATE
+    target_include_directories(kth_consensus_test PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/src/btc-rules)
   endif()
-  
 
-  target_link_libraries(knuth_consensus_test PUBLIC kth-consensus)
+  target_include_directories(kth_consensus_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/test>)
+
+  target_link_libraries(kth_consensus_test PUBLIC kth-consensus)
  
-  _group_sources(knuth_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
+  _group_sources(kth_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
-  _add_tests(knuth_consensus_test
-    #consensus__script_error_to_verify_result
-    consensus__script_verify
-    #consensus__verify_flags_to_script_flags
-          )
+  if (WITH_TESTS)
+    include(CTest)
+    include(Catch)
+    catch_discover_tests(kth_consensus_test)
+  endif()
 
-
+  # _add_tests(kth_consensus_test
+  #   #consensus__script_error_to_verify_result
+  #   consensus__script_verify
+  #   #consensus__verify_flags_to_script_flags
+  #         )
 endif()
 
 
