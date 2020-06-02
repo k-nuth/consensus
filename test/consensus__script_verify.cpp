@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include <kth/consensus.hpp>
-#include <boost/test/unit_test.hpp>
+#include <test_helpers.hpp>
 
 #ifdef KTH_CURRENCY_BCH
 #include <bch-rules/script/interpreter.h>
