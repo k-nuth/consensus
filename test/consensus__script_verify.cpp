@@ -231,14 +231,15 @@ TEST_CASE("consensus  script verify  valid nested p2wpkh  true", "[consensus  sc
         verify_flags_witness;
 
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_WITNESS_TX, CONSENSUS_SCRIPT_VERIFY_WITNESS_PREVOUT_SCRIPT, value, index, flags);
-    BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
+    REQUIRE(result == verify_result_eval_true);
 }
 #endif
+
 // TODO: create negative test vector.
-//BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid__false)
+//TEST_CASE("consensus  script verify  invalid  false", "[consensus  script verify]")
 //{
 //    const verify_result result = test_verify(...);
-//    BOOST_REQUIRE_EQUAL(result, verify_result_eval_false);
+//    REQUIRE(result == verify_result_eval_false);
 //}
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
