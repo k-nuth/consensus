@@ -217,9 +217,9 @@ TEST_CASE("consensus  script verify  valid  true  forkid long int", "[consensus 
     const verify_result result = test_verify(CONSENSUS_FORKID_TX, CONSENSUS_FORKID_TX_PREV_SCRIPT,0,flags,0,CONSENSUS_FORKID_TX_AMMOUT);
 }
 #else
+
 // TODO: BTC test
-BOOST_AUTO_TEST_CASE(consensus__script_verify__valid_nested_p2wpkh__true)
-{
+TEST_CASE("consensus  script verify  valid nested p2wpkh  true", "[consensus  script verify]") {
     static auto const index = 0u;
     static auto const value = 500000u;
     static const uint32_t flags =
