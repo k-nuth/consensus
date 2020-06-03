@@ -50,15 +50,17 @@ bool decode_base16_private(uint8_t* out, size_t size, const char* in) {
     return true;
 }
 
-static bool decode_base16(data_chunk& out, std::string const& in)
-{
+static 
+bool decode_base16(data_chunk& out, std::string const& in) {
     // This prevents a last odd character from being ignored:
-    if (in.size() % 2 != 0)
+    if (in.size() % 2 != 0) {
         return false;
+    }
 
     data_chunk result(in.size() / 2);
-    if (!decode_base16_private(result.data(), result.size(), in.data()))
+    if ( ! decode_base16_private(result.data(), result.size(), in.data())) {
         return false;
+    }
 
     out = result;
     return true;
