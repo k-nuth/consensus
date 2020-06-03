@@ -8,12 +8,11 @@
 #include <string>
 #include <vector>
 
-struct script_test
-{
+struct script_test {
     std::string input, output, description;
 };
 
-typedef std::vector<script_test> script_test_list;
+using script_test_list = std::vector<script_test>;
 
 script_test_list valid_scripts{{
     {"", "DEPTH 0 EQUAL", "Test the test: we should have an empty stack after scriptSig evaluation"},
