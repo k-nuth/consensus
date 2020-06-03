@@ -89,27 +89,29 @@ bool decode_base16(data_chunk& out, std::string const& in) {
 //         tx_input_index, flags);
 // >>>>>>> legacy/version3
 // }
+
 #ifdef KTH_CURRENCY_BCH
-static verify_result test_verify(std::string const& transaction,
+static 
+verify_result test_verify(std::string const& transaction,
     std::string const& prevout_script, uint32_t tx_input_index=0,
-    const uint32_t flags=verify_flags_p2sh, int32_t tx_size_hack = 0, uint64_t amount = 0 )
-{
+    const uint32_t flags=verify_flags_p2sh, int32_t tx_size_hack = 0, uint64_t amount = 0 ) {
     data_chunk tx_data, prevout_script_data;
-    BOOST_REQUIRE(decode_base16(tx_data, transaction));
-    BOOST_REQUIRE(decode_base16(prevout_script_data, prevout_script));
+    REQUIRE(decode_base16(tx_data, transaction));
+    REQUIRE(decode_base16(prevout_script_data, prevout_script));
     return verify_script(&tx_data[0], tx_data.size() + tx_size_hack,
         &prevout_script_data[0], prevout_script_data.size(), tx_input_index,
         flags, amount);
 }
 #else
-static verify_result test_verify(std::string const& transaction,
+
+static 
+verify_result test_verify(std::string const& transaction,
     std::string const& prevout_script, uint64_t prevout_value=0,
     uint32_t tx_input_index=0, const uint32_t flags=verify_flags_p2sh,
-    int32_t tx_size_hack=0)
-{
+    int32_t tx_size_hack=0) {
     data_chunk tx_data, prevout_script_data;
-    BOOST_REQUIRE(decode_base16(tx_data, transaction));
-    BOOST_REQUIRE(decode_base16(prevout_script_data, prevout_script));
+    REQUIRE(decode_base16(tx_data, transaction));
+    REQUIRE(decode_base16(prevout_script_data, prevout_script));
     return verify_script(&tx_data[0], tx_data.size() + tx_size_hack,
         &prevout_script_data[0], prevout_script_data.size(), prevout_value,
         tx_input_index, flags);
