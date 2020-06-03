@@ -78,8 +78,8 @@ bool decode_base16(data_chunk& out, std::string const& in) {
 // >>>>>>> legacy/version3
 // {
 //     data_chunk tx_data, prevout_script_data;
-//     BOOST_REQUIRE(decode_base16(tx_data, transaction));
-//     BOOST_REQUIRE(decode_base16(prevout_script_data, prevout_script));
+//     REQUIRE(decode_base16(tx_data, transaction));
+//     REQUIRE(decode_base16(prevout_script_data, prevout_script));
 //     return verify_script(&tx_data[0], tx_data.size() + tx_size_hack,
 // <<<<<<< HEAD
 //         &prevout_script_data[0], prevout_script_data.size(), tx_input_index,
