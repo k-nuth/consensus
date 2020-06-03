@@ -17,29 +17,31 @@
 #include <btc-rules/script/interpreter.h>
 #endif // KTH_CURRENCY_BCH
 
-BOOST_AUTO_TEST_SUITE(consensus__script_verify)
+// Start Boost Suite: consensus  script verify
 
 using namespace kth::consensus;
 
-typedef std::vector<uint8_t> data_chunk;
+using data_chunk = std::vector<uint8_t>;
 
-static unsigned from_hex(const char ch)
-{
-    if ('A' <= ch && ch <= 'F')
+static 
+unsigned int from_hex(const char ch) {
+    if ('A' <= ch && ch <= 'F') {
         return 10 + ch - 'A';
+    }
 
-    if ('a' <= ch && ch <= 'f')
+    if ('a' <= ch && ch <= 'f') {
         return 10 + ch - 'a';
+    }
 
     return ch - '0';
 }
 
-static bool decode_base16_private(uint8_t* out, size_t size, const char* in)
-{
-    for (size_t i = 0; i < size; ++i)
-    {
-        if (!isxdigit(in[0]) || !isxdigit(in[1]))
+static 
+bool decode_base16_private(uint8_t* out, size_t size, const char* in) {
+    for (size_t i = 0; i < size; ++i) {
+        if (!isxdigit(in[0]) || !isxdigit(in[1])) {
             return false;
+        }
 
         out[i] = (from_hex(in[0]) << 4) + from_hex(in[1]);
         in += 2;
