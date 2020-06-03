@@ -12,234 +12,328 @@
 
 using namespace kth::consensus;
 
-BOOST_AUTO_TEST_SUITE(consensus__script_error_to_verify_result)
+// Start Boost Suite: consensus  script error to verify result
 
 // Logical result
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__OK__eval_true)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_OK), verify_result_eval_true);
+TEST_CASE("consensus  script error to verify result  OK  eval true", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::OK) == verify_result_eval_true);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_OK) == verify_result_eval_true);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__EVAL_FALSE__eval_false)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_EVAL_FALSE), verify_result_eval_false);
+TEST_CASE("consensus  script error to verify result  EVAL FALSE  eval false", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::EVAL_FALSE) == verify_result_eval_false);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_EVAL_FALSE) == verify_result_eval_false);
+#endif
 }
 
 // Max size errors.
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SCRIPT_SIZE__script_size)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SCRIPT_SIZE), verify_result_script_size);
+TEST_CASE("consensus  script error to verify result  SCRIPT SIZE  script size", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::SCRIPT_SIZE) == verify_result_script_size);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_SCRIPT_SIZE) == verify_result_script_size);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__PUSH_SIZE__push_size)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_PUSH_SIZE), verify_result_push_size);
+TEST_CASE("consensus  script error to verify result  PUSH SIZE  push size", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::PUSH_SIZE) == verify_result_push_size);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_PUSH_SIZE) == verify_result_push_size);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__OP_COUNT__op_count)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_OP_COUNT), verify_result_op_count);
+TEST_CASE("consensus  script error to verify result  OP COUNT  op count", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::OP_COUNT) == verify_result_op_count);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_OP_COUNT) == verify_result_op_count);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__STACK_SIZE__stack_size)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_STACK_SIZE), verify_result_stack_size);
+TEST_CASE("consensus  script error to verify result  STACK SIZE  stack size", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::STACK_SIZE) == verify_result_stack_size);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_STACK_SIZE) == verify_result_stack_size);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_COUNT__sig_count)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_COUNT), verify_result_sig_count);
+TEST_CASE("consensus  script error to verify result  SIG COUNT  sig count", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::SIG_COUNT) == verify_result_sig_count);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_SIG_COUNT) == verify_result_sig_count);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__PUBKEY_COUNT__pubkey_count)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_PUBKEY_COUNT), verify_result_pubkey_count);
+TEST_CASE("consensus  script error to verify result  PUBKEY COUNT  pubkey count", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::PUBKEY_COUNT) == verify_result_pubkey_count);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_PUBKEY_COUNT) == verify_result_pubkey_count);
+#endif
 }
 
 // Failed verify operations
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__VERIFY__verify)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_VERIFY), verify_result_verify);
+TEST_CASE("consensus  script error to verify result  VERIFY  verify", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::VERIFY) == verify_result_verify);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_VERIFY) == verify_result_verify);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__EQUALVERIFY__equalverify)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_EQUALVERIFY), verify_result_equalverify);
+TEST_CASE("consensus  script error to verify result  EQUALVERIFY  equalverify", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::EQUALVERIFY) == verify_result_equalverify);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_EQUALVERIFY) == verify_result_equalverify);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CHECKMULTISIGVERIFY__checkmultisigverify)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CHECKMULTISIGVERIFY), verify_result_checkmultisigverify);
+TEST_CASE("consensus  script error to verify result  CHECKMULTISIGVERIFY  checkmultisigverify", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::CHECKMULTISIGVERIFY) == verify_result_checkmultisigverify);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_CHECKMULTISIGVERIFY) == verify_result_checkmultisigverify);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CHECKSIGVERIFY__checksigverify)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CHECKSIGVERIFY), verify_result_checksigverify);
+TEST_CASE("consensus  script error to verify result  CHECKSIGVERIFY  checksigverify", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::CHECKSIGVERIFY) == verify_result_checksigverify);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_CHECKSIGVERIFY) == verify_result_checksigverify);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__NUMEQUALVERIFY__numequalverify)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_NUMEQUALVERIFY), verify_result_numequalverify);
+TEST_CASE("consensus  script error to verify result  NUMEQUALVERIFY  numequalverify", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::NUMEQUALVERIFY) == verify_result_numequalverify);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_NUMEQUALVERIFY) == verify_result_numequalverify);
+#endif
 }
 
 // Logical/Format/Canonical errors
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__BAD_OPCODE__bad_opcode)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_BAD_OPCODE), verify_result_bad_opcode);
+TEST_CASE("consensus  script error to verify result  BAD OPCODE  bad opcode", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::BAD_OPCODE) == verify_result_bad_opcode);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_BAD_OPCODE) == verify_result_bad_opcode);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__DISABLED_OPCODE__disabled_opcode)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_DISABLED_OPCODE), verify_result_disabled_opcode);
+TEST_CASE("consensus  script error to verify result  DISABLED OPCODE  disabled opcode", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::DISABLED_OPCODE) == verify_result_disabled_opcode);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_DISABLED_OPCODE) == verify_result_disabled_opcode);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__INVALID_STACK_OPERATION__invalid_stack_operation)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_INVALID_STACK_OPERATION), verify_result_invalid_stack_operation);
+TEST_CASE("consensus  script error to verify result  INVALID STACK OPERATION  invalid stack operation", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::INVALID_STACK_OPERATION) == verify_result_invalid_stack_operation);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_INVALID_STACK_OPERATION) == verify_result_invalid_stack_operation);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__INVALID_ALTSTACK_OPERATION__invalid_altstack_operation)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_INVALID_ALTSTACK_OPERATION), verify_result_invalid_altstack_operation);
+TEST_CASE("consensus  script error to verify result  INVALID ALTSTACK OPERATION  invalid altstack operation", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::INVALID_ALTSTACK_OPERATION) == verify_result_invalid_altstack_operation);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_INVALID_ALTSTACK_OPERATION) == verify_result_invalid_altstack_operation);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__UNBALANCED_CONDITIONAL__unbalanced_conditional)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_UNBALANCED_CONDITIONAL), verify_result_unbalanced_conditional);
+TEST_CASE("consensus  script error to verify result  UNBALANCED CONDITIONAL  unbalanced conditional", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::UNBALANCED_CONDITIONAL) == verify_result_unbalanced_conditional);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_UNBALANCED_CONDITIONAL) == verify_result_unbalanced_conditional);
+#endif
 }
 
 // BIP65
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__NEGATIVE_LOCKTIME__sig_hashtype)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_NEGATIVE_LOCKTIME), verify_result_negative_locktime);
+TEST_CASE("consensus  script error to verify result  NEGATIVE LOCKTIME  sig hashtype", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::NEGATIVE_LOCKTIME) == verify_result_negative_locktime);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_NEGATIVE_LOCKTIME) == verify_result_negative_locktime);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__ERR_UNSATISFIED_LOCKTIME__err_sig_der)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_UNSATISFIED_LOCKTIME), verify_result_unsatisfied_locktime);
+TEST_CASE("consensus  script error to verify result  ERR UNSATISFIED LOCKTIME  err sig der", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::UNSATISFIED_LOCKTIME) == verify_result_unsatisfied_locktime);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_UNSATISFIED_LOCKTIME) == verify_result_unsatisfied_locktime);
+#endif
 }
 
 // BIP62
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_HASHTYPE__sig_hashtype)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_HASHTYPE), verify_result_sig_hashtype);
+TEST_CASE("consensus  script error to verify result  SIG HASHTYPE  sig hashtype", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::SIG_HASHTYPE) == verify_result_sig_hashtype);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_SIG_HASHTYPE) == verify_result_sig_hashtype);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__ERR_SIG_DER__err_sig_der)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_DER), verify_result_sig_der);
+TEST_CASE("consensus  script error to verify result  ERR SIG DER  err sig der", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::SIG_DER) == verify_result_sig_der);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_SIG_DER) == verify_result_sig_der);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__ERR_MINIMALDATA__err_minimaldata)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_MINIMALDATA), verify_result_minimaldata);
+TEST_CASE("consensus  script error to verify result  ERR MINIMALDATA  err minimaldata", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::MINIMALDATA) == verify_result_minimaldata);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_MINIMALDATA) == verify_result_minimaldata);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_PUSHONLY__sig_pushonly)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_PUSHONLY), verify_result_sig_pushonly);
+TEST_CASE("consensus  script error to verify result  SIG PUSHONLY  sig pushonly", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::SIG_PUSHONLY) == verify_result_sig_pushonly);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_SIG_PUSHONLY) == verify_result_sig_pushonly);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_HIGH_S__sig_high_s)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_HIGH_S), verify_result_sig_high_s);
+TEST_CASE("consensus  script error to verify result  SIG HIGH S  sig high s", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::SIG_HIGH_S) == verify_result_sig_high_s);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_SIG_HIGH_S) == verify_result_sig_high_s);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_NULLDUMMY__sig_nulldummy)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_NULLDUMMY), verify_result_sig_nulldummy);
+#if ! defined(KTH_CURRENCY_BCH)         //BIP 147
+TEST_CASE("consensus  script error to verify result  SIG NULLDUMMY  sig nulldummy", "[consensus  script error to verify result]") {
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_SIG_NULLDUMMY) == verify_result_sig_nulldummy);
+}
+#endif
+
+TEST_CASE("consensus  script error to verify result  PUBKEYTYPE  pubkeytype", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::PUBKEYTYPE) == verify_result_pubkeytype);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_PUBKEYTYPE) == verify_result_pubkeytype);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__PUBKEYTYPE__pubkeytype)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_PUBKEYTYPE), verify_result_pubkeytype);
+TEST_CASE("consensus  script error to verify result  CLEANSTACK  cleanstack", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::CLEANSTACK) == verify_result_cleanstack);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_CLEANSTACK) == verify_result_cleanstack);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CLEANSTACK__cleanstack)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CLEANSTACK), verify_result_cleanstack);
+TEST_CASE("consensus  script error to verify result  MINIMALIF  minimalif", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::MINIMALIF) == verify_result_minimalif);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_MINIMALIF) == verify_result_minimalif);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__MINIMALIF__minimalif)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_MINIMALIF), verify_result_minimalif);
-}
-
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_NULLFAIL__nullfail)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_NULLFAIL), verify_result_sig_nullfail);
+TEST_CASE("consensus  script error to verify result  SIG NULLFAIL  nullfail", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::SIG_NULLFAIL) == verify_result_sig_nullfail);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_SIG_NULLFAIL) == verify_result_sig_nullfail);
+#endif
 }
 
 // Softfork safeness
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___DISCOURAGE_UPGRADABLE_NOPS___discourage_upgradable_nops)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS), verify_result_discourage_upgradable_nops);
+TEST_CASE("consensus  script error to verify result   DISCOURAGE UPGRADABLE NOPS   discourage upgradable nops", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::DISCOURAGE_UPGRADABLE_NOPS) == verify_result_discourage_upgradable_nops);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS) == verify_result_discourage_upgradable_nops);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM___discourage_upgradable_witness_program)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM), verify_result_discourage_upgradable_witness_program);
+#if ! defined(KTH_CURRENCY_BCH)
+TEST_CASE("consensus  script error to verify result   DISCOURAGE UPGRADABLE WITNESS PROGRAM   discourage upgradable witness program", "[consensus  script error to verify result]") {
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM) == verify_result_discourage_upgradable_witness_program);
 }
 
 // Segregated witness
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_PROGRAM_WRONG_LENGTH___witness_program_wrong_length)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PROGRAM_WRONG_LENGTH), verify_result_witness_program_wrong_length);
+TEST_CASE("consensus  script error to verify result   WITNESS PROGRAM WRONG LENGTH   witness program wrong length", "[consensus  script error to verify result]") {
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PROGRAM_WRONG_LENGTH) == verify_result_witness_program_wrong_length);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_PROGRAM_WITNESS_EMPTY___witness_program_empty_witness)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PROGRAM_WITNESS_EMPTY), verify_result_witness_program_empty_witness);
+TEST_CASE("consensus  script error to verify result   WITNESS PROGRAM WITNESS EMPTY   witness program empty witness", "[consensus  script error to verify result]") {
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PROGRAM_WITNESS_EMPTY) == verify_result_witness_program_empty_witness);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_PROGRAM_MISMATCH___witness_program_mismatch)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PROGRAM_MISMATCH), verify_result_witness_program_mismatch);
+TEST_CASE("consensus  script error to verify result   WITNESS PROGRAM MISMATCH   witness program mismatch", "[consensus  script error to verify result]") {
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PROGRAM_MISMATCH) == verify_result_witness_program_mismatch);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_MALLEATED___witness_malleated)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_MALLEATED), verify_result_witness_malleated);
+TEST_CASE("consensus  script error to verify result   WITNESS MALLEATED   witness malleated", "[consensus  script error to verify result]") {
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_WITNESS_MALLEATED) == verify_result_witness_malleated);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_MALLEATED_P2SH___witness_malleated_p2sh)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_MALLEATED_P2SH), verify_result_witness_malleated_p2sh);
+TEST_CASE("consensus  script error to verify result   WITNESS MALLEATED P2SH   witness malleated p2sh", "[consensus  script error to verify result]") {
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_WITNESS_MALLEATED_P2SH) == verify_result_witness_malleated_p2sh);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_UNEXPECTED___witness_unexpected)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_UNEXPECTED), verify_result_witness_unexpected);
+TEST_CASE("consensus  script error to verify result   WITNESS UNEXPECTED   witness unexpected", "[consensus  script error to verify result]") {
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_WITNESS_UNEXPECTED) == verify_result_witness_unexpected);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_PUBKEYTYPE___witness_pubkeytype)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PUBKEYTYPE), verify_result_witness_pubkeytype);
+TEST_CASE("consensus  script error to verify result   WITNESS PUBKEYTYPE   witness pubkeytype", "[consensus  script error to verify result]") {
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PUBKEYTYPE) == verify_result_witness_pubkeytype);
 }
+#endif
 
 // Other
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__OP_RETURN__op_return)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_OP_RETURN), verify_result_op_return);
+TEST_CASE("consensus  script error to verify result  OP RETURN  op return", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::OP_RETURN) == verify_result_op_return);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_OP_RETURN) == verify_result_op_return);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__UNKNOWN_ERROR__unknown_error)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_UNKNOWN_ERROR), verify_result_unknown_error);
+TEST_CASE("consensus  script error to verify result  UNKNOWN ERROR  unknown error", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::UNKNOWN) == verify_result_unknown_error);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_UNKNOWN_ERROR) == verify_result_unknown_error);
+#endif
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__ERROR_COUNT__unknown_error)
-{
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_ERROR_COUNT), verify_result_unknown_error);
+TEST_CASE("consensus  script error to verify result  ERROR COUNT  unknown error", "[consensus  script error to verify result]") {
+#if defined(KTH_CURRENCY_BCH)
+    REQUIRE(script_error_to_verify_result(ScriptError::ERROR_COUNT) == verify_result_unknown_error);
+#else
+    REQUIRE(script_error_to_verify_result(SCRIPT_ERR_ERROR_COUNT) == verify_result_unknown_error);
+#endif
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+// End Boost Suite
