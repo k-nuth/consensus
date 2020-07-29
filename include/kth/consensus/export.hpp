@@ -62,8 +62,6 @@ typedef enum verify_result_type {
     // Softfork safeness
     verify_result_discourage_upgradable_nops,
 
-    //TODO(hardfork): update this with src/bch-rules/script/script_error.h
-
 #if ! defined(KTH_CURRENCY_BCH)    
     verify_result_discourage_upgradable_witness_program,
 #endif
@@ -91,6 +89,40 @@ typedef enum verify_result_type {
     // BIP65/BIP112 (shared codes)
     verify_result_negative_locktime,
     verify_result_unsatisfied_locktime
+
+
+#if defined(KTH_CURRENCY_BCH)
+    , verify_result_input_sigchecks
+
+    , verify_result_invalid_operand_size
+    , verify_result_invalid_number_range
+    , verify_result_impossible_encoding
+    , verify_result_invalid_split_range
+    , verify_result_invalid_bit_count
+
+    , verify_result_checkdatasigverify
+
+    , verify_result_div_by_zero
+    , verify_result_mod_by_zero
+
+    , verify_result_invalid_bitfield_size
+    , verify_result_invalid_bit_range
+
+    , verify_result_sig_badlength
+    , verify_result_sig_nonschnorr
+
+    , verify_result_illegal_forkid
+    , verify_result_must_use_forkid
+
+    , verify_result_sigchecks_limit_exceeded
+#endif
+
+#if ! defined(KTH_CURRENCY_BCH)
+    , verify_result_op_codeseparator
+    , verify_result_sig_findanddelete
+#endif
+
+
 } verify_result;
 
 
@@ -347,7 +379,7 @@ typedef enum verify_flags_type {
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags, int64_t amount = 0);
+    unsigned int flags, size_t& sig_checks, int64_t amount = 0);
 #else
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,

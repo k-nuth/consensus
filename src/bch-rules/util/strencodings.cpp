@@ -481,7 +481,7 @@ NODISCARD static bool ParsePrechecks(const std::string &str) {
 }
 
 bool ParseInt32(const std::string &str, int32_t *out) {
-    if (!ParsePrechecks(str)) {
+    if ( ! ParsePrechecks(str)) {
         return false;
     }
     char *endp = nullptr;
@@ -501,7 +501,7 @@ bool ParseInt32(const std::string &str, int32_t *out) {
 }
 
 bool ParseInt64(const std::string &str, int64_t *out) {
-    if (!ParsePrechecks(str)) {
+    if ( ! ParsePrechecks(str)) {
         return false;
     }
     char *endp = nullptr;
@@ -520,7 +520,7 @@ bool ParseInt64(const std::string &str, int64_t *out) {
 }
 
 bool ParseUInt32(const std::string &str, uint32_t *out) {
-    if (!ParsePrechecks(str)) {
+    if ( ! ParsePrechecks(str)) {
         return false;
     }
     // Reject negative values, unfortunately strtoul accepts these by default if
@@ -544,7 +544,7 @@ bool ParseUInt32(const std::string &str, uint32_t *out) {
 }
 
 bool ParseUInt64(const std::string &str, uint64_t *out) {
-    if (!ParsePrechecks(str)) {
+    if ( ! ParsePrechecks(str)) {
         return false;
     }
     // Reject negative values, unfortunately strtoull accepts these by default
@@ -567,7 +567,7 @@ bool ParseUInt64(const std::string &str, uint64_t *out) {
 }
 
 bool ParseDouble(const std::string &str, double *out) {
-    if (!ParsePrechecks(str)) {
+    if ( ! ParsePrechecks(str)) {
         return false;
     }
     // No hexadecimal floats allowed
@@ -703,7 +703,7 @@ bool ParseFixedPoint(const std::string &val, int decimals,
             ++ptr;
         } else if (val[ptr] >= '1' && val[ptr] <= '9') {
             while (ptr < end && IsDigit(val[ptr])) {
-                if (!ProcessMantissaDigit(val[ptr], mantissa,
+                if ( ! ProcessMantissaDigit(val[ptr], mantissa,
                                           mantissa_tzeros)) {
                     // overflow
                     return false;
@@ -722,7 +722,7 @@ bool ParseFixedPoint(const std::string &val, int decimals,
         ++ptr;
         if (ptr < end && IsDigit(val[ptr])) {
             while (ptr < end && IsDigit(val[ptr])) {
-                if (!ProcessMantissaDigit(val[ptr], mantissa,
+                if ( ! ProcessMantissaDigit(val[ptr], mantissa,
                                           mantissa_tzeros)) {
                     // overflow
                     return false;
@@ -834,7 +834,7 @@ bool ParseHDKeypath(const std::string &keypath_str,
             return false;
         }
         uint32_t number;
-        if (!ParseUInt32(item, &number)) {
+        if ( ! ParseUInt32(item, &number)) {
             return false;
         }
         path |= number;

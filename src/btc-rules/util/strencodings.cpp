@@ -27,8 +27,7 @@ static const std::string SAFE_CHARS[] =
 std::string SanitizeString(const std::string& str, int rule)
 {
     std::string strResult;
-    for (std::string::size_type i = 0; i < str.size(); i++)
-    {
+    for (std::string::size_type i = 0; i < str.size(); i++) {
         if (SAFE_CHARS[rule].find(str[i]) != std::string::npos)
             strResult.push_back(str[i]);
     }
@@ -60,8 +59,7 @@ signed char HexDigit(char c)
 
 bool IsHex(const std::string& str)
 {
-    for(std::string::const_iterator it(str.begin()); it != str.end(); ++it)
-    {
+    for(std::string::const_iterator it(str.begin()); it != str.end(); ++it) {
         if (HexDigit(*it) < 0)
             return false;
     }
@@ -85,8 +83,7 @@ std::vector<unsigned char> ParseHex(const char* psz)
 {
     // convert hex dump to vector
     std::vector<unsigned char> vch;
-    while (true)
-    {
+    while (true) {
         while (IsSpace(*psz))
             psz++;
         signed char c = HexDigit(*psz++);
@@ -191,7 +188,7 @@ std::vector<unsigned char> DecodeBase64(const char* p, bool* pf_invalid)
 
 std::string DecodeBase64(const std::string& str, bool* pf_invalid)
 {
-    if (!ValidAsCString(str)) {
+    if ( ! ValidAsCString(str)) {
         if (pf_invalid) {
             *pf_invalid = true;
         }
@@ -266,7 +263,7 @@ std::vector<unsigned char> DecodeBase32(const char* p, bool* pf_invalid)
 
 std::string DecodeBase32(const std::string& str, bool* pf_invalid)
 {
-    if (!ValidAsCString(str)) {
+    if ( ! ValidAsCString(str)) {
         if (pf_invalid) {
             *pf_invalid = true;
         }
@@ -282,14 +279,14 @@ NODISCARD static bool ParsePrechecks(const std::string& str)
         return false;
     if (str.size() >= 1 && (IsSpace(str[0]) || IsSpace(str[str.size()-1]))) // No padding allowed
         return false;
-    if (!ValidAsCString(str)) // No embedded NUL characters allowed
+    if ( ! ValidAsCString(str)) // No embedded NUL characters allowed
         return false;
     return true;
 }
 
 bool ParseInt32(const std::string& str, int32_t *out)
 {
-    if (!ParsePrechecks(str))
+    if ( ! ParsePrechecks(str))
         return false;
     char *endp = nullptr;
     errno = 0; // strtol will not set errno if valid
@@ -305,7 +302,7 @@ bool ParseInt32(const std::string& str, int32_t *out)
 
 bool ParseInt64(const std::string& str, int64_t *out)
 {
-    if (!ParsePrechecks(str))
+    if ( ! ParsePrechecks(str))
         return false;
     char *endp = nullptr;
     errno = 0; // strtoll will not set errno if valid
@@ -320,7 +317,7 @@ bool ParseInt64(const std::string& str, int64_t *out)
 
 bool ParseUInt32(const std::string& str, uint32_t *out)
 {
-    if (!ParsePrechecks(str))
+    if ( ! ParsePrechecks(str))
         return false;
     if (str.size() >= 1 && str[0] == '-') // Reject negative values, unfortunately strtoul accepts these by default if they fit in the range
         return false;
@@ -337,7 +334,7 @@ bool ParseUInt32(const std::string& str, uint32_t *out)
 
 bool ParseUInt64(const std::string& str, uint64_t *out)
 {
-    if (!ParsePrechecks(str))
+    if ( ! ParsePrechecks(str))
         return false;
     if (str.size() >= 1 && str[0] == '-') // Reject negative values, unfortunately strtoull accepts these by default if they fit in the range
         return false;
@@ -354,7 +351,7 @@ bool ParseUInt64(const std::string& str, uint64_t *out)
 
 bool ParseDouble(const std::string& str, double *out)
 {
-    if (!ParsePrechecks(str))
+    if ( ! ParsePrechecks(str))
         return false;
     if (str.size() >= 2 && str[0] == '0' && str[1] == 'x') // No hexadecimal floats allowed
         return false;
@@ -371,8 +368,7 @@ std::string FormatParagraph(const std::string& in, size_t width, size_t indent)
     std::stringstream out;
     size_t ptr = 0;
     size_t indented = 0;
-    while (ptr < in.size())
-    {
+    while (ptr < in.size()) {
         size_t lineend = in.find_first_of('\n', ptr);
         if (lineend == std::string::npos) {
             lineend = in.size();
@@ -472,34 +468,31 @@ bool ParseFixedPoint(const std::string &val, int decimals, int64_t *amount_out)
         mantissa_sign = true;
         ++ptr;
     }
-    if (ptr < end)
-    {
+    if (ptr < end) {
         if (val[ptr] == '0') {
             /* pass single 0 */
             ++ptr;
         } else if (val[ptr] >= '1' && val[ptr] <= '9') {
             while (ptr < end && IsDigit(val[ptr])) {
-                if (!ProcessMantissaDigit(val[ptr], mantissa, mantissa_tzeros))
+                if ( ! ProcessMantissaDigit(val[ptr], mantissa, mantissa_tzeros))
                     return false; /* overflow */
                 ++ptr;
             }
         } else return false; /* missing expected digit */
     } else return false; /* empty string or loose '-' */
-    if (ptr < end && val[ptr] == '.')
-    {
+    if (ptr < end && val[ptr] == '.') {
         ++ptr;
         if (ptr < end && IsDigit(val[ptr]))
         {
             while (ptr < end && IsDigit(val[ptr])) {
-                if (!ProcessMantissaDigit(val[ptr], mantissa, mantissa_tzeros))
+                if ( ! ProcessMantissaDigit(val[ptr], mantissa, mantissa_tzeros))
                     return false; /* overflow */
                 ++ptr;
                 ++point_ofs;
             }
         } else return false; /* missing expected digit */
     }
-    if (ptr < end && (val[ptr] == 'e' || val[ptr] == 'E'))
-    {
+    if (ptr < end && (val[ptr] == 'e' || val[ptr] == 'E')) {
         ++ptr;
         if (ptr < end && val[ptr] == '+')
             ++ptr;

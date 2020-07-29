@@ -166,14 +166,12 @@ private:
 public:
     explicit CHashVerifier(Source* source_) : CHashWriter(source_->GetType(), source_->GetVersion()), source(source_) {}
 
-    void read(char* pch, size_t nSize)
-    {
+    void read(char* pch, size_t nSize) {
         source->read(pch, nSize);
         this->write(pch, nSize);
     }
 
-    void ignore(size_t nSize)
-    {
+    void ignore(size_t nSize) {
         char data[1024];
         while (nSize > 0) {
             size_t now = std::min<size_t>(nSize, 1024);
@@ -183,8 +181,7 @@ public:
     }
 
     template<typename T>
-    CHashVerifier<Source>& operator>>(T&& obj)
-    {
+    CHashVerifier<Source>& operator>>(T&& obj) {
         // Unserialize from this stream
         ::Unserialize(*this, obj);
         return (*this);

@@ -20,8 +20,7 @@ protected:
     static constexpr int WIDTH = BITS / 8;
     uint8_t data[WIDTH];
 public:
-    base_blob()
-    {
+    base_blob() {
         memset(data, 0, sizeof(data));
     }
 
@@ -35,8 +34,7 @@ public:
         return true;
     }
 
-    void SetNull()
-    {
+    void SetNull() {
         memset(data, 0, sizeof(data));
     }
 
@@ -51,13 +49,11 @@ public:
     void SetHex(std::string const& str);
     std::string ToString() const;
 
-    unsigned char* begin()
-    {
+    unsigned char* begin() {
         return &data[0];
     }
 
-    unsigned char* end()
-    {
+    unsigned char* end() {
         return &data[WIDTH];
     }
 
@@ -96,8 +92,7 @@ public:
     }
 
     template<typename Stream>
-    void Unserialize(Stream& s)
-    {
+    void Unserialize(Stream& s) {
         s.read((char*)data, sizeof(data));
     }
 };

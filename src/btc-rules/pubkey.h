@@ -54,8 +54,7 @@ private:
     unsigned char vch[SIZE];
 
     //! Compute the length of a pubkey with a given first byte.
-    unsigned int static GetLen(unsigned char chHeader)
-    {
+    unsigned int static GetLen(unsigned char chHeader) {
         if (chHeader == 2 || chHeader == 3)
             return COMPRESSED_SIZE;
         if (chHeader == 4 || chHeader == 6 || chHeader == 7)
@@ -64,8 +63,7 @@ private:
     }
 
     //! Set this key data to be invalid
-    void Invalidate()
-    {
+    void Invalidate() {
         vch[0] = 0xFF;
     }
 
@@ -76,15 +74,13 @@ public:
     }
 
     //! Construct an invalid public key.
-    CPubKey()
-    {
+    CPubKey() {
         Invalidate();
     }
 
     //! Initialize a public key using begin/end iterators to byte data.
     template <typename T>
-    void Set(const T pbegin, const T pend)
-    {
+    void Set(const T pbegin, const T pend) {
         int len = pend == pbegin ? 0 : GetLen(pbegin[0]);
         if (len && len == (pend - pbegin))
             memcpy(vch, (unsigned char*)&pbegin[0], len);
@@ -94,14 +90,12 @@ public:
 
     //! Construct a public key using begin/end iterators to byte data.
     template <typename T>
-    CPubKey(const T pbegin, const T pend)
-    {
+    CPubKey(const T pbegin, const T pend) {
         Set(pbegin, pend);
     }
 
     //! Construct a public key from a byte vector.
-    explicit CPubKey(const std::vector<unsigned char>& _vch)
-    {
+    explicit CPubKey(const std::vector<unsigned char>& _vch) {
         Set(_vch.begin(), _vch.end());
     }
 
@@ -113,17 +107,14 @@ public:
     const unsigned char& operator[](unsigned int pos) const { return vch[pos]; }
 
     //! Comparator implementation.
-    friend bool operator==(const CPubKey& a, const CPubKey& b)
-    {
+    friend bool operator==(const CPubKey& a, const CPubKey& b) {
         return a.vch[0] == b.vch[0] &&
                memcmp(a.vch, b.vch, a.size()) == 0;
     }
-    friend bool operator!=(const CPubKey& a, const CPubKey& b)
-    {
+    friend bool operator!=(const CPubKey& a, const CPubKey& b) {
         return !(a == b);
     }
-    friend bool operator<(const CPubKey& a, const CPubKey& b)
-    {
+    friend bool operator<(const CPubKey& a, const CPubKey& b) {
         return a.vch[0] < b.vch[0] ||
                (a.vch[0] == b.vch[0] && memcmp(a.vch, b.vch, a.size()) < 0);
     }
@@ -137,8 +128,7 @@ public:
         s.write((char*)vch, len);
     }
     template <typename Stream>
-    void Unserialize(Stream& s)
-    {
+    void Unserialize(Stream& s) {
         unsigned int len = ::ReadCompactSize(s);
         if (len <= SIZE) {
             s.read((char*)vch, len);
@@ -210,8 +200,7 @@ struct CExtPubKey {
     ChainCode chaincode;
     CPubKey pubkey;
 
-    friend bool operator==(const CExtPubKey &a, const CExtPubKey &b)
-    {
+    friend bool operator==(const CExtPubKey &a, const CExtPubKey &b) {
         return a.nDepth == b.nDepth &&
             memcmp(&a.vchFingerprint[0], &b.vchFingerprint[0], sizeof(vchFingerprint)) == 0 &&
             a.nChild == b.nChild &&

@@ -214,13 +214,13 @@ bool CheckDataSignatureEncoding(const valtype &vchSig, uint32_t flags,
 static bool CheckSighashEncoding(const valtype &vchSig, uint32_t flags,
                                  ScriptError *serror) {
     if (flags & SCRIPT_VERIFY_STRICTENC) {
-        if (!GetHashType(vchSig).isDefined()) {
+        if ( ! GetHashType(vchSig).isDefined()) {
             return set_error(serror, ScriptError::SIG_HASHTYPE);
         }
 
         bool usesForkId = GetHashType(vchSig).hasForkId();
         bool forkIdEnabled = flags & SCRIPT_ENABLE_SIGHASH_FORKID;
-        if (!forkIdEnabled && usesForkId) {
+        if ( ! forkIdEnabled && usesForkId) {
             return set_error(serror, ScriptError::ILLEGAL_FORKID);
         }
 
@@ -242,7 +242,7 @@ static bool CheckTransactionSignatureEncodingImpl(const valtype &vchSig,
         return true;
     }
 
-    if (!fun(vchSig | boost::adaptors::sliced(0, vchSig.size() - 1), flags,
+    if ( ! fun(vchSig | boost::adaptors::sliced(0, vchSig.size() - 1), flags,
              serror)) {
         // serror is set
         return false;

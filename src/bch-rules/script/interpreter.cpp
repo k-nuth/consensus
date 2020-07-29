@@ -77,7 +77,7 @@ static void CleanupScriptCode(CScript &scriptCode,
                               uint32_t flags) {
     // Drop the signature in scripts when SIGHASH_FORKID is not used.
     SigHashType sigHashType = GetHashType(vchSig);
-    if (!(flags & SCRIPT_ENABLE_SIGHASH_FORKID) || !sigHashType.hasForkId()) {
+    if ( ! (flags & SCRIPT_ENABLE_SIGHASH_FORKID) || !sigHashType.hasForkId()) {
         FindAndDelete(scriptCode, CScript(vchSig));
     }
 }
@@ -129,7 +129,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
             //
             // Read instruction
             //
-            if (!script.GetOp(pc, opcode, vchPushValue)) {
+            if ( ! script.GetOp(pc, opcode, vchPushValue)) {
                 return set_error(serror, ScriptError::BAD_OPCODE);
             }
             if (vchPushValue.size() > MAX_SCRIPT_ELEMENT_SIZE) {
@@ -189,7 +189,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                         break;
 
                     case OP_CHECKLOCKTIMEVERIFY: {
-                        if (!(flags & SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY)) {
+                        if ( ! (flags & SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY)) {
                             break;
                         }
 
@@ -226,7 +226,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
 
                         // Actually compare the specified lock time with the
                         // transaction.
-                        if (!checker.CheckLockTime(nLockTime)) {
+                        if ( ! checker.CheckLockTime(nLockTime)) {
                             return set_error(serror,
                                              ScriptError::UNSATISFIED_LOCKTIME);
                         }
@@ -235,7 +235,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                     }
 
                     case OP_CHECKSEQUENCEVERIFY: {
-                        if (!(flags & SCRIPT_VERIFY_CHECKSEQUENCEVERIFY)) {
+                        if ( ! (flags & SCRIPT_VERIFY_CHECKSEQUENCEVERIFY)) {
                             break;
                         }
 
@@ -267,7 +267,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                         }
 
                         // Compare the specified sequence number with the input.
-                        if (!checker.CheckSequence(nSequence)) {
+                        if ( ! checker.CheckSequence(nSequence)) {
                             return set_error(serror,
                                              ScriptError::UNSATISFIED_LOCKTIME);
                         }
@@ -684,7 +684,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                 bn = (bn != bnZero);
                                 break;
                             default:
-                                assert(!"invalid opcode");
+                                assert( ! "invalid opcode");
                                 break;
                         }
                         popstack(stack);
@@ -775,7 +775,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                 bn = (bn1 > bn2 ? bn1 : bn2);
                                 break;
                             default:
-                                assert(!"invalid opcode");
+                                assert( ! "invalid opcode");
                                 break;
                         }
                         popstack(stack);
@@ -867,7 +867,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                         valtype &vchSig = stacktop(-2);
                         valtype &vchPubKey = stacktop(-1);
 
-                        if (!CheckTransactionSignatureEncoding(vchSig, flags,
+                        if ( ! CheckTransactionSignatureEncoding(vchSig, flags,
                                                                serror) ||
                             !CheckPubKeyEncoding(vchPubKey, flags, serror)) {
                             // serror is set
@@ -887,7 +887,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                                         scriptCode, flags);
                             metrics.nSigChecks += 1;
 
-                            if (!fSuccess && (flags & SCRIPT_VERIFY_NULLFAIL)) {
+                            if ( ! fSuccess && (flags & SCRIPT_VERIFY_NULLFAIL)) {
                                 return set_error(serror,
                                                  ScriptError::SIG_NULLFAIL);
                             }
@@ -918,7 +918,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                         valtype &vchMessage = stacktop(-2);
                         valtype &vchPubKey = stacktop(-1);
 
-                        if (!CheckDataSignatureEncoding(vchSig, flags,
+                        if ( ! CheckDataSignatureEncoding(vchSig, flags,
                                                         serror) ||
                             !CheckPubKeyEncoding(vchPubKey, flags, serror)) {
                             // serror is set
@@ -935,7 +935,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                 vchSig, CPubKey(vchPubKey), uint256(vchHash));
                             metrics.nSigChecks += 1;
 
-                            if (!fSuccess && (flags & SCRIPT_VERIFY_NULLFAIL)) {
+                            if ( ! fSuccess && (flags & SCRIPT_VERIFY_NULLFAIL)) {
                                 return set_error(serror,
                                                  ScriptError::SIG_NULLFAIL);
                             }
@@ -1022,7 +1022,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                             // Dummy element is to be interpreted as a bitfield
                             // that represent which pubkeys should be checked.
                             valtype &vchDummy = stacktop(-idxDummy);
-                            if (!DecodeBitfield(vchDummy, nKeysCount, checkBits,
+                            if ( ! DecodeBitfield(vchDummy, nKeysCount, checkBits,
                                                 serror)) {
                                 // serror is set
                                 return false;
@@ -1070,7 +1070,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
 
                                 // Note that only pubkeys associated with a
                                 // signature are checked for validity.
-                                if (!CheckTransactionSchnorrSignatureEncoding(
+                                if ( ! CheckTransactionSchnorrSignatureEncoding(
                                         vchSig, flags, serror) ||
                                     !CheckPubKeyEncoding(vchPubKey, flags,
                                                          serror)) {
@@ -1079,7 +1079,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                 }
 
                                 // Check signature
-                                if (!checker.CheckSig(vchSig, vchPubKey,
+                                if ( ! checker.CheckSig(vchSig, vchPubKey,
                                                       scriptCode, flags)) {
                                     // This can fail if the signature is empty,
                                     // which also is a NULLFAIL error as the
@@ -1122,7 +1122,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                 // by CHECKMULTISIG NOT if the STRICTENC flag is
                                 // set. See the script_(in)valid tests for
                                 // details.
-                                if (!CheckTransactionECDSASignatureEncoding(
+                                if ( ! CheckTransactionECDSASignatureEncoding(
                                         vchSig, flags, serror) ||
                                     !CheckPubKeyEncoding(vchPubKey, flags,
                                                          serror)) {
@@ -1158,13 +1158,13 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
 
                             // If the operation failed, we may require that all
                             // signatures must be empty vector
-                            if (!fSuccess && (flags & SCRIPT_VERIFY_NULLFAIL) &&
+                            if ( ! fSuccess && (flags & SCRIPT_VERIFY_NULLFAIL) &&
                                 !areAllSignaturesNull) {
                                 return set_error(serror,
                                                  ScriptError::SIG_NULLFAIL);
                             }
 
-                            if (!areAllSignaturesNull) {
+                            if ( ! areAllSignaturesNull) {
                                 // This is not identical to the number of actual
                                 // ECDSA verifies, but, it is an upper bound
                                 // that can be easily determined without doing
@@ -1236,7 +1236,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                     } break;
 
                     case OP_REVERSEBYTES: {
-                        if (!(flags & SCRIPT_ENABLE_OP_REVERSEBYTES)) {
+                        if ( ! (flags & SCRIPT_ENABLE_OP_REVERSEBYTES)) {
                             return set_error(serror, ScriptError::BAD_OPCODE);
                         }
 
@@ -1309,7 +1309,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                         CScriptNum::MinimallyEncode(n);
 
                         // The resulting number must be a valid number.
-                        if (!CScriptNum::IsMinimallyEncoded(n)) {
+                        if ( ! CScriptNum::IsMinimallyEncoded(n)) {
                             return set_error(serror,
                                              ScriptError::INVALID_NUMBER_RANGE);
                         }
@@ -1329,7 +1329,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
         return set_error(serror, ScriptError::UNKNOWN);
     }
 
-    if (!vfExec.empty()) {
+    if ( ! vfExec.empty()) {
         return set_error(serror, ScriptError::UNBALANCED_CONDITIONAL);
     }
 
@@ -1510,11 +1510,11 @@ uint256 SignatureHash(const CScript &scriptCode, const T &txTo,
         uint256 hashSequence;
         uint256 hashOutputs;
 
-        if (!sigHashType.hasAnyoneCanPay()) {
+        if ( ! sigHashType.hasAnyoneCanPay()) {
             hashPrevouts = cache ? cache->hashPrevouts : GetPrevoutHash(txTo);
         }
 
-        if (!sigHashType.hasAnyoneCanPay() &&
+        if ( ! sigHashType.hasAnyoneCanPay() &&
             (sigHashType.getBaseType() != BaseSigHashType::SINGLE) &&
             (sigHashType.getBaseType() != BaseSigHashType::NONE)) {
             hashSequence = cache ? cache->hashSequence : GetSequenceHash(txTo);
@@ -1589,7 +1589,7 @@ bool GenericTransactionSignatureChecker<T>::CheckSig(
     const std::vector<uint8_t> &vchSigIn, const std::vector<uint8_t> &vchPubKey,
     const CScript &scriptCode, uint32_t flags) const {
     CPubKey pubkey(vchPubKey);
-    if (!pubkey.IsValid()) {
+    if ( ! pubkey.IsValid()) {
         return false;
     }
 
@@ -1604,7 +1604,7 @@ bool GenericTransactionSignatureChecker<T>::CheckSig(
     uint256 sighash = SignatureHash(scriptCode, *txTo, nIn, sigHashType, amount,
                                     this->txdata, flags);
 
-    if (!VerifySignature(vchSig, pubkey, sighash)) {
+    if ( ! VerifySignature(vchSig, pubkey, sighash)) {
         return false;
     }
 
@@ -1621,7 +1621,7 @@ bool GenericTransactionSignatureChecker<T>::CheckLockTime(
     // We want to compare apples to apples, so fail the script unless the type
     // of nLockTime being tested is the same as the nLockTime in the
     // transaction.
-    if (!((txTo->nLockTime < LOCKTIME_THRESHOLD &&
+    if ( ! ((txTo->nLockTime < LOCKTIME_THRESHOLD &&
            nLockTime < LOCKTIME_THRESHOLD) ||
           (txTo->nLockTime >= LOCKTIME_THRESHOLD &&
            nLockTime >= LOCKTIME_THRESHOLD))) {
@@ -1685,7 +1685,7 @@ bool GenericTransactionSignatureChecker<T>::CheckSequence(
     // We want to compare apples to apples, so fail the script unless the type
     // of nSequenceMasked being tested is the same as the nSequenceMasked in the
     // transaction.
-    if (!((txToSequenceMasked < CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG &&
+    if ( ! ((txToSequenceMasked < CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG &&
            nSequenceMasked < CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG) ||
           (txToSequenceMasked >= CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG &&
            nSequenceMasked >= CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG))) {
@@ -1722,14 +1722,14 @@ bool VerifyScript(const CScript &scriptSig, const CScript &scriptPubKey,
     ScriptExecutionMetrics metrics = {};
 
     std::vector<valtype> stack, stackCopy;
-    if (!EvalScript(stack, scriptSig, flags, checker, metrics, serror)) {
+    if ( ! EvalScript(stack, scriptSig, flags, checker, metrics, serror)) {
         // serror is set
         return false;
     }
     if (flags & SCRIPT_VERIFY_P2SH) {
         stackCopy = stack;
     }
-    if (!EvalScript(stack, scriptPubKey, flags, checker, metrics, serror)) {
+    if ( ! EvalScript(stack, scriptPubKey, flags, checker, metrics, serror)) {
         // serror is set
         return false;
     }
@@ -1743,7 +1743,7 @@ bool VerifyScript(const CScript &scriptSig, const CScript &scriptPubKey,
     // Additional validation for spend-to-script-hash transactions:
     if ((flags & SCRIPT_VERIFY_P2SH) && scriptPubKey.IsPayToScriptHash()) {
         // scriptSig must be literals-only or validation fails
-        if (!scriptSig.IsPushOnly()) {
+        if ( ! scriptSig.IsPushOnly()) {
             return set_error(serror, ScriptError::SIG_PUSHONLY);
         }
 
@@ -1753,7 +1753,7 @@ bool VerifyScript(const CScript &scriptSig, const CScript &scriptPubKey,
         // stack cannot be empty here, because if it was the P2SH  HASH <> EQUAL
         // scriptPubKey would be evaluated with an empty stack and the
         // EvalScript above would return false.
-        assert(!stack.empty());
+        assert( ! stack.empty());
 
         const valtype &pubKeySerialized = stack.back();
         CScript pubKey2(pubKeySerialized.begin(), pubKeySerialized.end());
@@ -1769,21 +1769,21 @@ bool VerifyScript(const CScript &scriptSig, const CScript &scriptPubKey,
             // Prior to activation of this flag, all transactions will count as
             // having a sigchecks count of 0 for accounting purposes outside of
             // VerifyScript.
-            if (!(flags & SCRIPT_REPORT_SIGCHECKS)) {
+            if ( ! (flags & SCRIPT_REPORT_SIGCHECKS)) {
                 metrics.nSigChecks = 0;
             }
             metricsOut = metrics;
             return set_success(serror);
         }
 
-        if (!EvalScript(stack, pubKey2, flags, checker, metrics, serror)) {
+        if ( ! EvalScript(stack, pubKey2, flags, checker, metrics, serror)) {
             // serror is set
             return false;
         }
         if (stack.empty()) {
             return set_error(serror, ScriptError::EVAL_FALSE);
         }
-        if (!CastToBool(stack.back())) {
+        if ( ! CastToBool(stack.back())) {
             return set_error(serror, ScriptError::EVAL_FALSE);
         }
     }
@@ -1828,7 +1828,7 @@ bool VerifyScript(const CScript &scriptSig, const CScript &scriptPubKey,
 
     // Prior to activation of this flag, all transactions will count as having a
     // sigchecks count of 0 for accounting purposes outside of VerifyScript.
-    if (!(flags & SCRIPT_REPORT_SIGCHECKS)) {
+    if ( ! (flags & SCRIPT_REPORT_SIGCHECKS)) {
         metrics.nSigChecks = 0;
     }
 

@@ -37,19 +37,16 @@ public:
     void SetNull() { hash.SetNull(); n = NULL_INDEX; }
     bool IsNull() const { return (hash.IsNull() && n == NULL_INDEX); }
 
-    friend bool operator<(const COutPoint& a, const COutPoint& b)
-    {
+    friend bool operator<(const COutPoint& a, const COutPoint& b) {
         int cmp = a.hash.Compare(b.hash);
         return cmp < 0 || (cmp == 0 && a.n < b.n);
     }
 
-    friend bool operator==(const COutPoint& a, const COutPoint& b)
-    {
+    friend bool operator==(const COutPoint& a, const COutPoint& b) {
         return (a.hash == b.hash && a.n == b.n);
     }
 
-    friend bool operator!=(const COutPoint& a, const COutPoint& b)
-    {
+    friend bool operator!=(const COutPoint& a, const COutPoint& b) {
         return !(a == b);
     }
 
@@ -95,8 +92,7 @@ public:
      * 9 bits. */
     static int const SEQUENCE_LOCKTIME_GRANULARITY = 9;
 
-    CTxIn()
-    {
+    CTxIn() {
         nSequence = SEQUENCE_FINAL;
     }
 
@@ -112,15 +108,13 @@ public:
         READWRITE(nSequence);
     }
 
-    friend bool operator==(const CTxIn& a, const CTxIn& b)
-    {
+    friend bool operator==(const CTxIn& a, const CTxIn& b) {
         return (a.prevout   == b.prevout &&
                 a.scriptSig == b.scriptSig &&
                 a.nSequence == b.nSequence);
     }
 
-    friend bool operator!=(const CTxIn& a, const CTxIn& b)
-    {
+    friend bool operator!=(const CTxIn& a, const CTxIn& b) {
         return !(a == b);
     }
 
@@ -136,8 +130,7 @@ public:
     CAmount nValue;
     CScript scriptPubKey;
 
-    CTxOut()
-    {
+    CTxOut() {
         SetNull();
     }
 
@@ -151,8 +144,7 @@ public:
         READWRITE(scriptPubKey);
     }
 
-    void SetNull()
-    {
+    void SetNull() {
         nValue = -1;
         scriptPubKey.clear();
     }
@@ -162,14 +154,12 @@ public:
         return (nValue == -1);
     }
 
-    friend bool operator==(const CTxOut& a, const CTxOut& b)
-    {
+    friend bool operator==(const CTxOut& a, const CTxOut& b) {
         return (a.nValue       == b.nValue &&
                 a.scriptPubKey == b.scriptPubKey);
     }
 
-    friend bool operator!=(const CTxOut& a, const CTxOut& b)
-    {
+    friend bool operator!=(const CTxOut& a, const CTxOut& b) {
         return !(a == b);
     }
 
@@ -188,7 +178,7 @@ struct CMutableTransaction;
  * Extended transaction serialization format:
  * - int32_t nVersion
  * - unsigned char dummy = 0x00
- * - unsigned char flags (!= 0)
+ * - unsigned char flags ( ! = 0)
  * - std::vector<CTxIn> vin
  * - std::vector<CTxOut> vout
  * - if (flags & 1):
@@ -222,7 +212,7 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
         for (size_t i = 0; i < tx.vin.size(); i++) {
             s >> tx.vin[i].scriptWitness.stack;
         }
-        if (!tx.HasWitness()) {
+        if ( ! tx.HasWitness()) {
             /* It's illegal to encode witnesses when all witness stacks are empty. */
             throw std::ios_base::failure("Superfluous witness record");
         }
@@ -339,13 +329,11 @@ public:
         return (vin.size() == 1 && vin[0].prevout.IsNull());
     }
 
-    friend bool operator==(const CTransaction& a, const CTransaction& b)
-    {
+    friend bool operator==(const CTransaction& a, const CTransaction& b) {
         return a.hash == b.hash;
     }
 
-    friend bool operator!=(const CTransaction& a, const CTransaction& b)
-    {
+    friend bool operator!=(const CTransaction& a, const CTransaction& b) {
         return a.hash != b.hash;
     }
 
@@ -354,7 +342,7 @@ public:
     bool HasWitness() const
     {
         for (size_t i = 0; i < vin.size(); i++) {
-            if (!vin[i].scriptWitness.IsNull()) {
+            if ( ! vin[i].scriptWitness.IsNull()) {
                 return true;
             }
         }
@@ -397,7 +385,7 @@ struct CMutableTransaction
     bool HasWitness() const
     {
         for (size_t i = 0; i < vin.size(); i++) {
-            if (!vin[i].scriptWitness.IsNull()) {
+            if ( ! vin[i].scriptWitness.IsNull()) {
                 return true;
             }
         }

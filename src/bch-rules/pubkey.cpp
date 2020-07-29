@@ -158,7 +158,7 @@ static int ecdsa_signature_parse_der_lax(const secp256k1_context *ctx,
         memcpy(tmpsig + 64 - slen, input + spos, slen);
     }
 
-    if (!overflow) {
+    if ( ! overflow) {
         overflow = !secp256k1_ecdsa_signature_parse_compact(ctx, sig, tmpsig);
     }
     if (overflow) {
@@ -172,17 +172,17 @@ static int ecdsa_signature_parse_der_lax(const secp256k1_context *ctx,
 
 bool CPubKey::VerifyECDSA(const uint256 &hash,
                           const std::vector<uint8_t> &vchSig) const {
-    if (!IsValid()) {
+    if ( ! IsValid()) {
         return false;
     }
 
     secp256k1_pubkey pubkey;
     secp256k1_ecdsa_signature sig;
-    if (!secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch,
+    if ( ! secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch,
                                    size())) {
         return false;
     }
-    if (!ecdsa_signature_parse_der_lax(secp256k1_context_verify, &sig,
+    if ( ! ecdsa_signature_parse_der_lax(secp256k1_context_verify, &sig,
                                        vchSig.data(), vchSig.size())) {
         return false;
     }
@@ -197,7 +197,7 @@ bool CPubKey::VerifyECDSA(const uint256 &hash,
 
 bool CPubKey::VerifySchnorr(const uint256 &hash,
                             const std::vector<uint8_t> &vchSig) const {
-    if (!IsValid()) {
+    if ( ! IsValid()) {
         return false;
     }
 
@@ -206,7 +206,7 @@ bool CPubKey::VerifySchnorr(const uint256 &hash,
     }
 
     secp256k1_pubkey pubkey;
-    if (!secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey,
+    if ( ! secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey,
                                    &(*this)[0], size())) {
         return false;
     }
@@ -225,11 +225,11 @@ bool CPubKey::RecoverCompact(const uint256 &hash,
     bool fComp = ((vchSig[0] - 27) & 4) != 0;
     secp256k1_pubkey pubkey;
     secp256k1_ecdsa_recoverable_signature sig;
-    if (!secp256k1_ecdsa_recoverable_signature_parse_compact(
+    if ( ! secp256k1_ecdsa_recoverable_signature_parse_compact(
             secp256k1_context_verify, &sig, &vchSig[1], recid)) {
         return false;
     }
-    if (!secp256k1_ecdsa_recover(secp256k1_context_verify, &pubkey, &sig,
+    if ( ! secp256k1_ecdsa_recover(secp256k1_context_verify, &pubkey, &sig,
                                  hash.begin())) {
         return false;
     }
@@ -243,7 +243,7 @@ bool CPubKey::RecoverCompact(const uint256 &hash,
 }
 
 bool CPubKey::IsFullyValid() const {
-    if (!IsValid()) {
+    if ( ! IsValid()) {
         return false;
     }
     secp256k1_pubkey pubkey;
@@ -252,11 +252,11 @@ bool CPubKey::IsFullyValid() const {
 }
 
 bool CPubKey::Decompress() {
-    if (!IsValid()) {
+    if ( ! IsValid()) {
         return false;
     }
     secp256k1_pubkey pubkey;
-    if (!secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch,
+    if ( ! secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch,
                                    size())) {
         return false;
     }
@@ -277,11 +277,11 @@ bool CPubKey::Derive(CPubKey &pubkeyChild, ChainCode &ccChild,
     BIP32Hash(cc, nChild, *begin(), begin() + 1, out);
     memcpy(ccChild.begin(), out + 32, 32);
     secp256k1_pubkey pubkey;
-    if (!secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch,
+    if ( ! secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch,
                                    size())) {
         return false;
     }
-    if (!secp256k1_ec_pubkey_tweak_add(secp256k1_context_verify, &pubkey,
+    if ( ! secp256k1_ec_pubkey_tweak_add(secp256k1_context_verify, &pubkey,
                                        out)) {
         return false;
     }
@@ -324,11 +324,11 @@ bool CExtPubKey::Derive(CExtPubKey &out, unsigned int _nChild) const {
 bool CPubKey::CheckLowS(
     const boost::sliced_range<const std::vector<uint8_t>> &vchSig) {
     secp256k1_ecdsa_signature sig;
-    if (!ecdsa_signature_parse_der_lax(secp256k1_context_verify, &sig,
+    if ( ! ecdsa_signature_parse_der_lax(secp256k1_context_verify, &sig,
                                        &vchSig.front(), vchSig.size())) {
         return false;
     }
-    return (!secp256k1_ecdsa_signature_normalize(secp256k1_context_verify,
+    return ( ! secp256k1_ecdsa_signature_normalize(secp256k1_context_verify,
                                                  nullptr, &sig));
 }
 

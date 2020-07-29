@@ -154,7 +154,7 @@ static int ecdsa_signature_parse_der_lax(const secp256k1_context* ctx, secp256k1
         memcpy(tmpsig + 64 - slen, input + spos, slen);
     }
 
-    if (!overflow) {
+    if ( ! overflow) {
         overflow = !secp256k1_ecdsa_signature_parse_compact(ctx, sig, tmpsig);
     }
     if (overflow) {
@@ -167,15 +167,15 @@ static int ecdsa_signature_parse_der_lax(const secp256k1_context* ctx, secp256k1
 }
 
 bool CPubKey::Verify(const uint256 &hash, const std::vector<unsigned char>& vchSig) const {
-    if (!IsValid())
+    if ( ! IsValid())
         return false;
     secp256k1_pubkey pubkey;
     secp256k1_ecdsa_signature sig;
     assert(secp256k1_context_verify && "secp256k1_context_verify must be initialized to use CPubKey.");
-    if (!secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch, size())) {
+    if ( ! secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch, size())) {
         return false;
     }
-    if (!ecdsa_signature_parse_der_lax(secp256k1_context_verify, &sig, vchSig.data(), vchSig.size())) {
+    if ( ! ecdsa_signature_parse_der_lax(secp256k1_context_verify, &sig, vchSig.data(), vchSig.size())) {
         return false;
     }
     /* libsecp256k1's ECDSA verification requires lower-S signatures, which have
@@ -192,10 +192,10 @@ bool CPubKey::RecoverCompact(const uint256 &hash, const std::vector<unsigned cha
     secp256k1_pubkey pubkey;
     secp256k1_ecdsa_recoverable_signature sig;
     assert(secp256k1_context_verify && "secp256k1_context_verify must be initialized to use CPubKey.");
-    if (!secp256k1_ecdsa_recoverable_signature_parse_compact(secp256k1_context_verify, &sig, &vchSig[1], recid)) {
+    if ( ! secp256k1_ecdsa_recoverable_signature_parse_compact(secp256k1_context_verify, &sig, &vchSig[1], recid)) {
         return false;
     }
-    if (!secp256k1_ecdsa_recover(secp256k1_context_verify, &pubkey, &sig, hash.begin())) {
+    if ( ! secp256k1_ecdsa_recover(secp256k1_context_verify, &pubkey, &sig, hash.begin())) {
         return false;
     }
     unsigned char pub[SIZE];
@@ -206,7 +206,7 @@ bool CPubKey::RecoverCompact(const uint256 &hash, const std::vector<unsigned cha
 }
 
 bool CPubKey::IsFullyValid() const {
-    if (!IsValid())
+    if ( ! IsValid())
         return false;
     secp256k1_pubkey pubkey;
     assert(secp256k1_context_verify && "secp256k1_context_verify must be initialized to use CPubKey.");
@@ -214,11 +214,11 @@ bool CPubKey::IsFullyValid() const {
 }
 
 bool CPubKey::Decompress() {
-    if (!IsValid())
+    if ( ! IsValid())
         return false;
     secp256k1_pubkey pubkey;
     assert(secp256k1_context_verify && "secp256k1_context_verify must be initialized to use CPubKey.");
-    if (!secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch, size())) {
+    if ( ! secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch, size())) {
         return false;
     }
     unsigned char pub[SIZE];
@@ -237,10 +237,10 @@ bool CPubKey::Derive(CPubKey& pubkeyChild, ChainCode &ccChild, unsigned int nChi
     memcpy(ccChild.begin(), out+32, 32);
     secp256k1_pubkey pubkey;
     assert(secp256k1_context_verify && "secp256k1_context_verify must be initialized to use CPubKey.");
-    if (!secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch, size())) {
+    if ( ! secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch, size())) {
         return false;
     }
-    if (!secp256k1_ec_pubkey_tweak_add(secp256k1_context_verify, &pubkey, out)) {
+    if ( ! secp256k1_ec_pubkey_tweak_add(secp256k1_context_verify, &pubkey, out)) {
         return false;
     }
     unsigned char pub[COMPRESSED_SIZE];
@@ -279,10 +279,10 @@ bool CExtPubKey::Derive(CExtPubKey &out, unsigned int _nChild) const {
 /* static */ bool CPubKey::CheckLowS(const std::vector<unsigned char>& vchSig) {
     secp256k1_ecdsa_signature sig;
     assert(secp256k1_context_verify && "secp256k1_context_verify must be initialized to use CPubKey.");
-    if (!ecdsa_signature_parse_der_lax(secp256k1_context_verify, &sig, vchSig.data(), vchSig.size())) {
+    if ( ! ecdsa_signature_parse_der_lax(secp256k1_context_verify, &sig, vchSig.data(), vchSig.size())) {
         return false;
     }
-    return (!secp256k1_ecdsa_signature_normalize(secp256k1_context_verify, nullptr, &sig));
+    return ( ! secp256k1_ecdsa_signature_normalize(secp256k1_context_verify, nullptr, &sig));
 }
 
 /* static */ int ECCVerifyHandle::refcount = 0;

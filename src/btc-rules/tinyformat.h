@@ -253,8 +253,7 @@ struct formatZeroIntegerWorkaround
 template<typename T>
 struct formatZeroIntegerWorkaround<T,true>
 {
-    static bool invoke(std::ostream& out, const T& value)
-    {
+    static bool invoke(std::ostream& out, const T& value) {
         if (static_cast<int>(value) == 0 && out.flags() & std::ios::showpos) {
             out << "+0";
             return true;
@@ -269,8 +268,7 @@ struct formatZeroIntegerWorkaround<T,true>
 template<typename T, bool convertible = is_convertible<T,int>::value>
 struct convertToInt
 {
-    static int invoke(const T& /*value*/)
-    {
+    static int invoke(const T& /*value*/) {
         TINYFORMAT_ERROR("tinyformat: Cannot convert from argument type to "
                          "integer for use as variable width or precision");
         return 0;
@@ -716,7 +714,7 @@ inline const char* streamStateFromFormat(std::ostream& out, bool& positionalMode
         TINYFORMAT_ERROR("tinyformat: Non-positional argument used after a positional one");
     }
     // 2) Parse flags and width if we did not do it in previous step.
-    if (!widthSet) {
+    if ( ! widthSet) {
         // Parse flags
         for (;; ++c) {
             switch (*c) {
@@ -725,7 +723,7 @@ inline const char* streamStateFromFormat(std::ostream& out, bool& positionalMode
                     continue;
                 case '0':
                     // overridden by left alignment ('-' flag)
-                    if (!(out.flags() & std::ios::left)) {
+                    if ( ! (out.flags() & std::ios::left)) {
                         // Use internal padding so that numeric values are
                         // formatted correctly, eg -00010 rather than 000-10
                         out.fill('0');
@@ -738,7 +736,7 @@ inline const char* streamStateFromFormat(std::ostream& out, bool& positionalMode
                     continue;
                 case ' ':
                     // overridden by show positive sign, '+' flag.
-                    if (!(out.flags() & std::ios::showpos))
+                    if ( ! (out.flags() & std::ios::showpos))
                         spacePadPositive = true;
                     continue;
                 case '+':
@@ -886,7 +884,7 @@ inline void formatImpl(std::ostream& out, const char* fmt,
     while (true) {
         fmt = printFormatStringLiteral(out, fmt);
         if (*fmt == '\0') {
-            if (!positionalMode && argIndex < numArgs) {
+            if ( ! positionalMode && argIndex < numArgs) {
                 TINYFORMAT_ERROR("tinyformat: Not enough conversion specifiers in format string");
             }
             break;
@@ -903,7 +901,7 @@ inline void formatImpl(std::ostream& out, const char* fmt,
         }
         const FormatArg& arg = args[argIndex];
         // Format the arg into the stream.
-        if (!spacePadPositive) {
+        if ( ! spacePadPositive) {
             arg.format(out, fmt, fmtEnd, ntrunc);
         }
         else {
@@ -922,7 +920,7 @@ inline void formatImpl(std::ostream& out, const char* fmt,
             }
             out << result;
         }
-        if (!positionalMode)
+        if ( ! positionalMode)
             ++argIndex;
         fmt = fmtEnd;
     }

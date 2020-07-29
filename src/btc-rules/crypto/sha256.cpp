@@ -515,33 +515,33 @@ bool SelfTest() {
         uint32_t state[8];
         std::copy(init, init + 8, state);
         Transform(state, data + 1, i);
-        if (!std::equal(state, state + 8, result[i])) return false;
+        if ( ! std::equal(state, state + 8, result[i])) return false;
     }
 
     // Test TransformD64
     unsigned char out[32];
     TransformD64(out, data + 1);
-    if (!std::equal(out, out + 32, result_d64)) return false;
+    if ( ! std::equal(out, out + 32, result_d64)) return false;
 
     // Test TransformD64_2way, if available.
     if (TransformD64_2way) {
         unsigned char out[64];
         TransformD64_2way(out, data + 1);
-        if (!std::equal(out, out + 64, result_d64)) return false;
+        if ( ! std::equal(out, out + 64, result_d64)) return false;
     }
 
     // Test TransformD64_4way, if available.
     if (TransformD64_4way) {
         unsigned char out[128];
         TransformD64_4way(out, data + 1);
-        if (!std::equal(out, out + 128, result_d64)) return false;
+        if ( ! std::equal(out, out + 128, result_d64)) return false;
     }
 
     // Test TransformD64_8way, if available.
     if (TransformD64_8way) {
         unsigned char out[256];
         TransformD64_8way(out, data + 1);
-        if (!std::equal(out, out + 256, result_d64)) return false;
+        if ( ! std::equal(out, out + 256, result_d64)) return false;
     }
 
     return true;

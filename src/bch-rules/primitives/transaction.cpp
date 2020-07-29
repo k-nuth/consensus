@@ -75,7 +75,7 @@ Amount CTransaction::GetValueOut() const {
     Amount nValueOut = Amount::zero();
     for (auto const &tx_out : vout) {
         nValueOut += tx_out.nValue;
-        if (!MoneyRange(tx_out.nValue) || !MoneyRange(nValueOut)) {
+        if ( ! MoneyRange(tx_out.nValue) || !MoneyRange(nValueOut)) {
             throw std::runtime_error(std::string(__func__) +
                                      ": value out of range");
         }

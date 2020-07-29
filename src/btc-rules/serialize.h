@@ -316,17 +316,14 @@ inline void WriteCompactSize(CSizeComputer& os, uint64_t nSize);
 template<typename Stream>
 void WriteCompactSize(Stream& os, uint64_t nSize)
 {
-    if (nSize < 253)
-    {
+    if (nSize < 253) {
         ser_writedata8(os, nSize);
     }
-    else if (nSize <= std::numeric_limits<unsigned short>::max())
-    {
+    else if (nSize <= std::numeric_limits<unsigned short>::max()) {
         ser_writedata8(os, 253);
         ser_writedata16(os, nSize);
     }
-    else if (nSize <= std::numeric_limits<unsigned int>::max())
-    {
+    else if (nSize <= std::numeric_limits<unsigned int>::max()) {
         ser_writedata8(os, 254);
         ser_writedata32(os, nSize);
     }
@@ -343,18 +340,15 @@ uint64_t ReadCompactSize(Stream& is)
 {
     uint8_t chSize = ser_readdata8(is);
     uint64_t nSizeRet = 0;
-    if (chSize < 253)
-    {
+    if (chSize < 253) {
         nSizeRet = chSize;
     }
-    else if (chSize == 253)
-    {
+    else if (chSize == 253) {
         nSizeRet = ser_readdata16(is);
         if (nSizeRet < 253)
             throw std::ios_base::failure("non-canonical ReadCompactSize()");
     }
-    else if (chSize == 254)
-    {
+    else if (chSize == 254) {
         nSizeRet = ser_readdata32(is);
         if (nSizeRet < 0x10000u)
             throw std::ios_base::failure("non-canonical ReadCompactSize()");
@@ -408,8 +402,7 @@ enum class VarIntMode { DEFAULT, NONNEGATIVE_SIGNED };
 
 template <VarIntMode Mode, typename I>
 struct CheckVarIntMode {
-    constexpr CheckVarIntMode()
-    {
+    constexpr CheckVarIntMode() {
         static_assert(Mode != VarIntMode::DEFAULT || std::is_unsigned<I>::value, "Unsigned type required with mode DEFAULT.");
         static_assert(Mode != VarIntMode::NONNEGATIVE_SIGNED || std::is_signed<I>::value, "Signed type required with mode NONNEGATIVE_SIGNED.");
     }
@@ -507,13 +500,11 @@ static inline Wrapper<Formatter, T&> Using(T&& t) { return Wrapper<Formatter, T&
 template<VarIntMode Mode>
 struct VarIntFormatter
 {
-    template<typename Stream, typename I> void Ser(Stream &s, I v)
-    {
+    template<typename Stream, typename I> void Ser(Stream &s, I v) {
         WriteVarInt<Stream,Mode,typename std::remove_cv<I>::type>(s, v);
     }
 
-    template<typename Stream, typename I> void Unser(Stream& s, I& v)
-    {
+    template<typename Stream, typename I> void Unser(Stream& s, I& v) {
         v = ReadVarInt<Stream,Mode,typename std::remove_cv<I>::type>(s);
     }
 };
@@ -524,15 +515,13 @@ struct CustomUintFormatter
     static_assert(Bytes > 0 && Bytes <= 8, "CustomUintFormatter Bytes out of range");
     static constexpr uint64_t MAX = 0xffffffffffffffff >> (8 * (8 - Bytes));
 
-    template <typename Stream, typename I> void Ser(Stream& s, I v)
-    {
+    template <typename Stream, typename I> void Ser(Stream& s, I v) {
         if (v < 0 || v > MAX) throw std::ios_base::failure("CustomUintFormatter value out of range");
         uint64_t raw = htole64(v);
         s.write((const char*)&raw, Bytes);
     }
 
-    template <typename Stream, typename I> void Unser(Stream& s, I& v)
-    {
+    template <typename Stream, typename I> void Unser(Stream& s, I& v) {
         static_assert(std::numeric_limits<I>::max() >= MAX && std::numeric_limits<I>::min() <= 0, "CustomUintFormatter type too small");
         uint64_t raw = 0;
         s.read((char*)&raw, Bytes);
@@ -555,8 +544,7 @@ class BigEndian
 protected:
     I& m_val;
 public:
-    explicit BigEndian(I& val) : m_val(val)
-    {
+    explicit BigEndian(I& val) : m_val(val) {
         static_assert(std::is_unsigned<I>::value, "BigEndian type must be unsigned integer");
         static_assert(sizeof(I) == 2 && std::numeric_limits<I>::min() == 0 && std::numeric_limits<I>::max() == std::numeric_limits<uint16_t>::max(), "Unsupported BigEndian size");
     }
@@ -568,8 +556,7 @@ public:
     }
 
     template<typename Stream>
-    void Unserialize(Stream& s)
-    {
+    void Unserialize(Stream& s) {
         m_val = ser_readdata16be(s);
     }
 };
@@ -578,8 +565,7 @@ public:
 struct CompactSizeFormatter
 {
     template<typename Stream, typename I>
-    void Unser(Stream& s, I& v)
-    {
+    void Unser(Stream& s, I& v) {
         uint64_t n = ReadCompactSize<Stream>(s);
         if (n < std::numeric_limits<I>::min() || n > std::numeric_limits<I>::max()) {
             throw std::ios_base::failure("CompactSize exceeds limit of type");
@@ -588,8 +574,7 @@ struct CompactSizeFormatter
     }
 
     template<typename Stream, typename I>
-    void Ser(Stream& s, I v)
-    {
+    void Ser(Stream& s, I v) {
         static_assert(std::is_unsigned<I>::value, "CompactSize only supported for unsigned integers");
         static_assert(std::numeric_limits<I>::max() <= std::numeric_limits<uint64_t>::max(), "CompactSize only supports 64-bit integers and below");
 
@@ -606,8 +591,7 @@ public:
     explicit LimitedString(std::string& _string) : string(_string) {}
 
     template<typename Stream>
-    void Unserialize(Stream& s)
-    {
+    void Unserialize(Stream& s) {
         size_t size = ReadCompactSize(s);
         if (size > Limit) {
             throw std::ios_base::failure("String length limit exceeded");
@@ -621,7 +605,7 @@ public:
     void Serialize(Stream& s) const
     {
         WriteCompactSize(s, string.size());
-        if (!string.empty())
+        if ( ! string.empty())
             s.write((char*)string.data(), string.size());
     }
 };
@@ -646,8 +630,7 @@ template<class Formatter>
 struct VectorFormatter
 {
     template<typename Stream, typename V>
-    void Ser(Stream& s, const V& v)
-    {
+    void Ser(Stream& s, const V& v) {
         Formatter formatter;
         WriteCompactSize(s, v.size());
         for (const typename V::value_type& elem : v) {
@@ -656,8 +639,7 @@ struct VectorFormatter
     }
 
     template<typename Stream, typename V>
-    void Unser(Stream& s, V& v)
-    {
+    void Unser(Stream& s, V& v) {
         Formatter formatter;
         v.clear();
         size_t size = ReadCompactSize(s);
@@ -782,7 +764,7 @@ template<typename Stream, typename C>
 void Serialize(Stream& os, const std::basic_string<C>& str)
 {
     WriteCompactSize(os, str.size());
-    if (!str.empty())
+    if ( ! str.empty())
         os.write((char*)str.data(), str.size() * sizeof(C));
 }
 
@@ -804,7 +786,7 @@ template<typename Stream, unsigned int N, typename T>
 void Serialize_impl(Stream& os, const prevector<N, T>& v, const unsigned char&)
 {
     WriteCompactSize(os, v.size());
-    if (!v.empty())
+    if ( ! v.empty())
         os.write((char*)v.data(), v.size() * sizeof(T));
 }
 
@@ -828,8 +810,7 @@ void Unserialize_impl(Stream& is, prevector<N, T>& v, const unsigned char&)
     v.clear();
     unsigned int nSize = ReadCompactSize(is);
     unsigned int i = 0;
-    while (i < nSize)
-    {
+    while (i < nSize) {
         unsigned int blk = std::min(nSize - i, (unsigned int)(1 + 4999999 / sizeof(T)));
         v.resize_uninitialized(i + blk);
         is.read((char*)&v[i], blk * sizeof(T));
@@ -858,7 +839,7 @@ template<typename Stream, typename T, typename A>
 void Serialize_impl(Stream& os, const std::vector<T, A>& v, const unsigned char&)
 {
     WriteCompactSize(os, v.size());
-    if (!v.empty())
+    if ( ! v.empty())
         os.write((char*)v.data(), v.size() * sizeof(T));
 }
 
@@ -894,8 +875,7 @@ void Unserialize_impl(Stream& is, std::vector<T, A>& v, const unsigned char&)
     v.clear();
     unsigned int nSize = ReadCompactSize(is);
     unsigned int i = 0;
-    while (i < nSize)
-    {
+    while (i < nSize) {
         unsigned int blk = std::min(nSize - i, (unsigned int)(1 + 4999999 / sizeof(T)));
         v.resize(i + blk);
         is.read((char*)&v[i], blk * sizeof(T));
@@ -953,8 +933,7 @@ void Unserialize(Stream& is, std::map<K, T, Pred, A>& m)
     m.clear();
     unsigned int nSize = ReadCompactSize(is);
     typename std::map<K, T, Pred, A>::iterator mi = m.begin();
-    for (unsigned int i = 0; i < nSize; i++)
-    {
+    for (unsigned int i = 0; i < nSize; i++) {
         std::pair<K, T> item;
         Unserialize(is, item);
         mi = m.insert(mi, item);
@@ -980,8 +959,7 @@ void Unserialize(Stream& is, std::set<K, Pred, A>& m)
     m.clear();
     unsigned int nSize = ReadCompactSize(is);
     typename std::set<K, Pred, A>::iterator it = m.begin();
-    for (unsigned int i = 0; i < nSize; i++)
-    {
+    for (unsigned int i = 0; i < nSize; i++) {
         K key;
         Unserialize(is, key);
         it = m.insert(it, key);
@@ -1063,20 +1041,17 @@ protected:
 public:
     explicit CSizeComputer(int nVersionIn) : nSize(0), nVersion(nVersionIn) {}
 
-    void write(const char *psz, size_t _nSize)
-    {
+    void write(const char *psz, size_t _nSize) {
         this->nSize += _nSize;
     }
 
     /** Pretend _nSize bytes are written, without specifying them. */
-    void seek(size_t _nSize)
-    {
+    void seek(size_t _nSize) {
         this->nSize += _nSize;
     }
 
     template<typename T>
-    CSizeComputer& operator<<(const T& obj)
-    {
+    CSizeComputer& operator<<(const T& obj) {
         ::Serialize(*this, obj);
         return (*this);
     }

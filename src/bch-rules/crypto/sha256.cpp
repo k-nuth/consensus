@@ -688,7 +688,7 @@ bool SelfTest() {
         uint32_t state[8];
         std::copy(init, init + 8, state);
         Transform(state, data + 1, i);
-        if (!std::equal(state, state + 8, result[i])) {
+        if ( ! std::equal(state, state + 8, result[i])) {
             return false;
         }
     }
@@ -697,7 +697,7 @@ bool SelfTest() {
     {
         uint8_t out[32];
         TransformD64(out, data + 1);
-        if (!std::equal(out, out + 32, result_d64)) {
+        if ( ! std::equal(out, out + 32, result_d64)) {
             return false;
         }
     }
@@ -706,7 +706,7 @@ bool SelfTest() {
     if (TransformD64_2way) {
         uint8_t out[64];
         TransformD64_2way(out, data + 1);
-        if (!std::equal(out, out + 64, result_d64)) {
+        if ( ! std::equal(out, out + 64, result_d64)) {
             return false;
         }
     }
@@ -715,7 +715,7 @@ bool SelfTest() {
     if (TransformD64_4way) {
         uint8_t out[128];
         TransformD64_4way(out, data + 1);
-        if (!std::equal(out, out + 128, result_d64)) {
+        if ( ! std::equal(out, out + 128, result_d64)) {
             return false;
         }
     }
@@ -724,7 +724,7 @@ bool SelfTest() {
     if (TransformD64_8way) {
         uint8_t out[256];
         TransformD64_8way(out, data + 1);
-        if (!std::equal(out, out + 256, result_d64)) {
+        if ( ! std::equal(out, out + 256, result_d64)) {
             return false;
         }
     }

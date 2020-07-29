@@ -560,7 +560,7 @@ public:
 
     template <typename Stream> void Serialize(Stream &s) const {
         WriteCompactSize(s, string.size());
-        if (!string.empty()) {
+        if ( ! string.empty()) {
             s.write((char *)string.data(), string.size());
         }
     }
@@ -679,7 +679,7 @@ inline void Unserialize(Stream &is, T &&a) {
 template <typename Stream, typename C>
 void Serialize(Stream &os, const std::basic_string<C> &str) {
     WriteCompactSize(os, str.size());
-    if (!str.empty()) {
+    if ( ! str.empty()) {
         os.write((char *)str.data(), str.size() * sizeof(C));
     }
 }
@@ -699,7 +699,7 @@ void Unserialize(Stream &is, std::basic_string<C> &str) {
 template <typename Stream, unsigned int N, typename T>
 void Serialize_impl(Stream &os, const prevector<N, T> &v, uint8_t const &) {
     WriteCompactSize(os, v.size());
-    if (!v.empty()) {
+    if ( ! v.empty()) {
         os.write((char *)v.data(), v.size() * sizeof(T));
     }
 }
@@ -760,7 +760,7 @@ inline void Unserialize(Stream &is, prevector<N, T> &v) {
 template <typename Stream, typename T, typename A>
 void Serialize_impl(Stream &os, const std::vector<T, A> &v, uint8_t const &) {
     WriteCompactSize(os, v.size());
-    if (!v.empty()) {
+    if ( ! v.empty()) {
         os.write((char *)v.data(), v.size() * sizeof(T));
     }
 }

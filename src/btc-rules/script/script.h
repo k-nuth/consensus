@@ -213,16 +213,14 @@ class CScriptNum
  */
 public:
 
-    explicit CScriptNum(const int64_t& n)
-    {
+    explicit CScriptNum(const int64_t& n) {
         m_value = n;
     }
 
     static const size_t nDefaultMaxNumSize = 4;
 
     explicit CScriptNum(const std::vector<unsigned char>& vch, bool fRequireMinimal,
-                        const size_t nMaxNumSize = nDefaultMaxNumSize)
-    {
+                        const size_t nMaxNumSize = nDefaultMaxNumSize) {
         if (vch.size() > nMaxNumSize) {
             throw scriptnum_error("script number overflow");
         }
@@ -280,30 +278,26 @@ public:
         return CScriptNum(-m_value);
     }
 
-    inline CScriptNum& operator=( const int64_t& rhs)
-    {
+    inline CScriptNum& operator=( const int64_t& rhs) {
         m_value = rhs;
         return *this;
     }
 
-    inline CScriptNum& operator+=( const int64_t& rhs)
-    {
+    inline CScriptNum& operator+=( const int64_t& rhs) {
         assert(rhs == 0 || (rhs > 0 && m_value <= std::numeric_limits<int64_t>::max() - rhs) ||
                            (rhs < 0 && m_value >= std::numeric_limits<int64_t>::min() - rhs));
         m_value += rhs;
         return *this;
     }
 
-    inline CScriptNum& operator-=( const int64_t& rhs)
-    {
+    inline CScriptNum& operator-=( const int64_t& rhs) {
         assert(rhs == 0 || (rhs > 0 && m_value >= std::numeric_limits<int64_t>::min() + rhs) ||
                            (rhs < 0 && m_value <= std::numeric_limits<int64_t>::max() + rhs));
         m_value -= rhs;
         return *this;
     }
 
-    inline CScriptNum& operator&=( const int64_t& rhs)
-    {
+    inline CScriptNum& operator&=( const int64_t& rhs) {
         m_value &= rhs;
         return *this;
     }
@@ -322,8 +316,7 @@ public:
         return serialize(m_value);
     }
 
-    static std::vector<unsigned char> serialize(const int64_t& value)
-    {
+    static std::vector<unsigned char> serialize(const int64_t& value) {
         if(value == 0)
             return std::vector<unsigned char>();
 
@@ -356,8 +349,7 @@ public:
     }
 
 private:
-    static int64_t set_vch(const std::vector<unsigned char>& vch)
-    {
+    static int64_t set_vch(const std::vector<unsigned char>& vch) {
       if (vch.empty())
           return 0;
 
@@ -390,8 +382,7 @@ bool GetScriptOp(CScriptBase::const_iterator& pc, CScriptBase::const_iterator en
 class CScript : public CScriptBase
 {
 protected:
-    CScript& push_int64(int64_t n)
-    {
+    CScript& push_int64(int64_t n) {
         if (n == -1 || (n >= 1 && n <= 16))
         {
             push_back(n + (OP_1 - 1));
@@ -431,22 +422,19 @@ public:
 
     CScript& operator<<(int64_t b) { return push_int64(b); }
 
-    CScript& operator<<(opcodetype opcode)
-    {
+    CScript& operator<<(opcodetype opcode) {
         if (opcode < 0 || opcode > 0xff)
             throw std::runtime_error("CScript::operator<<(): invalid opcode");
         insert(end(), (unsigned char)opcode);
         return *this;
     }
 
-    CScript& operator<<(const CScriptNum& b)
-    {
+    CScript& operator<<(const CScriptNum& b) {
         *this << b.getvch();
         return *this;
     }
 
-    CScript& operator<<(const std::vector<unsigned char>& b)
-    {
+    CScript& operator<<(const std::vector<unsigned char>& b) {
         if (b.size() < OP_PUSHDATA1)
         {
             insert(end(), (unsigned char)b.size());
@@ -485,15 +473,13 @@ public:
     }
 
     /** Encode/decode small integers: */
-    static int DecodeOP_N(opcodetype opcode)
-    {
+    static int DecodeOP_N(opcodetype opcode) {
         if (opcode == OP_0)
             return 0;
         assert(opcode >= OP_1 && opcode <= OP_16);
         return (int)opcode - (int)(OP_1 - 1);
     }
-    static opcodetype EncodeOP_N(int n)
-    {
+    static opcodetype EncodeOP_N(int n) {
         assert(n >= 0 && n <= 16);
         if (n == 0)
             return OP_0;
@@ -536,8 +522,7 @@ public:
         return (size() > 0 && *begin() == OP_RETURN) || (size() > MAX_SCRIPT_SIZE);
     }
 
-    void clear()
-    {
+    void clear() {
         // The default prevector::clear() does not release memory
         CScriptBase::clear();
         shrink_to_fit();

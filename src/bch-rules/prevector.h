@@ -257,7 +257,7 @@ private:
 
     void change_capacity(size_type new_capacity) {
         if (new_capacity <= N) {
-            if (!is_direct()) {
+            if ( ! is_direct()) {
                 T *indirect = indirect_ptr(0);
                 T *src = indirect;
                 T *dst = direct_ptr(0);
@@ -266,7 +266,7 @@ private:
                 _size -= N + 1;
             }
         } else {
-            if (!is_direct()) {
+            if ( ! is_direct()) {
                 // FIXME: Because malloc/realloc here won't call new_handler if
                 // allocation fails, assert success. These should instead use an
                 // allocator or new/delete so that handlers are called as
@@ -478,7 +478,7 @@ public:
         // representation (with capacity N and size <= N).
         iterator p = first;
         char *endp = (char *)&(*end());
-        if (!std::is_trivially_destructible<T>::value) {
+        if ( ! std::is_trivially_destructible<T>::value) {
             while (p != last) {
                 (*p).~T();
                 _size--;
@@ -516,10 +516,10 @@ public:
     }
 
     ~prevector() {
-        if (!std::is_trivially_destructible<T>::value) {
+        if ( ! std::is_trivially_destructible<T>::value) {
             clear();
         }
-        if (!is_direct()) {
+        if ( ! is_direct()) {
             free(_union.indirect);
             _union.indirect = nullptr;
         }

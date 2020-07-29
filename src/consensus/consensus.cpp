@@ -19,6 +19,10 @@
 #include "script/script_error.h"
 #include "version.h"
 
+#if defined(KTH_CURRENCY_BCH)
+#include "script/script_metrics.h"
+#endif
+
 namespace kth::consensus {
 
 // Initialize libsecp256k1 context.
@@ -34,8 +38,7 @@ public:
     }
 
     transaction_istream(uint8_t const* transaction, size_t size)
-        : source_(transaction), remaining_(size)
-    {}
+        : source_(transaction), remaining_(size) {}
 
     void read(char* destination, size_t size) {
         if (size > remaining_) {
@@ -63,6 +66,81 @@ private:
 // This mapping decouples the consensus API from the satoshi implementation
 // files. We prefer to keep our copies of consensus files isomorphic.
 // This function is not published (but non-static for testability).
+
+// enum class ScriptError {
+//     UNKNOWN,
+//     OP_RETURN,
+
+//     /* Max sizes */
+//     SCRIPT_SIZE,
+//     PUSH_SIZE,
+//     OP_COUNT,
+//     STACK_SIZE,
+//     SIG_COUNT,
+//     PUBKEY_COUNT,
+//     INPUT_SIGCHECKS,
+
+//     /* Operands checks */
+//     INVALID_OPERAND_SIZE,
+//     INVALID_NUMBER_RANGE,
+//     IMPOSSIBLE_ENCODING,
+//     INVALID_SPLIT_RANGE,
+//     INVALID_BIT_COUNT,
+
+//     /* Failed verify operations */
+//     VERIFY,
+//     EQUALVERIFY,
+//     CHECKMULTISIGVERIFY,
+//     CHECKSIGVERIFY,
+//     CHECKDATASIGVERIFY,
+//     NUMEQUALVERIFY,
+
+//     /* Logical/Format/Canonical errors */
+//     BAD_OPCODE,
+//     DISABLED_OPCODE,
+//     INVALID_STACK_OPERATION,
+//     INVALID_ALTSTACK_OPERATION,
+//     UNBALANCED_CONDITIONAL,
+
+//     /* Divisor errors */
+//     DIV_BY_ZERO,
+//     MOD_BY_ZERO,
+
+//     /* Bitfield errors */
+//     INVALID_BITFIELD_SIZE,
+//     INVALID_BIT_RANGE,
+
+//     /* CHECKLOCKTIMEVERIFY and CHECKSEQUENCEVERIFY */
+//     NEGATIVE_LOCKTIME,
+//     UNSATISFIED_LOCKTIME,
+
+//     /* Malleability */
+//     SIG_HASHTYPE,
+//     SIG_DER,
+//     MINIMALDATA,
+//     SIG_PUSHONLY,
+//     SIG_HIGH_S,
+//     PUBKEYTYPE,
+//     CLEANSTACK,
+//     MINIMALIF,
+//     SIG_NULLFAIL,
+
+//     /* Schnorr */
+//     SIG_BADLENGTH,
+//     SIG_NONSCHNORR,
+
+//     /* softfork safeness */
+//     DISCOURAGE_UPGRADABLE_NOPS,
+
+//     /* anti replay */
+//     ILLEGAL_FORKID,
+//     MUST_USE_FORKID,
+
+//     /* Auxiliary errors (unused by interpreter) */
+//     SIGCHECKS_LIMIT_EXCEEDED,
+
+//     ERROR_COUNT,
+// };
 
 #if defined(KTH_CURRENCY_BCH)
 verify_result_type script_error_to_verify_result(ScriptError code) {
@@ -140,6 +218,46 @@ verify_result_type script_error_to_verify_result(ScriptError code) {
         // Softfork safeness
         case ScriptError::DISCOURAGE_UPGRADABLE_NOPS:
             return verify_result_discourage_upgradable_nops;
+
+        case ScriptError::INPUT_SIGCHECKS:
+            return verify_result_input_sigchecks;
+
+        case ScriptError::INVALID_OPERAND_SIZE:
+            return verify_result_invalid_operand_size;
+        case ScriptError::INVALID_NUMBER_RANGE:
+            return verify_result_invalid_number_range;
+        case ScriptError::IMPOSSIBLE_ENCODING:
+            return verify_result_impossible_encoding;
+        case ScriptError::INVALID_SPLIT_RANGE:
+            return verify_result_invalid_split_range;
+        case ScriptError::INVALID_BIT_COUNT:
+            return verify_result_invalid_bit_count;
+
+        case ScriptError::CHECKDATASIGVERIFY:
+            return verify_result_checkdatasigverify;
+
+        case ScriptError::DIV_BY_ZERO:
+            return verify_result_div_by_zero;
+        case ScriptError::MOD_BY_ZERO:
+            return verify_result_mod_by_zero;
+
+        case ScriptError::INVALID_BITFIELD_SIZE:
+            return verify_result_invalid_bitfield_size;
+        case ScriptError::INVALID_BIT_RANGE:
+            return verify_result_invalid_bit_range;
+
+        case ScriptError::SIG_BADLENGTH:
+            return verify_result_sig_badlength;
+        case ScriptError::SIG_NONSCHNORR:
+            return verify_result_sig_nonschnorr;
+
+        case ScriptError::ILLEGAL_FORKID:
+            return verify_result_illegal_forkid;
+        case ScriptError::MUST_USE_FORKID:
+            return verify_result_must_use_forkid;
+
+        case ScriptError::SIGCHECKS_LIMIT_EXCEEDED:
+            return verify_result_sigchecks_limit_exceeded;
 
         // Other
         case ScriptError::OP_RETURN:
@@ -231,7 +349,6 @@ verify_result_type script_error_to_verify_result(ScriptError_t code) {
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS:
             return verify_result_discourage_upgradable_nops;
 
-// #if ! defined(KTH_CURRENCY_BCH)
         // Softfork safeness
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM:
             return verify_result_discourage_upgradable_witness_program;
@@ -251,7 +368,11 @@ verify_result_type script_error_to_verify_result(ScriptError_t code) {
             return verify_result_witness_unexpected;
         case SCRIPT_ERR_WITNESS_PUBKEYTYPE:
             return verify_result_witness_pubkeytype;
-// #endif //! defined(KTH_CURRENCY_BCH)
+
+        case SCRIPT_ERR_OP_CODESEPARATOR:
+            return verify_result_op_codeseparator;
+        case SCRIPT_ERR_SIG_FINDANDDELETE:
+            return verify_result_sig_findanddelete;
 
         // Other
         case SCRIPT_ERR_OP_RETURN:
@@ -384,15 +505,19 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
 verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags, int64_t amount /* = 0 */) {
-    if (amount > INT64_MAX)
+    unsigned int flags, size_t& sig_checks, int64_t amount /* = 0 */) {
+
+    if (amount > INT64_MAX) {
         throw std::invalid_argument("value");
+    }
 
-    if (transaction_size > 0 && transaction == NULL)
+    if (transaction_size > 0 && transaction == NULL) {
         throw std::invalid_argument("transaction");
+    }
 
-    if (prevout_script_size > 0 && prevout_script == NULL)
+    if (prevout_script_size > 0 && prevout_script == NULL) {
         throw std::invalid_argument("prevout_script");
+    }
 
     std::shared_ptr<CTransaction> tx;
 
@@ -404,11 +529,13 @@ verify_result_type verify_script(const unsigned char* transaction,
         return verify_result_tx_invalid;
     }
 
-    if (tx_input_index >= tx->vin.size())
+    if (tx_input_index >= tx->vin.size()) {
         return verify_result_tx_input_invalid;
+    }
 
-    if (GetSerializeSize(*tx, PROTOCOL_VERSION) != transaction_size)
+    if (GetSerializeSize(*tx, PROTOCOL_VERSION) != transaction_size) {
         return verify_result_tx_size_invalid;
+    }
 
     ScriptError error;
     auto const& tx_ref = *tx;
@@ -419,13 +546,10 @@ verify_result_type verify_script(const unsigned char* transaction,
     CScript output_script(prevout_script, prevout_script + prevout_script_size);
     auto const& input_script = tx->vin[tx_input_index].scriptSig;
 
-    // See blockchain : validate.cpp :
-    // if (!output_script.run(input.script, current_tx, input_index, flags))...
-    // const CScriptWitness* witness = nullptr;
-    
-    // VerifyScript(input_script, output_script, witness, script_flags, checker, &error);
-    VerifyScript(input_script, output_script, script_flags, checker, &error);
+    ScriptExecutionMetrics metrics = {};
 
+    VerifyScript(input_script, output_script, script_flags, checker, metrics, &error);
+    sig_checks = metrics.nSigChecks;
     return script_error_to_verify_result(error);
 }
 #else //KTH_CURRENCY_BCH
@@ -435,14 +559,17 @@ verify_result_type verify_script(const unsigned char* transaction,
     size_t prevout_script_size, unsigned long long prevout_value,
     unsigned int tx_input_index, unsigned int flags) {
 
-    if (prevout_value > INT64_MAX)
+    if (prevout_value > INT64_MAX) {
         throw std::invalid_argument("value");
+    }
 
-    if (transaction_size > 0 && transaction == NULL)
+    if (transaction_size > 0 && transaction == NULL) {
         throw std::invalid_argument("transaction");
+    }
 
-    if (prevout_script_size > 0 && prevout_script == NULL)
+    if (prevout_script_size > 0 && prevout_script == NULL) {
         throw std::invalid_argument("prevout_script");
+    }
 
     std::shared_ptr<CTransaction> tx;
 
@@ -454,11 +581,13 @@ verify_result_type verify_script(const unsigned char* transaction,
         return verify_result_tx_invalid;
     }
 
-    if (tx_input_index >= tx->vin.size())
+    if (tx_input_index >= tx->vin.size()) {
         return verify_result_tx_input_invalid;
+    }
 
-    if (GetSerializeSize(*tx, PROTOCOL_VERSION) != transaction_size)
+    if (GetSerializeSize(*tx, PROTOCOL_VERSION) != transaction_size) {
         return verify_result_tx_size_invalid;
+    }
 
     ScriptError_t error;
     auto const& tx_ref = *tx;
@@ -470,7 +599,7 @@ verify_result_type verify_script(const unsigned char* transaction,
     auto const witness_stack = &tx->vin[tx_input_index].scriptWitness;
 
     // See blockchain : validate_input.cpp :
-    // bc::blockchain::validate_input::verify_script(const transaction& tx,
+    // bc::blockchain::validate_input::verify_script(transaction const& tx,
     //     uint32_t input_index, uint32_t forks, bool use_libconsensus)...
     VerifyScript(input_script, output_script, witness_stack, script_flags, checker, &error);
 

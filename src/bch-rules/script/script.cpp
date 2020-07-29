@@ -379,7 +379,7 @@ uint32_t CScript::GetSigOpCount(uint32_t flags, bool fAccurate) const {
     opcodetype lastOpcode = OP_INVALIDOPCODE;
     while (pc < end()) {
         opcodetype opcode;
-        if (!GetOp(pc, opcode)) {
+        if ( ! GetOp(pc, opcode)) {
             break;
         }
 
@@ -427,7 +427,7 @@ uint32_t CScript::GetSigOpCount(uint32_t flags,
     std::vector<uint8_t> vData;
     while (pc < scriptSig.end()) {
         opcodetype opcode;
-        if (!scriptSig.GetOp(pc, opcode, vData)) {
+        if ( ! scriptSig.GetOp(pc, opcode, vData)) {
             return 0;
         }
         if (opcode > OP_16) {
@@ -495,7 +495,7 @@ bool CScript::IsWitnessProgram() const {
 bool CScript::IsPushOnly(const_iterator pc) const {
     while (pc < end()) {
         opcodetype opcode;
-        if (!GetOp(pc, opcode)) {
+        if ( ! GetOp(pc, opcode)) {
             return false;
         }
 
@@ -573,7 +573,7 @@ bool CScript::HasValidOps() const {
     while (it < end()) {
         opcodetype opcode;
         std::vector<uint8_t> item;
-        if (!GetOp(it, opcode, item) || opcode > MAX_OPCODE ||
+        if ( ! GetOp(it, opcode, item) || opcode > MAX_OPCODE ||
             item.size() > MAX_SCRIPT_ELEMENT_SIZE) {
             return false;
         }

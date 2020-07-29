@@ -205,7 +205,7 @@ bool ConvertBits(O &out, I it, I end) {
     }
 
     // We have remaining bits to encode but do not pad.
-    if (!pad && bits) {
+    if ( ! pad && bits) {
         return false;
     }
 

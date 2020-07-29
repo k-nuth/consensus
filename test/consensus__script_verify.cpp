@@ -39,7 +39,7 @@ unsigned int from_hex(const char ch) {
 static 
 bool decode_base16_private(uint8_t* out, size_t size, const char* in) {
     for (size_t i = 0; i < size; ++i) {
-        if (!isxdigit(in[0]) || !isxdigit(in[1])) {
+        if ( ! isxdigit(in[0]) || !isxdigit(in[1])) {
             return false;
         }
 

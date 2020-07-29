@@ -674,7 +674,7 @@ namespace detail {
                     continue;
                 case '0':
                     // overridden by left alignment ('-' flag)
-                    if (!(out.flags() & std::ios::left)) {
+                    if ( ! (out.flags() & std::ios::left)) {
                         // Use internal padding so that numeric values are
                         // formatted correctly, eg -00010 rather than 000-10
                         out.fill('0');
@@ -687,7 +687,7 @@ namespace detail {
                     continue;
                 case ' ':
                     // overridden by show positive sign, '+' flag.
-                    if (!(out.flags() & std::ios::showpos))
+                    if ( ! (out.flags() & std::ios::showpos))
                         spacePadPositive = true;
                     continue;
                 case '+':
@@ -854,7 +854,7 @@ namespace detail {
             }
             const FormatArg &arg = formatters[argIndex];
             // Format the arg into the stream.
-            if (!spacePadPositive)
+            if ( ! spacePadPositive)
                 arg.format(out, fmt, fmtEnd, ntrunc);
             else {
                 // The following is a special case with no direct correspondence
