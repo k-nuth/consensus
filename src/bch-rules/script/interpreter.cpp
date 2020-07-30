@@ -959,7 +959,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                     case OP_CHECKMULTISIGVERIFY: {
                         // ([dummy] [sig ...] num_of_signatures [pubkey ...]
                         // num_of_pubkeys -- bool)
-                        const size_t idxKeyCount = 1;
+                        size_t const idxKeyCount = 1;
                         if (stack.size() < idxKeyCount) {
                             return set_error(
                                 serror, ScriptError::INVALID_STACK_OPERATION);
@@ -977,10 +977,10 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                         }
 
                         // stack depth of the top pubkey
-                        const size_t idxTopKey = idxKeyCount + 1;
+                        size_t const idxTopKey = idxKeyCount + 1;
 
                         // stack depth of nSigsCount
-                        const size_t idxSigCount = idxTopKey + nKeysCount;
+                        size_t const idxSigCount = idxTopKey + nKeysCount;
                         if (stack.size() < idxSigCount) {
                             return set_error(
                                 serror, ScriptError::INVALID_STACK_OPERATION);
@@ -993,10 +993,10 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                         }
 
                         // stack depth of the top signature
-                        const size_t idxTopSig = idxSigCount + 1;
+                        size_t const idxTopSig = idxSigCount + 1;
 
                         // stack depth of the dummy element
-                        const size_t idxDummy = idxTopSig + nSigsCount;
+                        size_t const idxDummy = idxTopSig + nSigsCount;
                         if (stack.size() < idxDummy) {
                             return set_error(
                                 serror, ScriptError::INVALID_STACK_OPERATION);
@@ -1035,9 +1035,9 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                     serror, ScriptError::INVALID_BIT_COUNT);
                             }
 
-                            const size_t idxBottomKey =
+                            size_t const idxBottomKey =
                                 idxTopKey + nKeysCount - 1;
-                            const size_t idxBottomSig =
+                            size_t const idxBottomSig =
                                 idxTopSig + nSigsCount - 1;
 
                             int iKey = 0;

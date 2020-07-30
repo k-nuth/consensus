@@ -373,8 +373,8 @@ std::string FormatParagraph(const std::string& in, size_t width, size_t indent)
         if (lineend == std::string::npos) {
             lineend = in.size();
         }
-        const size_t linelen = lineend - ptr;
-        const size_t rem_width = width - indented;
+        size_t const linelen = lineend - ptr;
+        size_t const rem_width = width - indented;
         if (linelen <= rem_width) {
             out << in.substr(ptr, linelen + 1);
             ptr = lineend + 1;

@@ -17,7 +17,7 @@ private:
     CSHA512 inner;
 
 public:
-    static const size_t OUTPUT_SIZE = 64;
+    static size_t const OUTPUT_SIZE = 64;
 
     CHMAC_SHA512(uint8_t const *key, size_t keylen);
     CHMAC_SHA512 &Write(uint8_t const *data, size_t len) {

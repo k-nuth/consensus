@@ -15,7 +15,7 @@ bool DecodeBitfield(const std::vector<uint8_t> &vch, unsigned size,
         return set_error(serror, ScriptError::INVALID_BITFIELD_SIZE);
     }
 
-    const size_t bitfield_size = (size + 7) / 8;
+    size_t const bitfield_size = (size + 7) / 8;
     if (vch.size() != bitfield_size) {
         return set_error(serror, ScriptError::INVALID_BITFIELD_SIZE);
     }

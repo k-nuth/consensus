@@ -297,7 +297,7 @@ bool CheckMinimalPush(const std::vector<uint8_t> &data, opcodetype opcode) {
 }
 
 bool CScriptNum::IsMinimallyEncoded(const std::vector<uint8_t> &vch,
-                                    const size_t nMaxNumSize) {
+                                    size_t const nMaxNumSize) {
     if (vch.size() > nMaxNumSize) {
         return false;
     }

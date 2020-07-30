@@ -223,12 +223,12 @@ class CScriptNum {
      * arithmetic is done or the result is interpreted as an integer.
      */
 public:
-    static const size_t MAXIMUM_ELEMENT_SIZE = 4;
+    static size_t const MAXIMUM_ELEMENT_SIZE = 4;
 
     explicit CScriptNum(int64_t const &n) { m_value = n; }
 
     explicit CScriptNum(const std::vector<uint8_t> &vch, bool fRequireMinimal,
-                        const size_t nMaxNumSize = MAXIMUM_ELEMENT_SIZE) {
+                        size_t const nMaxNumSize = MAXIMUM_ELEMENT_SIZE) {
         if (vch.size() > nMaxNumSize) {
             throw scriptnum_error("script number overflow");
         }
@@ -240,7 +240,7 @@ public:
 
     static bool IsMinimallyEncoded(
         const std::vector<uint8_t> &vch,
-        const size_t nMaxNumSize = CScriptNum::MAXIMUM_ELEMENT_SIZE);
+        size_t const nMaxNumSize = CScriptNum::MAXIMUM_ELEMENT_SIZE);
 
     static bool MinimallyEncode(std::vector<uint8_t> &data);
 

@@ -24,7 +24,7 @@ private:
     CSHA256 sha;
 
 public:
-    static const size_t OUTPUT_SIZE = CSHA256::OUTPUT_SIZE;
+    static size_t const OUTPUT_SIZE = CSHA256::OUTPUT_SIZE;
 
     void Finalize(uint8_t hash[OUTPUT_SIZE]) {
         uint8_t buf[CSHA256::OUTPUT_SIZE];
@@ -49,7 +49,7 @@ private:
     CSHA256 sha;
 
 public:
-    static const size_t OUTPUT_SIZE = CRIPEMD160::OUTPUT_SIZE;
+    static size_t const OUTPUT_SIZE = CRIPEMD160::OUTPUT_SIZE;
 
     void Finalize(uint8_t hash[OUTPUT_SIZE]) {
         uint8_t buf[CSHA256::OUTPUT_SIZE];

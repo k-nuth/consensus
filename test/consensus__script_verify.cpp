@@ -11,7 +11,7 @@
 #include <kth/consensus.hpp>
 #include <test_helpers.hpp>
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 #include <bch-rules/script/interpreter.h>
 #else
 #include <btc-rules/script/interpreter.h>
@@ -90,7 +90,7 @@ bool decode_base16(data_chunk& out, std::string const& in) {
 // >>>>>>> legacy/version3
 // }
 
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 static 
 verify_result test_verify(std::string const& transaction,
     std::string const& prevout_script, uint32_t tx_input_index=0,
@@ -150,7 +150,7 @@ TEST_CASE("consensus  script verify  invalid tx  tx invalid", "[consensus  scrip
     const verify_result result = test_verify("42", "42");
     REQUIRE(result == verify_result_tx_invalid);
 }
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 TEST_CASE("consensus  script verify  invalid input  tx input invalid", "[consensus  script verify]") {
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 1);
     REQUIRE(result == verify_result_tx_input_invalid);
@@ -185,7 +185,7 @@ TEST_CASE("consensus  script verify  valid  true", "[consensus  script verify]")
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT);
     REQUIRE(result == verify_result_eval_true);
 }
-#ifdef KTH_CURRENCY_BCH
+#if defined(KTH_CURRENCY_BCH)
 //TODO: just for Bitcoin Cash
 TEST_CASE("consensus  script verify  valid  true  non forkid", "[consensus  script verify]") {
     std::string CONSENSUS_FORKID_TX = "0100000001f2ca1aebc2e51b345f87365bdfa4956aaa5443cfb38f58e75318e3a3d3f1462e000000006b483045022100845a35869063291e4610de4939ac76f123a0b11b74e0615694a09206c30afbfc022063347ec313a582ab2025863ebdca71015ffc698eb37dbbf679b2865be944cf79012102fee381c90149e22ae182156c16316c24fe680a0e617646c3d58531112ac82e29ffffffff01b2e60200000000001976a914b96b816f378babb1fe585b7be7a2cd16eb99b3e488ac00000000";
