@@ -60,11 +60,11 @@ class KnuthConsensusConan(KnuthConanFile):
 
 
     def requirements(self):
-        self.requires("boost/1.73.0@kth/stable")
+        self.requires("boost/1.74.0@kth/stable")
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.tests:
-            self.requires("catch2/2.12.2@")
+            self.requires("catch2/2.13.0@")
 
     def config_options(self):
         KnuthConanFile.config_options(self)
