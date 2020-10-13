@@ -64,7 +64,7 @@ class KnuthConsensusConan(KnuthConanFile):
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.tests:
-            self.requires("catch2/2.12.2@")
+            self.requires("catch2/2.13.1@")
 
     def config_options(self):
         KnuthConanFile.config_options(self)
