@@ -30,27 +30,31 @@ class KnuthConsensusConan(KnuthConanFile):
                "cflags": "ANY",
                "glibcxx_supports_cxx11_abi": "ANY",
                "cmake_export_compile_commands": [True, False],
+               "log": ["boost", "spdlog", "binlog"],
     }
 
     #    "with_java": [True, False],
     #    "with_python": [True, False],
 
-    default_options = "shared=False", \
-        "fPIC=True", \
-        "tests=False", \
-        "currency=BCH", \
-        "microarchitecture=_DUMMY_",  \
-        "fix_march=False", \
-        "march_id=_DUMMY_",  \
-        "verbose=False", \
-        "cxxflags=_DUMMY_", \
-        "cflags=_DUMMY_", \
-        "glibcxx_supports_cxx11_abi=_DUMMY_", \
-        "cmake_export_compile_commands=False"
+    default_options = {
+        "shared": False,
+        "fPIC": True,
+        "tests": False,
+        "currency": "BCH",
+        "microarchitecture": "_DUMMY_",
+        "fix_march": False,
+        "march_id": "_DUMMY_",
+        "verbose": False,
+        "cxxflags": "_DUMMY_",
+        "cflags": "_DUMMY_",
+        "glibcxx_supports_cxx11_abi": "_DUMMY_",
+        "cmake_export_compile_commands": False,
+        "log": "spdlog",
+    }
 
-        # "with_png=False", \
-        # "with_java=False", \
-        # "with_python=False", \
+        # "with_png": False",
+        # "with_java": False",
+        # "with_python": False",
 
     generators = "cmake"
     exports = "conan_*", "ci_utils/*"
@@ -64,7 +68,7 @@ class KnuthConsensusConan(KnuthConanFile):
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.tests:
-            self.requires("catch2/2.13.0@")
+            self.requires("catch2/2.13.1@")
 
     def config_options(self):
         KnuthConanFile.config_options(self)
@@ -79,7 +83,11 @@ class KnuthConsensusConan(KnuthConanFile):
         # "enable_module_schnorr=True", \
         # "enable_module_recovery=True", \
         # "enable_module_multiset=True", \
-        
+
+        if self.options.log != "boost":
+            self.options["boost"].without_filesystem = True
+            self.options["boost"].without_log = True
+
         if self.options.currency == 'BCH':
             self.options["secp256k1"].enable_module_schnorr = True
         else:
