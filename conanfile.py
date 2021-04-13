@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2020 Knuth Project developers.
+# Copyright (c) 2016-2021 Knuth Project developers.
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -64,11 +64,11 @@ class KnuthConsensusConan(KnuthConanFile):
 
 
     def requirements(self):
-        self.requires("boost/1.75.0@kth/stable")
+        self.requires("boost/1.75.0")
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.tests:
-            self.requires("catch2/2.13.1@")
+            self.requires("catch2/2.13.4")
 
     def config_options(self):
         KnuthConanFile.config_options(self)
