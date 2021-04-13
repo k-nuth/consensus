@@ -84,9 +84,9 @@ class KnuthConsensusConan(KnuthConanFile):
         # "enable_module_recovery=True", \
         # "enable_module_multiset=True", \
 
-        if self.options.log != "boost":
-            self.options["boost"].without_filesystem = True
-            self.options["boost"].without_log = True
+        # if self.options.log != "boost":
+        #     self.options["boost"].without_filesystem = True
+        #     self.options["boost"].without_log = True
 
         if self.options.currency == 'BCH':
             self.options["secp256k1"].enable_module_schnorr = True
