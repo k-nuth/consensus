@@ -8,7 +8,7 @@ from shutil import copyfile
 
 #  BCHN
 PATH = '/Users/fernando/dev/kth/kth/consensus/src/bch-rules/'
-SOURCE_PATH = '/Users/fernando/dev/bitcoin-cash-node/src/'
+SOURCE_PATH = '/Users/fernando/dev/bchn/bitcoin-cash-node/src/'
 
 # # Core
 # PATH = '/Users/fernando/dev/kth/kth/consensus/src/btc-rules/'
@@ -22,28 +22,38 @@ def replace(kth_files):
         # print(x)
         # print(x[len(PATH):])
 
-        source_file = os.path.join(SOURCE_PATH, x[len(PATH):])   
+        source_file = os.path.join(SOURCE_PATH, x[len(PATH):])
         print(source_file)
         # print(os.path.isfile(source_file))
         # print(x)
 
-        if os.path.isfile(source_file): 
+        if os.path.isfile(source_file):
             os.makedirs(os.path.dirname(x), exist_ok=True)
-            # shutil.copy(src_fpath, dest_fpath)            
+            # shutil.copy(src_fpath, dest_fpath)
             copyfile(source_file, x)
         else:
-            os.remove(x) 
+            os.remove(x)
 
 
 # kth_files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames if os.path.splitext(f)[1] == '.txt']
 # kth_files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames]
 
-kth_files = [(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames]
-replace(kth_files)
-# print(kth_files)
+# kth_files = [(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames]
+# replace(kth_files)
+# # print(kth_files)
 
 
 # # ------------------------------------------------------------------------------------------
+
+#include <crypto/siphash.h>
+
+missing_files = [
+    # ('/Users/fernando/dev/kth/kth/consensus/src/bch-rules/crypto/', 'siphash.h'),
+    # ('/Users/fernando/dev/kth/kth/consensus/src/bch-rules/compat/', 'cpuid.h'),
+    ('/Users/fernando/dev/kth/kth/consensus/src/bch-rules/config/', 'bitcoin-config.h'),
+]
+
+
 
 # # missing_files = [
 # #     # ('/Users/fernando/dev/kth/consensus/src/bch-rules/', 'span.h'),
@@ -73,8 +83,8 @@ replace(kth_files)
 # ]
 
 
-# # print(missing_files)
-# replace(missing_files)
+print(missing_files)
+replace(missing_files)
 
 # # ------------------------------------------------------------------------------------------
 

@@ -1,5 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2020 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -13,6 +14,17 @@
 #include <cstring>
 #include <limits>
 
+namespace strencodings {
+// used by the HexStr template function as a lookup table to convert bytes -> hex
+const char hexmap[513] =
+    "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f"
+    "303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f"
+    "606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f"
+    "909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebf"
+    "c0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeef"
+    "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff";
+} // namespace strencodings
+
 static const std::string CHARS_ALPHA_NUM =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -23,6 +35,8 @@ static const std::string SAFE_CHARS[] = {
     CHARS_ALPHA_NUM + " .,;-_?@",
     // SAFE_CHARS_FILENAME
     CHARS_ALPHA_NUM + ".-_",
+    // SAFE_CHARS_URI
+    CHARS_ALPHA_NUM + "!*'();:@&=+$,/?#[]-_.~%",
 };
 
 std::string SanitizeString(const std::string &str, int rule) {
@@ -54,11 +68,11 @@ const signed char p_util_hexdigit[256] = {
     -1, -1,  -1,  -1,  -1,  -1,  -1,  -1, -1, -1, -1, -1, -1, -1, -1, -1,
 };
 
-signed char HexDigit(char c) {
+signed char HexDigit(char c) noexcept {
     return p_util_hexdigit[(uint8_t)c];
 }
 
-bool IsHex(const std::string &str) {
+bool IsHex(const std::string &str) noexcept {
     for (std::string::const_iterator it(str.begin()); it != str.end(); ++it) {
         if (HexDigit(*it) < 0) {
             return false;
@@ -133,56 +147,25 @@ void SplitHostPort(std::string in, int &portOut, std::string &hostOut) {
     }
 }
 
-std::string EncodeBase64(uint8_t const *pch, size_t len) {
+std::string EncodeBase64(const uint8_t *pch, size_t len) {
     static const char *pbase64 =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    std::string strRet;
-    strRet.reserve((len + 2) / 3 * 4);
-
-    int mode = 0, left = 0;
-    uint8_t const *pchEnd = pch + len;
-
-    while (pch < pchEnd) {
-        int enc = *(pch++);
-        switch (mode) {
-            case 0: // we have no bits
-                strRet += pbase64[enc >> 2];
-                left = (enc & 3) << 4;
-                mode = 1;
-                break;
-
-            case 1: // we have two bits
-                strRet += pbase64[left | (enc >> 4)];
-                left = (enc & 15) << 2;
-                mode = 2;
-                break;
-
-            case 2: // we have four bits
-                strRet += pbase64[left | (enc >> 6)];
-                strRet += pbase64[enc & 63];
-                mode = 0;
-                break;
-        }
+    std::string str;
+    str.reserve(((len + 2) / 3) * 4);
+    ConvertBits<8, 6, true>([&](int v) { str += pbase64[v]; }, pch, pch + len);
+    while (str.size() % 4) {
+        str += '=';
     }
-
-    if (mode) {
-        strRet += pbase64[left];
-        strRet += '=';
-        if (mode == 1) {
-            strRet += '=';
-        }
-    }
-
-    return strRet;
+    return str;
 }
 
 std::string EncodeBase64(const std::string &str) {
-    return EncodeBase64((uint8_t const *)str.c_str(), str.size());
+    return EncodeBase64((const uint8_t *)str.c_str(), str.size());
 }
 
 std::vector<uint8_t> DecodeBase64(const char *p, bool *pfInvalid) {
-    static int const decode64_table[256] = {
+    static const int decode64_table[256] = {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57,
@@ -199,73 +182,37 @@ std::vector<uint8_t> DecodeBase64(const char *p, bool *pfInvalid) {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1};
 
-    if (pfInvalid) {
-        *pfInvalid = false;
-    }
-
-    std::vector<uint8_t> vchRet;
-    vchRet.reserve(strlen(p) * 3 / 4);
-
-    int mode = 0;
-    int left = 0;
-
-    while (1) {
-        int dec = decode64_table[(uint8_t)*p];
-        if (dec == -1) {
+    const char *e = p;
+    std::vector<uint8_t> val;
+    val.reserve(strlen(p));
+    while (*p != 0) {
+        int x = decode64_table[(uint8_t)*p];
+        if (x == -1) {
             break;
         }
-        p++;
-        switch (mode) {
-            case 0: // we have no bits and get 6
-                left = dec;
-                mode = 1;
-                break;
-
-            case 1: // we have 6 bits and keep 4
-                vchRet.push_back((left << 2) | (dec >> 4));
-                left = dec & 15;
-                mode = 2;
-                break;
-
-            case 2: // we have 4 bits and get 6, we keep 2
-                vchRet.push_back((left << 4) | (dec >> 2));
-                left = dec & 3;
-                mode = 3;
-                break;
-
-            case 3: // we have 2 bits and get 6
-                vchRet.push_back((left << 6) | dec);
-                mode = 0;
-                break;
-        }
+        val.push_back(x);
+        ++p;
     }
 
+    std::vector<uint8_t> ret;
+    ret.reserve((val.size() * 3) / 4);
+    bool valid = ConvertBits<6, 8, false>([&](uint8_t c) { ret.push_back(c); },
+                                          val.begin(), val.end());
+
+    const char *q = p;
+    while (valid && *p != 0) {
+        if (*p != '=') {
+            valid = false;
+            break;
+        }
+        ++p;
+    }
+    valid = valid && (p - e) % 4 == 0 && p - q < 4;
     if (pfInvalid) {
-        switch (mode) {
-            case 0: // 4n base64 characters processed: ok
-                break;
-
-            case 1: // 4n+1 base64 character processed: impossible
-                *pfInvalid = true;
-                break;
-
-            case 2: // 4n+2 base64 characters processed: require '=='
-                if (left || p[0] != '=' || p[1] != '=' ||
-                    decode64_table[(uint8_t)p[2]] != -1) {
-                    *pfInvalid = true;
-                }
-                break;
-
-            case 3: // 4n+3 base64 characters processed: require '='
-                if (left || p[0] != '=' ||
-                    decode64_table[(uint8_t)p[1]] != -1) {
-                    *pfInvalid = true;
-                }
-                break;
-        }
+        *pfInvalid = !valid;
     }
 
-    return vchRet;
+    return ret;
 }
 
 std::string DecodeBase64(const std::string &str) {
@@ -273,68 +220,24 @@ std::string DecodeBase64(const std::string &str) {
     return std::string((const char *)vchRet.data(), vchRet.size());
 }
 
-std::string EncodeBase32(uint8_t const *pch, size_t len) {
+std::string EncodeBase32(const uint8_t *pch, size_t len) {
     static const char *pbase32 = "abcdefghijklmnopqrstuvwxyz234567";
 
-    std::string strRet;
-    strRet.reserve((len + 4) / 5 * 8);
-
-    int mode = 0, left = 0;
-    uint8_t const *pchEnd = pch + len;
-
-    while (pch < pchEnd) {
-        int enc = *(pch++);
-        switch (mode) {
-            case 0: // we have no bits
-                strRet += pbase32[enc >> 3];
-                left = (enc & 7) << 2;
-                mode = 1;
-                break;
-
-            case 1: // we have three bits
-                strRet += pbase32[left | (enc >> 6)];
-                strRet += pbase32[(enc >> 1) & 31];
-                left = (enc & 1) << 4;
-                mode = 2;
-                break;
-
-            case 2: // we have one bit
-                strRet += pbase32[left | (enc >> 4)];
-                left = (enc & 15) << 1;
-                mode = 3;
-                break;
-
-            case 3: // we have four bits
-                strRet += pbase32[left | (enc >> 7)];
-                strRet += pbase32[(enc >> 2) & 31];
-                left = (enc & 3) << 3;
-                mode = 4;
-                break;
-
-            case 4: // we have two bits
-                strRet += pbase32[left | (enc >> 5)];
-                strRet += pbase32[enc & 31];
-                mode = 0;
-        }
+    std::string str;
+    str.reserve(((len + 4) / 5) * 8);
+    ConvertBits<8, 5, true>([&](int v) { str += pbase32[v]; }, pch, pch + len);
+    while (str.size() % 8) {
+        str += '=';
     }
-
-    static int const nPadding[5] = {0, 6, 4, 3, 1};
-    if (mode) {
-        strRet += pbase32[left];
-        for (int n = 0; n < nPadding[mode]; n++) {
-            strRet += '=';
-        }
-    }
-
-    return strRet;
+    return str;
 }
 
 std::string EncodeBase32(const std::string &str) {
-    return EncodeBase32((uint8_t const *)str.c_str(), str.size());
+    return EncodeBase32((const uint8_t *)str.c_str(), str.size());
 }
 
 std::vector<uint8_t> DecodeBase32(const char *p, bool *pfInvalid) {
-    static int const decode32_table[256] = {
+    static const int decode32_table[256] = {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29,
@@ -351,112 +254,37 @@ std::vector<uint8_t> DecodeBase32(const char *p, bool *pfInvalid) {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1};
 
-    if (pfInvalid) {
-        *pfInvalid = false;
-    }
-
-    std::vector<uint8_t> vchRet;
-    vchRet.reserve((strlen(p)) * 5 / 8);
-
-    int mode = 0;
-    int left = 0;
-
-    while (1) {
-        int dec = decode32_table[(uint8_t)*p];
-        if (dec == -1) {
+    const char *e = p;
+    std::vector<uint8_t> val;
+    val.reserve(strlen(p));
+    while (*p != 0) {
+        int x = decode32_table[(uint8_t)*p];
+        if (x == -1) {
             break;
         }
-        p++;
-        switch (mode) {
-            case 0: // we have no bits and get 5
-                left = dec;
-                mode = 1;
-                break;
-
-            case 1: // we have 5 bits and keep 2
-                vchRet.push_back((left << 3) | (dec >> 2));
-                left = dec & 3;
-                mode = 2;
-                break;
-
-            case 2: // we have 2 bits and keep 7
-                left = left << 5 | dec;
-                mode = 3;
-                break;
-
-            case 3: // we have 7 bits and keep 4
-                vchRet.push_back((left << 1) | (dec >> 4));
-                left = dec & 15;
-                mode = 4;
-                break;
-
-            case 4: // we have 4 bits, and keep 1
-                vchRet.push_back((left << 4) | (dec >> 1));
-                left = dec & 1;
-                mode = 5;
-                break;
-
-            case 5: // we have 1 bit, and keep 6
-                left = left << 5 | dec;
-                mode = 6;
-                break;
-
-            case 6: // we have 6 bits, and keep 3
-                vchRet.push_back((left << 2) | (dec >> 3));
-                left = dec & 7;
-                mode = 7;
-                break;
-
-            case 7: // we have 3 bits, and keep 0
-                vchRet.push_back((left << 5) | dec);
-                mode = 0;
-                break;
-        }
+        val.push_back(x);
+        ++p;
     }
 
+    std::vector<uint8_t> ret;
+    ret.reserve((val.size() * 5) / 8);
+    bool valid = ConvertBits<5, 8, false>([&](uint8_t c) { ret.push_back(c); },
+                                          val.begin(), val.end());
+
+    const char *q = p;
+    while (valid && *p != 0) {
+        if (*p != '=') {
+            valid = false;
+            break;
+        }
+        ++p;
+    }
+    valid = valid && (p - e) % 8 == 0 && p - q < 8;
     if (pfInvalid) {
-        switch (mode) {
-            case 0: // 8n base32 characters processed: ok
-                break;
-
-            case 1: // 8n+1 base32 characters processed: impossible
-            case 3: //   +3
-            case 6: //   +6
-                *pfInvalid = true;
-                break;
-
-            case 2: // 8n+2 base32 characters processed: require '======'
-                if (left || p[0] != '=' || p[1] != '=' || p[2] != '=' ||
-                    p[3] != '=' || p[4] != '=' || p[5] != '=' ||
-                    decode32_table[(uint8_t)p[6]] != -1) {
-                    *pfInvalid = true;
-                }
-                break;
-
-            case 4: // 8n+4 base32 characters processed: require '===='
-                if (left || p[0] != '=' || p[1] != '=' || p[2] != '=' ||
-                    p[3] != '=' || decode32_table[(uint8_t)p[4]] != -1) {
-                    *pfInvalid = true;
-                }
-                break;
-
-            case 5: // 8n+5 base32 characters processed: require '==='
-                if (left || p[0] != '=' || p[1] != '=' || p[2] != '=' ||
-                    decode32_table[(uint8_t)p[3]] != -1) {
-                    *pfInvalid = true;
-                }
-                break;
-
-            case 7: // 8n+7 base32 characters processed: require '='
-                if (left || p[0] != '=' ||
-                    decode32_table[(uint8_t)p[1]] != -1) {
-                    *pfInvalid = true;
-                }
-                break;
-        }
+        *pfInvalid = !valid;
     }
 
-    return vchRet;
+    return ret;
 }
 
 std::string DecodeBase32(const std::string &str) {
@@ -464,7 +292,7 @@ std::string DecodeBase32(const std::string &str) {
     return std::string((const char *)vchRet.data(), vchRet.size());
 }
 
-NODISCARD static bool ParsePrechecks(const std::string &str) {
+[[nodiscard]] static bool ParsePrechecks(const std::string &str) {
     // No empty string allowed
     if (str.empty()) {
         return false;
@@ -481,7 +309,7 @@ NODISCARD static bool ParsePrechecks(const std::string &str) {
 }
 
 bool ParseInt32(const std::string &str, int32_t *out) {
-    if ( ! ParsePrechecks(str)) {
+    if (!ParsePrechecks(str)) {
         return false;
     }
     char *endp = nullptr;
@@ -501,7 +329,7 @@ bool ParseInt32(const std::string &str, int32_t *out) {
 }
 
 bool ParseInt64(const std::string &str, int64_t *out) {
-    if ( ! ParsePrechecks(str)) {
+    if (!ParsePrechecks(str)) {
         return false;
     }
     char *endp = nullptr;
@@ -520,7 +348,7 @@ bool ParseInt64(const std::string &str, int64_t *out) {
 }
 
 bool ParseUInt32(const std::string &str, uint32_t *out) {
-    if ( ! ParsePrechecks(str)) {
+    if (!ParsePrechecks(str)) {
         return false;
     }
     // Reject negative values, unfortunately strtoul accepts these by default if
@@ -544,7 +372,7 @@ bool ParseUInt32(const std::string &str, uint32_t *out) {
 }
 
 bool ParseUInt64(const std::string &str, uint64_t *out) {
-    if ( ! ParsePrechecks(str)) {
+    if (!ParsePrechecks(str)) {
         return false;
     }
     // Reject negative values, unfortunately strtoull accepts these by default
@@ -567,7 +395,7 @@ bool ParseUInt64(const std::string &str, uint64_t *out) {
 }
 
 bool ParseDouble(const std::string &str, double *out) {
-    if ( ! ParsePrechecks(str)) {
+    if (!ParsePrechecks(str)) {
         return false;
     }
     // No hexadecimal floats allowed
@@ -584,44 +412,37 @@ bool ParseDouble(const std::string &str, double *out) {
     return text.eof() && !text.fail();
 }
 
-std::string FormatParagraph(const std::string &in, size_t width,
-                            size_t indent) {
-    std::stringstream out;
+std::string FormatParagraph(const std::string &in, size_t width, const size_t indent) {
+    width -= indent;
+    std::string out;
     size_t ptr = 0;
-    size_t indented = 0;
     while (ptr < in.size()) {
+        out.append(indent, ' ');
         size_t lineend = in.find_first_of('\n', ptr);
         if (lineend == std::string::npos) {
             lineend = in.size();
         }
-        size_t const linelen = lineend - ptr;
-        size_t const rem_width = width - indented;
-        if (linelen <= rem_width) {
-            out << in.substr(ptr, linelen + 1);
+        const size_t linelen = lineend - ptr;
+        if (linelen <= width) {
+            out += in.substr(ptr, linelen + 1);
             ptr = lineend + 1;
-            indented = 0;
         } else {
-            size_t finalspace = in.find_last_of(" \n", ptr + rem_width);
+            size_t finalspace = in.find_last_of(" \n", ptr + width);
             if (finalspace == std::string::npos || finalspace < ptr) {
                 // No place to break; just include the entire word and move on
                 finalspace = in.find_first_of("\n ", ptr);
                 if (finalspace == std::string::npos) {
                     // End of the string, just add it and break
-                    out << in.substr(ptr);
+                    out += in.substr(ptr);
                     break;
                 }
             }
-            out << in.substr(ptr, finalspace - ptr) << "\n";
-            if (in[finalspace] == '\n') {
-                indented = 0;
-            } else if (indent) {
-                out << std::string(indent, ' ');
-                indented = indent;
-            }
+            out += in.substr(ptr, finalspace - ptr);
+            out += '\n';
             ptr = finalspace + 1;
         }
     }
-    return out.str();
+    return out;
 }
 
 std::string i64tostr(int64_t n) {
@@ -661,7 +482,7 @@ int atoi(const std::string &str) {
  *  9223372036854775807  (1<<63)-1  (max int64_t)
  *  9999999999999999999  1^19-1     (would overflow)
  */
-static int64_t const UPPER_BOUND = 1000000000000000000LL - 1LL;
+static const int64_t UPPER_BOUND = 1000000000000000000LL - 1LL;
 
 /** Helper function for ParseFixedPoint */
 static inline bool ProcessMantissaDigit(char ch, int64_t &mantissa,
@@ -703,7 +524,7 @@ bool ParseFixedPoint(const std::string &val, int decimals,
             ++ptr;
         } else if (val[ptr] >= '1' && val[ptr] <= '9') {
             while (ptr < end && IsDigit(val[ptr])) {
-                if ( ! ProcessMantissaDigit(val[ptr], mantissa,
+                if (!ProcessMantissaDigit(val[ptr], mantissa,
                                           mantissa_tzeros)) {
                     // overflow
                     return false;
@@ -722,7 +543,7 @@ bool ParseFixedPoint(const std::string &val, int decimals,
         ++ptr;
         if (ptr < end && IsDigit(val[ptr])) {
             while (ptr < end && IsDigit(val[ptr])) {
-                if ( ! ProcessMantissaDigit(val[ptr], mantissa,
+                if (!ProcessMantissaDigit(val[ptr], mantissa,
                                           mantissa_tzeros)) {
                     // overflow
                     return false;
@@ -834,7 +655,7 @@ bool ParseHDKeypath(const std::string &keypath_str,
             return false;
         }
         uint32_t number;
-        if ( ! ParseUInt32(item, &number)) {
+        if (!ParseUInt32(item, &number)) {
             return false;
         }
         path |= number;

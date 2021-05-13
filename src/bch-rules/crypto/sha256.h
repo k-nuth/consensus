@@ -17,10 +17,10 @@ private:
     uint64_t bytes;
 
 public:
-    static size_t const OUTPUT_SIZE = 32;
+    static const size_t OUTPUT_SIZE = 32;
 
     CSHA256();
-    CSHA256 &Write(uint8_t const *data, size_t len);
+    CSHA256 &Write(const uint8_t *data, size_t len);
     void Finalize(uint8_t hash[OUTPUT_SIZE]);
     CSHA256 &Reset();
 };
@@ -37,6 +37,6 @@ std::string SHA256AutoDetect();
  * input:   pointer to a blocks*64 byte input buffer
  * blocks:  the number of hashes to compute.
  */
-void SHA256D64(uint8_t *output, uint8_t const *input, size_t blocks);
+void SHA256D64(uint8_t *output, const uint8_t *input, size_t blocks);
 
 #endif // BITCOIN_CRYPTO_SHA256_H

@@ -1,5 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2020 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,15 +12,11 @@
 
 #include <attributes.h>
 
+#include <cassert>
 #include <cstdint>
+#include <iterator>
 #include <string>
 #include <vector>
-
-#define BEGIN(a) ((char *)&(a))
-#define END(a) ((char *)&((&(a))[1]))
-#define UBEGIN(a) ((uint8_t *)&(a))
-#define UEND(a) ((uint8_t *)&((&(a))[1]))
-#define ARRAYLEN(array) (sizeof(array) / sizeof((array)[0]))
 
 /** Used by SanitizeString() */
 enum SafeChars {
@@ -29,6 +26,8 @@ enum SafeChars {
     SAFE_CHARS_UA_COMMENT,
     //! Chars allowed in filenames
     SAFE_CHARS_FILENAME,
+    //! Chars allowed in URIs (RFC 3986)
+    SAFE_CHARS_URI,
 };
 
 /**
@@ -43,23 +42,23 @@ std::string SanitizeString(const std::string &str,
                            int rule = SAFE_CHARS_DEFAULT);
 std::vector<uint8_t> ParseHex(const char *psz);
 std::vector<uint8_t> ParseHex(const std::string &str);
-signed char HexDigit(char c);
+signed char HexDigit(char c) noexcept;
 /**
  * Returns true if each character in str is a hex character, and has an even
  * number of hex digits.
  */
-bool IsHex(const std::string &str);
+bool IsHex(const std::string &str) noexcept;
 /**
  * Return true if the string is a hex number, optionally prefixed with "0x"
  */
 bool IsHexNumber(const std::string &str);
 std::vector<uint8_t> DecodeBase64(const char *p, bool *pfInvalid = nullptr);
 std::string DecodeBase64(const std::string &str);
-std::string EncodeBase64(uint8_t const *pch, size_t len);
+std::string EncodeBase64(const uint8_t *pch, size_t len);
 std::string EncodeBase64(const std::string &str);
 std::vector<uint8_t> DecodeBase32(const char *p, bool *pfInvalid = nullptr);
 std::string DecodeBase32(const std::string &str);
-std::string EncodeBase32(uint8_t const *pch, size_t len);
+std::string EncodeBase32(const uint8_t *pch, size_t len);
 std::string EncodeBase32(const std::string &str);
 
 void SplitHostPort(std::string in, int &portOut, std::string &hostOut);
@@ -74,7 +73,7 @@ int atoi(const std::string &str);
  * @param[in] c     character to test
  * @return          true if the argument is a decimal digit; otherwise false.
  */
-constexpr bool IsDigit(char c) {
+inline constexpr bool IsDigit(char c) noexcept {
     return c >= '0' && c <= '9';
 }
 
@@ -90,7 +89,7 @@ constexpr bool IsDigit(char c) {
  * @return          true if the argument is a whitespace character; otherwise
  * false
  */
-constexpr inline bool IsSpace(char c) noexcept {
+inline constexpr bool IsSpace(char c) noexcept {
     return c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
            c == '\v';
 }
@@ -100,14 +99,14 @@ constexpr inline bool IsSpace(char c) noexcept {
  * @returns true if the entire string could be parsed as valid integer, false if
  * not the entire string could be parsed or when overflow or underflow occurred.
  */
-NODISCARD bool ParseInt32(const std::string &str, int32_t *out);
+[[nodiscard]] bool ParseInt32(const std::string &str, int32_t *out);
 
 /**
  * Convert string to signed 64-bit integer with strict parse error feedback.
  * @returns true if the entire string could be parsed as valid integer, false if
  * not the entire string could be parsed or when overflow or underflow occurred.
  */
-NODISCARD bool ParseInt64(const std::string &str, int64_t *out);
+[[nodiscard]] bool ParseInt64(const std::string &str, int64_t *out);
 
 /**
  * Convert decimal string to unsigned 32-bit integer with strict parse error
@@ -115,7 +114,7 @@ NODISCARD bool ParseInt64(const std::string &str, int64_t *out);
  * @returns true if the entire string could be parsed as valid integer, false if
  * not the entire string could be parsed or when overflow or underflow occurred.
  */
-NODISCARD bool ParseUInt32(const std::string &str, uint32_t *out);
+[[nodiscard]] bool ParseUInt32(const std::string &str, uint32_t *out);
 
 /**
  * Convert decimal string to unsigned 64-bit integer with strict parse error
@@ -123,27 +122,59 @@ NODISCARD bool ParseUInt32(const std::string &str, uint32_t *out);
  * @returns true if the entire string could be parsed as valid integer, false if
  * not the entire string could be parsed or when overflow or underflow occurred.
  */
-NODISCARD bool ParseUInt64(const std::string &str, uint64_t *out);
+[[nodiscard]] bool ParseUInt64(const std::string &str, uint64_t *out);
 
 /**
  * Convert string to double with strict parse error feedback.
  * @returns true if the entire string could be parsed as valid double, false if
  * not the entire string could be parsed or when overflow or underflow occurred.
  */
-NODISCARD bool ParseDouble(const std::string &str, double *out);
+[[nodiscard]] bool ParseDouble(const std::string &str, double *out);
+
+namespace strencodings {
+// We use a hex lookup table with a series of hex pairs all in 1 string in order to ensure locality of reference.
+// This is indexed as hexmap[ubyte_val * 2].
+extern const char hexmap[513];
+}
 
 template <typename T>
 std::string HexStr(const T itbegin, const T itend, bool fSpaces = false) {
     std::string rv;
-    static const char hexmap[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
-                                    '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-    rv.reserve((itend - itbegin) * 3);
-    for (T it = itbegin; it < itend; ++it) {
-        uint8_t val = uint8_t(*it);
-        if (fSpaces && it != itbegin) rv.push_back(' ');
-        rv.push_back(hexmap[val >> 4]);
-        rv.push_back(hexmap[val & 15]);
+    using strencodings::hexmap;
+    using diff_t = typename std::iterator_traits<T>::difference_type;
+    const diff_t iSpaces = diff_t(fSpaces);
+    diff_t size = (itend - itbegin) * (2 + iSpaces);
+    if (size <= 0) // short-circuit return and/or guard against invalid usage
+        return rv;
+    size -= iSpaces;  // fSpaces only: deduct 1 space for first item
+    rv.resize(size_t(size)); // pre-allocate the entire array to avoid using the slower push_back
+    size_t pos = 0;
+    if (!fSpaces) {
+        // this branch is the most likely branch in this codebase
+        for (T it = itbegin; it < itend; ++it) {
+            const char *hex = &hexmap[uint8_t(*it) * 2];
+            rv[pos++] = *hex++;
+            rv[pos++] = *hex;
+        }
+    } else {
+        // we unroll the first iteration (which prints no space) to avoid any branching while looping
+        T it = itbegin;
+        if (it < itend) {
+            // first iteration, no space
+            const char *hex = &hexmap[uint8_t(*it) * 2];
+            rv[pos++] = *hex++;
+            rv[pos++] = *hex;
+            ++it;
+            for (; it < itend; ++it) {
+                // subsequent iterations (if any), unconditionally prepend space
+                rv[pos++] = ' ';
+                hex = &hexmap[uint8_t(*it) * 2];
+                rv[pos++] = *hex++;
+                rv[pos++] = *hex;
+            }
+        }
     }
+    assert(pos == rv.size());
 
     return rv;
 }
@@ -154,11 +185,9 @@ inline std::string HexStr(const T &vch, bool fSpaces = false) {
 }
 
 /**
- * Format a paragraph of text to a fixed width, adding spaces for indentation to
- * any added line.
+ * Format a paragraph of text to a fixed width, optionally adding spaces for indentation to every line.
  */
-std::string FormatParagraph(const std::string &in, size_t width = 79,
-                            size_t indent = 0);
+std::string FormatParagraph(const std::string &in, size_t width = 79, size_t indent = 0);
 
 /**
  * Timing-attack-resistant comparison.
@@ -179,8 +208,7 @@ template <typename T> bool TimingResistantEqual(const T &a, const T &b) {
  * @note The result must be in the range (-10^18,10^18), otherwise an overflow
  * error will trigger.
  */
-NODISCARD bool ParseFixedPoint(const std::string &val, int decimals,
-                               int64_t *amount_out);
+[[nodiscard]] bool ParseFixedPoint(const std::string &val, int decimals, int64_t *amount_out);
 
 /**
  * Convert from one power-of-2 number base to another.
@@ -189,7 +217,7 @@ NODISCARD bool ParseFixedPoint(const std::string &val, int decimals,
  * of all the bits of the input are encoded in the output.
  */
 template <int frombits, int tobits, bool pad, typename O, typename I>
-bool ConvertBits(O &out, I it, I end) {
+bool ConvertBits(const O &outfn, I it, I end) {
     size_t acc = 0;
     size_t bits = 0;
     constexpr size_t maxv = (1 << tobits) - 1;
@@ -199,27 +227,24 @@ bool ConvertBits(O &out, I it, I end) {
         bits += frombits;
         while (bits >= tobits) {
             bits -= tobits;
-            out.push_back((acc >> bits) & maxv);
+            outfn((acc >> bits) & maxv);
         }
         ++it;
     }
 
-    // We have remaining bits to encode but do not pad.
-    if ( ! pad && bits) {
+    if (pad) {
+        if (bits) {
+            outfn((acc << (tobits - bits)) & maxv);
+        }
+    } else if (bits >= frombits || ((acc << (tobits - bits)) & maxv)) {
         return false;
-    }
-
-    // We have remaining bits to encode so we do pad.
-    if (pad && bits) {
-        out.push_back((acc << (tobits - bits)) & maxv);
     }
 
     return true;
 }
 
 /** Parse an HD keypaths like "m/7/0'/2000". */
-NODISCARD bool ParseHDKeypath(const std::string &keypath_str,
-                              std::vector<uint32_t> &keypath);
+[[nodiscard]] bool ParseHDKeypath(const std::string &keypath_str, std::vector<uint32_t> &keypath);
 
 /**
  * Converts the given character to its lowercase equivalent.
@@ -229,7 +254,7 @@ NODISCARD bool ParseHDKeypath(const std::string &keypath_str,
  * @return          the lowercase equivalent of c; or the argument
  *                  if no conversion is possible.
  */
-constexpr uint8_t ToLower(uint8_t c) {
+inline constexpr uint8_t ToLower(uint8_t c) noexcept {
     return (c >= 'A' && c <= 'Z' ? (c - 'A') + 'a' : c);
 }
 
@@ -249,7 +274,7 @@ void Downcase(std::string &str);
  * @return          the uppercase equivalent of c; or the argument
  *                  if no conversion is possible.
  */
-constexpr uint8_t ToUpper(uint8_t c) {
+inline constexpr uint8_t ToUpper(uint8_t c) noexcept {
     return (c >= 'a' && c <= 'z' ? (c - 'a') + 'A' : c);
 }
 

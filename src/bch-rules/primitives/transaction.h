@@ -13,7 +13,7 @@
 #include <script/script.h>
 #include <serialize.h>
 
-static int const SERIALIZE_TRANSACTION = 0x00;
+static const int SERIALIZE_TRANSACTION = 0x00;
 
 /**
  * An outpoint - a combination of a transaction hash and an index n into its
@@ -25,7 +25,9 @@ private:
     uint32_t n;
 
 public:
-    COutPoint() : txid(), n(-1) {}
+    static constexpr uint32_t NULL_INDEX = std::numeric_limits<uint32_t>::max();
+
+    COutPoint() : txid(), n(NULL_INDEX) {}
     COutPoint(TxId txidIn, uint32_t nIn) : txid(txidIn), n(nIn) {}
 
     ADD_SERIALIZE_METHODS;
@@ -36,7 +38,7 @@ public:
         READWRITE(n);
     }
 
-    bool IsNull() const { return txid.IsNull() && n == uint32_t(-1); }
+    bool IsNull() const { return txid.IsNull() && n == NULL_INDEX; }
 
     const TxId &GetTxId() const { return txid; }
     uint32_t GetN() const { return n; }
@@ -102,7 +104,7 @@ public:
      * seconds is performed by multiplying by 512 = 2^9, or equivalently
      * shifting up by 9 bits.
      */
-    static int const SEQUENCE_LOCKTIME_GRANULARITY = 9;
+    static const int SEQUENCE_LOCKTIME_GRANULARITY = 9;
 
     CTxIn() { nSequence = SEQUENCE_FINAL; }
 
@@ -202,20 +204,23 @@ inline void SerializeTransaction(const TxType &tx, Stream &s) {
     s << tx.nLockTime;
 }
 
+class CTransaction;
+using CTransactionRef = std::shared_ptr<const CTransaction>;
+
 /**
  * The basic transaction that is broadcasted on the network and contained in
  * blocks. A transaction can contain multiple inputs and outputs.
  */
-class CTransaction {
+class CTransaction final {
 public:
     // Default transaction version.
-    static int32_t const CURRENT_VERSION = 2;
+    static const int32_t CURRENT_VERSION = 2;
 
     // Changing the default transaction version requires a two step process:
     // first adapting relay policy by bumping MAX_STANDARD_VERSION, and then
     // later date bumping the default CURRENT_VERSION at which point both
     // CURRENT_VERSION and MAX_STANDARD_VERSION will be equal.
-    static int32_t const MAX_STANDARD_VERSION = 2;
+    static const int32_t MAX_STANDARD_VERSION = 2;
 
     // The local variables are made const to prevent unintended modification
     // without updating the cached hash value. However, CTransaction is not
@@ -224,7 +229,7 @@ public:
     // structure, including the hash.
     const std::vector<CTxIn> vin;
     const std::vector<CTxOut> vout;
-    int32_t const nVersion;
+    const int32_t nVersion;
     const uint32_t nLockTime;
 
 private:
@@ -233,13 +238,26 @@ private:
 
     uint256 ComputeHash() const;
 
-public:
     /** Construct a CTransaction that qualifies as IsNull() */
     CTransaction();
+
+public:
+    /** Default-constructed CTransaction that qualifies as IsNull() */
+    static const CTransaction null;
+    //! Points to null (with a no-op deleter)
+    static const CTransactionRef sharedNull;
 
     /** Convert a CMutableTransaction into a CTransaction. */
     explicit CTransaction(const CMutableTransaction &tx);
     explicit CTransaction(CMutableTransaction &&tx);
+
+    /**
+     * We prevent copy assignment & construction to enforce use of
+     * CTransactionRef, as well as prevent new code from inadvertently copying
+     * around these potentially very heavy objects.
+     */
+    CTransaction(const CTransaction &) = delete;
+    CTransaction &operator=(const CTransaction &) = delete;
 
     template <typename Stream> inline void Serialize(Stream &s) const {
         SerializeTransaction(*this, s);
@@ -333,10 +351,8 @@ static_assert(sizeof(CMutableTransaction) == 56,
               "sizeof CMutableTransaction is expected to be 56 bytes");
 #endif
 
-typedef std::shared_ptr<const CTransaction> CTransactionRef;
-static inline CTransactionRef MakeTransactionRef() {
-    return std::make_shared<const CTransaction>();
-}
+static inline CTransactionRef MakeTransactionRef() { return CTransaction::sharedNull; }
+
 template <typename Tx>
 static inline CTransactionRef MakeTransactionRef(Tx &&txIn) {
     return std::make_shared<const CTransaction>(std::forward<Tx>(txIn));

@@ -14,7 +14,6 @@
 #include <iterator>
 #include <type_traits>
 
-#pragma pack(push, 1)
 /**
  * Implements a drop-in replacement for std::vector<T> which stores up to N
  * elements directly (without heap allocation). The types Size and Diff are used
@@ -232,14 +231,25 @@ public:
     };
 
 private:
-    size_type _size = 0;
+#pragma pack(push, 1)
     union direct_or_indirect {
         char direct[sizeof(T) * N];
         struct {
-            size_type capacity;
             char *indirect;
+            size_type capacity;
         };
-    } _union = {};
+    };
+#pragma pack(pop)
+    alignas(char *) direct_or_indirect _union = {};
+    size_type _size = 0;
+
+    static_assert(alignof(char *) % alignof(size_type) == 0 &&
+                      sizeof(char *) % alignof(size_type) == 0,
+                  "size_type cannot have more restrictive alignment "
+                  "requirement than pointer");
+    static_assert(alignof(char *) % alignof(T) == 0,
+                  "value_type T cannot have more restrictive alignment "
+                  "requirement than pointer");
 
     T *direct_ptr(difference_type pos) {
         return reinterpret_cast<T *>(_union.direct) + pos;
@@ -257,7 +267,7 @@ private:
 
     void change_capacity(size_type new_capacity) {
         if (new_capacity <= N) {
-            if ( ! is_direct()) {
+            if (!is_direct()) {
                 T *indirect = indirect_ptr(0);
                 T *src = indirect;
                 T *dst = direct_ptr(0);
@@ -266,7 +276,7 @@ private:
                 _size -= N + 1;
             }
         } else {
-            if ( ! is_direct()) {
+            if (!is_direct()) {
                 // FIXME: Because malloc/realloc here won't call new_handler if
                 // allocation fails, assert success. These should instead use an
                 // allocator or new/delete so that handlers are called as
@@ -478,7 +488,7 @@ public:
         // representation (with capacity N and size <= N).
         iterator p = first;
         char *endp = (char *)&(*end());
-        if ( ! std::is_trivially_destructible<T>::value) {
+        if (!std::is_trivially_destructible<T>::value) {
             while (p != last) {
                 (*p).~T();
                 _size--;
@@ -516,10 +526,10 @@ public:
     }
 
     ~prevector() {
-        if ( ! std::is_trivially_destructible<T>::value) {
+        if (!std::is_trivially_destructible<T>::value) {
             clear();
         }
-        if ( ! is_direct()) {
+        if (!is_direct()) {
             free(_union.indirect);
             _union.indirect = nullptr;
         }
@@ -581,6 +591,5 @@ public:
 
     const value_type *data() const { return item_ptr(0); }
 };
-#pragma pack(pop)
 
 #endif // BITCOIN_PREVECTOR_H

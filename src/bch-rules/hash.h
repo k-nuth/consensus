@@ -9,6 +9,7 @@
 #include <crypto/common.h>
 #include <crypto/ripemd160.h>
 #include <crypto/sha256.h>
+#include <crypto/siphash.h>
 #include <prevector.h>
 #include <serialize.h>
 #include <uint256.h>
@@ -24,7 +25,7 @@ private:
     CSHA256 sha;
 
 public:
-    static size_t const OUTPUT_SIZE = CSHA256::OUTPUT_SIZE;
+    static const size_t OUTPUT_SIZE = CSHA256::OUTPUT_SIZE;
 
     void Finalize(uint8_t hash[OUTPUT_SIZE]) {
         uint8_t buf[CSHA256::OUTPUT_SIZE];
@@ -32,7 +33,7 @@ public:
         sha.Reset().Write(buf, CSHA256::OUTPUT_SIZE).Finalize(hash);
     }
 
-    CHash256 &Write(uint8_t const *data, size_t len) {
+    CHash256 &Write(const uint8_t *data, size_t len) {
         sha.Write(data, len);
         return *this;
     }
@@ -49,7 +50,7 @@ private:
     CSHA256 sha;
 
 public:
-    static size_t const OUTPUT_SIZE = CRIPEMD160::OUTPUT_SIZE;
+    static const size_t OUTPUT_SIZE = CRIPEMD160::OUTPUT_SIZE;
 
     void Finalize(uint8_t hash[OUTPUT_SIZE]) {
         uint8_t buf[CSHA256::OUTPUT_SIZE];
@@ -57,7 +58,7 @@ public:
         CRIPEMD160().Write(buf, CSHA256::OUTPUT_SIZE).Finalize(hash);
     }
 
-    CHash160 &Write(uint8_t const *data, size_t len) {
+    CHash160 &Write(const uint8_t *data, size_t len) {
         sha.Write(data, len);
         return *this;
     }
@@ -70,10 +71,10 @@ public:
 
 /** Compute the 256-bit hash of an object. */
 template <typename T1> inline uint256 Hash(const T1 pbegin, const T1 pend) {
-    static uint8_t const pblank[1] = {};
+    static const uint8_t pblank[1] = {};
     uint256 result;
     CHash256()
-        .Write(pbegin == pend ? pblank : (uint8_t const *)&pbegin[0],
+        .Write(pbegin == pend ? pblank : (const uint8_t *)&pbegin[0],
                (pend - pbegin) * sizeof(pbegin[0]))
         .Finalize((uint8_t *)&result);
     return result;
@@ -83,12 +84,12 @@ template <typename T1> inline uint256 Hash(const T1 pbegin, const T1 pend) {
 template <typename T1, typename T2>
 inline uint256 Hash(const T1 p1begin, const T1 p1end, const T2 p2begin,
                     const T2 p2end) {
-    static uint8_t const pblank[1] = {};
+    static const uint8_t pblank[1] = {};
     uint256 result;
     CHash256()
-        .Write(p1begin == p1end ? pblank : (uint8_t const *)&p1begin[0],
+        .Write(p1begin == p1end ? pblank : (const uint8_t *)&p1begin[0],
                (p1end - p1begin) * sizeof(p1begin[0]))
-        .Write(p2begin == p2end ? pblank : (uint8_t const *)&p2begin[0],
+        .Write(p2begin == p2end ? pblank : (const uint8_t *)&p2begin[0],
                (p2end - p2begin) * sizeof(p2begin[0]))
         .Finalize((uint8_t *)&result);
     return result;
@@ -99,7 +100,7 @@ template <typename T1> inline uint160 Hash160(const T1 pbegin, const T1 pend) {
     static uint8_t pblank[1] = {};
     uint160 result;
     CHash160()
-        .Write(pbegin == pend ? pblank : (uint8_t const *)&pbegin[0],
+        .Write(pbegin == pend ? pblank : (const uint8_t *)&pbegin[0],
                (pend - pbegin) * sizeof(pbegin[0]))
         .Finalize((uint8_t *)&result);
     return result;
@@ -121,8 +122,8 @@ class CHashWriter {
 private:
     CHash256 ctx;
 
-    int const nType;
-    int const nVersion;
+    const int nType;
+    const int nVersion;
 
 public:
     CHashWriter(int nTypeIn, int nVersionIn)
@@ -132,13 +133,13 @@ public:
     int GetVersion() const { return nVersion; }
 
     void write(const char *pch, size_t size) {
-        ctx.Write((uint8_t const *)pch, size);
+        ctx.Write((const uint8_t *)pch, size);
     }
 
     // invalidates the object
     uint256 GetHash() {
         uint256 result;
-        ctx.Finalize((uint8_t *)&result);
+        ctx.Finalize(&*result.begin());
         return result;
     }
 
@@ -200,10 +201,51 @@ uint256 SerializeHash(const T &obj, int nType = SER_GETHASH,
     return ss.GetHash();
 }
 
+// MurmurHash3: ultra-fast hash suitable for hash tables but not cryptographically secure
 uint32_t MurmurHash3(uint32_t nHashSeed,
-                     const std::vector<uint8_t> &vDataToHash);
+                     const uint8_t *pDataToHash, size_t nDataLen /* bytes */);
+inline uint32_t MurmurHash3(uint32_t nHashSeed,
+                            const std::vector<uint8_t> &vDataToHash) {
+    return MurmurHash3(nHashSeed, vDataToHash.data(), vDataToHash.size());
+}
 
 void BIP32Hash(const ChainCode &chainCode, uint32_t nChild, uint8_t header,
-               uint8_t const data[32], uint8_t output[64]);
+               const uint8_t data[32], uint8_t output[64]);
+
+/// Hash writer for fast SipHash - Used to get a fast hash for any serializable type
+class CSipHashWriter
+{
+    CSipHasher hasher;
+    const int nType, nVersion;
+public:
+    CSipHashWriter(uint64_t k0, uint64_t k1, int nTypeIn, int nVersionIn) noexcept
+        : hasher(k0, k1), nType(nTypeIn), nVersion(nVersionIn)
+    {}
+
+    int GetType() const { return nType; }
+    int GetVersion() const { return nVersion; }
+
+    void write(const char *pch, size_t size) {
+        hasher.Write(reinterpret_cast<const uint8_t *>(pch), size);
+    }
+
+    template <typename T> CSipHashWriter &operator<<(const T &obj) {
+        // Serialize to this stream
+        ::Serialize(*this, obj);
+        return *this;
+    }
+
+    // Invalidates hasher
+    uint64_t GetHash() const { return hasher.Finalize(); }
+};
+
+/** Compute the Sip hash of an object's serialization. */
+template <typename T>
+uint64_t SerializeSipHash(const T &obj, uint64_t k0, uint64_t k1,
+                          int nType = SER_GETHASH, int nVersion = PROTOCOL_VERSION) {
+    CSipHashWriter ss(k0, k1, nType, nVersion);
+    ss << obj;
+    return ss.GetHash();
+}
 
 #endif // BITCOIN_HASH_H

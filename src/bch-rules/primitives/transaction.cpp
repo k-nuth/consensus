@@ -57,13 +57,17 @@ uint256 CTransaction::ComputeHash() const {
     return SerializeHash(*this, SER_GETHASH, 0);
 }
 
-/**
- * For backward compatibility, the hash is initialized to 0.
- * TODO: remove the need for this default constructor entirely.
- */
-CTransaction::CTransaction()
-    : vin(), vout(), nVersion(CTransaction::CURRENT_VERSION), nLockTime(0),
-      hash() {}
+/*static*/ const CTransaction CTransaction::null;
+
+//! This sharedNull is a singleton returned by MakeTransactionRef() (no args).
+//! It is a 'fake' shared pointer that points to `null` above, and its deleter
+//! is a no-op.
+/*static*/ const CTransactionRef CTransaction::sharedNull{&CTransaction::null, [](const CTransaction *){}};
+
+/* private - for constructing the above null value only */
+CTransaction::CTransaction() : nVersion{CTransaction::CURRENT_VERSION}, nLockTime{0} {}
+
+/* public */
 CTransaction::CTransaction(const CMutableTransaction &tx)
     : vin(tx.vin), vout(tx.vout), nVersion(tx.nVersion),
       nLockTime(tx.nLockTime), hash(ComputeHash()) {}
@@ -73,9 +77,9 @@ CTransaction::CTransaction(CMutableTransaction &&tx)
 
 Amount CTransaction::GetValueOut() const {
     Amount nValueOut = Amount::zero();
-    for (auto const &tx_out : vout) {
+    for (const auto &tx_out : vout) {
         nValueOut += tx_out.nValue;
-        if ( ! MoneyRange(tx_out.nValue) || !MoneyRange(nValueOut)) {
+        if (!MoneyRange(tx_out.nValue) || !MoneyRange(nValueOut)) {
             throw std::runtime_error(std::string(__func__) +
                                      ": value out of range");
         }
@@ -93,10 +97,10 @@ std::string CTransaction::ToString() const {
                      "nLockTime=%u)\n",
                      GetId().ToString().substr(0, 10), nVersion, vin.size(),
                      vout.size(), nLockTime);
-    for (auto const &nVin : vin) {
+    for (const auto &nVin : vin) {
         str += "    " + nVin.ToString() + "\n";
     }
-    for (auto const &nVout : vout) {
+    for (const auto &nVout : vout) {
         str += "    " + nVout.ToString() + "\n";
     }
     return str;

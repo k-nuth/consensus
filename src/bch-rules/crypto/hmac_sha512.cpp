@@ -6,7 +6,7 @@
 
 #include <cstring>
 
-CHMAC_SHA512::CHMAC_SHA512(uint8_t const *key, size_t keylen) {
+CHMAC_SHA512::CHMAC_SHA512(const uint8_t *key, size_t keylen) {
     uint8_t rkey[128];
     if (keylen <= 128) {
         memcpy(rkey, key, keylen);

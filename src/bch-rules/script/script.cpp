@@ -257,9 +257,6 @@ const char *GetOpName(opcodetype opcode) {
         case OP_NOP10:
             return "OP_NOP10";
 
-        case OP_INVALIDOPCODE:
-            return "OP_INVALIDOPCODE";
-
         default:
             return "OP_UNKNOWN";
     }
@@ -297,7 +294,7 @@ bool CheckMinimalPush(const std::vector<uint8_t> &data, opcodetype opcode) {
 }
 
 bool CScriptNum::IsMinimallyEncoded(const std::vector<uint8_t> &vch,
-                                    size_t const nMaxNumSize) {
+                                    const size_t nMaxNumSize) {
     if (vch.size() > nMaxNumSize) {
         return false;
     }
@@ -370,76 +367,6 @@ bool CScriptNum::MinimallyEncode(std::vector<uint8_t> &data) {
     return true;
 }
 
-uint32_t CScript::GetSigOpCount(uint32_t flags, bool fAccurate) const {
-    if (flags & SCRIPT_ZERO_SIGOPS) {
-        return 0;
-    }
-    uint32_t n = 0;
-    const_iterator pc = begin();
-    opcodetype lastOpcode = OP_INVALIDOPCODE;
-    while (pc < end()) {
-        opcodetype opcode;
-        if ( ! GetOp(pc, opcode)) {
-            break;
-        }
-
-        switch (opcode) {
-            case OP_CHECKSIG:
-            case OP_CHECKSIGVERIFY:
-                n++;
-                break;
-
-            case OP_CHECKDATASIG:
-            case OP_CHECKDATASIGVERIFY:
-                if (flags & SCRIPT_VERIFY_CHECKDATASIG_SIGOPS) {
-                    n++;
-                }
-                break;
-
-            case OP_CHECKMULTISIG:
-            case OP_CHECKMULTISIGVERIFY:
-                if (fAccurate && lastOpcode >= OP_1 && lastOpcode <= OP_16) {
-                    n += DecodeOP_N(lastOpcode);
-                } else {
-                    n += MAX_PUBKEYS_PER_MULTISIG;
-                }
-                break;
-            default:
-                break;
-        }
-
-        lastOpcode = opcode;
-    }
-
-    return n;
-}
-
-uint32_t CScript::GetSigOpCount(uint32_t flags,
-                                const CScript &scriptSig) const {
-    if ((flags & SCRIPT_VERIFY_P2SH) == 0 || !IsPayToScriptHash()) {
-        return GetSigOpCount(flags, true);
-    }
-
-    // This is a pay-to-script-hash scriptPubKey;
-    // get the last item that the scriptSig
-    // pushes onto the stack:
-    const_iterator pc = scriptSig.begin();
-    std::vector<uint8_t> vData;
-    while (pc < scriptSig.end()) {
-        opcodetype opcode;
-        if ( ! scriptSig.GetOp(pc, opcode, vData)) {
-            return 0;
-        }
-        if (opcode > OP_16) {
-            return 0;
-        }
-    }
-
-    /// ... and return its opcount:
-    CScript subscript(vData.begin(), vData.end());
-    return subscript.GetSigOpCount(flags, true);
-}
-
 bool CScript::IsPayToScriptHash() const {
     // Extra-fast test for pay-to-script-hash CScripts:
     return (this->size() == 23 && (*this)[0] == OP_HASH160 &&
@@ -495,7 +422,7 @@ bool CScript::IsWitnessProgram() const {
 bool CScript::IsPushOnly(const_iterator pc) const {
     while (pc < end()) {
         opcodetype opcode;
-        if ( ! GetOp(pc, opcode)) {
+        if (!GetOp(pc, opcode)) {
             return false;
         }
 
@@ -517,7 +444,7 @@ bool CScript::IsPushOnly() const {
 bool GetScriptOp(CScriptBase::const_iterator &pc,
                  CScriptBase::const_iterator end, opcodetype &opcodeRet,
                  std::vector<uint8_t> *pvchRet) {
-    opcodeRet = OP_INVALIDOPCODE;
+    opcodeRet = INVALIDOPCODE;
     if (pvchRet) {
         pvchRet->clear();
     }
@@ -573,7 +500,7 @@ bool CScript::HasValidOps() const {
     while (it < end()) {
         opcodetype opcode;
         std::vector<uint8_t> item;
-        if ( ! GetOp(it, opcode, item) || opcode > MAX_OPCODE ||
+        if (!GetOp(it, opcode, item) || opcode > MAX_OPCODE ||
             item.size() > MAX_SCRIPT_ELEMENT_SIZE) {
             return false;
         }

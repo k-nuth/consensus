@@ -21,8 +21,8 @@ const unsigned int BIP32_EXTKEY_SIZE = 74;
 /** A reference to a CKey: the Hash160 of its serialized public key */
 class CKeyID : public uint160 {
 public:
-    CKeyID() : uint160() {}
-    explicit CKeyID(const uint160 &in) : uint160(in) {}
+    constexpr CKeyID() noexcept : uint160() {}
+    explicit constexpr CKeyID(const uint160 &in) noexcept : uint160(in) {}
 };
 
 typedef uint256 ChainCode;
@@ -95,10 +95,10 @@ public:
 
     //! Simple read-only vector-like interface to the pubkey data.
     unsigned int size() const { return GetLen(vch[0]); }
-    uint8_t const *data() const { return vch; }
-    uint8_t const *begin() const { return vch; }
-    uint8_t const *end() const { return vch + size(); }
-    uint8_t const &operator[](unsigned int pos) const { return vch[pos]; }
+    const uint8_t *data() const { return vch; }
+    const uint8_t *begin() const { return vch; }
+    const uint8_t *end() const { return vch + size(); }
+    const uint8_t &operator[](unsigned int pos) const { return vch[pos]; }
 
     //! Comparator implementation.
     friend bool operator==(const CPubKey &a, const CPubKey &b) {
@@ -203,7 +203,7 @@ struct CExtPubKey {
     }
 
     void Encode(uint8_t code[BIP32_EXTKEY_SIZE]) const;
-    void Decode(uint8_t const code[BIP32_EXTKEY_SIZE]);
+    void Decode(const uint8_t code[BIP32_EXTKEY_SIZE]);
     bool Derive(CExtPubKey &out, unsigned int nChild) const;
 
     void Serialize(CSizeComputer &s) const {

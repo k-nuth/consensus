@@ -65,7 +65,7 @@ inline char *CharCast(uint8_t *c) {
 inline const char *CharCast(const char *c) {
     return c;
 }
-inline const char *CharCast(uint8_t const *c) {
+inline const char *CharCast(const uint8_t *c) {
     return (const char *)c;
 }
 
@@ -79,6 +79,11 @@ template <typename Stream> inline void ser_writedata8(Stream &s, uint8_t obj) {
 template <typename Stream>
 inline void ser_writedata16(Stream &s, uint16_t obj) {
     obj = htole16(obj);
+    s.write((char *)&obj, 2);
+}
+template <typename Stream>
+inline void ser_writedata16be(Stream &s, uint16_t obj) {
+    obj = htobe16(obj);
     s.write((char *)&obj, 2);
 }
 template <typename Stream>
@@ -105,6 +110,11 @@ template <typename Stream> inline uint16_t ser_readdata16(Stream &s) {
     uint16_t obj;
     s.read((char *)&obj, 2);
     return le16toh(obj);
+}
+template <typename Stream> inline uint16_t ser_readdata16be(Stream &s) {
+    uint16_t obj;
+    s.read((char *)&obj, 2);
+    return be16toh(obj);
 }
 template <typename Stream> inline uint32_t ser_readdata32(Stream &s) {
     uint32_t obj;
@@ -232,11 +242,11 @@ template <typename Stream> inline void Serialize(Stream &s, double a) {
     ser_writedata64(s, ser_double_to_uint64(a));
 }
 template <typename Stream, size_t N>
-inline void Serialize(Stream &s, int8_t const (&a)[N]) {
+inline void Serialize(Stream &s, const int8_t (&a)[N]) {
     s.write(a, N);
 }
 template <typename Stream, size_t N>
-inline void Serialize(Stream &s, uint8_t const (&a)[N]) {
+inline void Serialize(Stream &s, const uint8_t (&a)[N]) {
     s.write(CharCast(a), N);
 }
 template <typename Stream, size_t N>
@@ -262,7 +272,7 @@ inline void Serialize(Stream &s, const std::array<char, N> &a) {
 }
 #endif
 template <typename Stream>
-inline void Serialize(Stream &s, const Span<uint8_t const> &span) {
+inline void Serialize(Stream &s, const Span<const uint8_t> &span) {
     s.write(CharCast(span.data()), span.size());
 }
 template <typename Stream>
@@ -378,7 +388,7 @@ template <typename Stream> void WriteCompactSize(Stream &os, uint64_t nSize) {
     return;
 }
 
-template <typename Stream> uint64_t ReadCompactSize(Stream &is) {
+template <typename Stream> uint64_t ReadCompactSizeWithLimit(Stream &is, const uint64_t maxSize) {
     uint8_t chSize = ser_readdata8(is);
     uint64_t nSizeRet = 0;
     if (chSize < 253) {
@@ -399,10 +409,14 @@ template <typename Stream> uint64_t ReadCompactSize(Stream &is) {
             throw std::ios_base::failure("non-canonical ReadCompactSize()");
         }
     }
-    if (nSizeRet > MAX_SIZE) {
+    if (nSizeRet > maxSize) {
         throw std::ios_base::failure("ReadCompactSize(): size too large");
     }
     return nSizeRet;
+}
+
+template <typename Stream> uint64_t ReadCompactSize(Stream &is) {
+    return ReadCompactSizeWithLimit(is, MAX_SIZE);
 }
 
 /**
@@ -524,6 +538,38 @@ public:
     }
 };
 
+/** Serialization wrapper class for big-endian integers.
+ *
+ * Use this wrapper around integer types that are stored in memory in native
+ * byte order, but serialized in big endian notation. This is only intended
+ * to implement serializers that are compatible with existing formats, and
+ * its use is not recommended for new data structures.
+ *
+ * Only 16-bit types are supported for now.
+ */
+template <typename I> class BigEndian {
+protected:
+    I &m_val;
+
+public:
+    explicit BigEndian(I &val) : m_val(val) {
+        static_assert(std::is_unsigned<I>::value,
+                      "BigEndian type must be unsigned integer");
+        static_assert(sizeof(I) == 2 && std::numeric_limits<I>::min() == 0 &&
+                          std::numeric_limits<I>::max() ==
+                              std::numeric_limits<uint16_t>::max(),
+                      "Unsupported BigEndian size");
+    }
+
+    template <typename Stream> void Serialize(Stream &s) const {
+        ser_writedata16be(s, m_val);
+    }
+
+    template <typename Stream> void Unserialize(Stream &s) {
+        m_val = ser_readdata16be(s);
+    }
+};
+
 class CCompactSize {
 protected:
     uint64_t &n;
@@ -560,7 +606,7 @@ public:
 
     template <typename Stream> void Serialize(Stream &s) const {
         WriteCompactSize(s, string.size());
-        if ( ! string.empty()) {
+        if (!string.empty()) {
             s.write((char *)string.data(), string.size());
         }
     }
@@ -569,6 +615,10 @@ public:
 template <VarIntMode Mode = VarIntMode::DEFAULT, typename I>
 CVarInt<Mode, I> WrapVarInt(I &n) {
     return CVarInt<Mode, I>{n};
+}
+
+template <typename I> BigEndian<I> WrapBigEndian(I &n) {
+    return BigEndian<I>(n);
 }
 
 /**
@@ -589,13 +639,13 @@ void Unserialize(Stream &is, std::basic_string<C> &str);
  * a single opaque blob.
  */
 template <typename Stream, unsigned int N, typename T>
-void Serialize_impl(Stream &os, const prevector<N, T> &v, uint8_t const &);
+void Serialize_impl(Stream &os, const prevector<N, T> &v, const uint8_t &);
 template <typename Stream, unsigned int N, typename T, typename V>
 void Serialize_impl(Stream &os, const prevector<N, T> &v, const V &);
 template <typename Stream, unsigned int N, typename T>
 inline void Serialize(Stream &os, const prevector<N, T> &v);
 template <typename Stream, unsigned int N, typename T>
-void Unserialize_impl(Stream &is, prevector<N, T> &v, uint8_t const &);
+void Unserialize_impl(Stream &is, prevector<N, T> &v, const uint8_t &);
 template <typename Stream, unsigned int N, typename T, typename V>
 void Unserialize_impl(Stream &is, prevector<N, T> &v, const V &);
 template <typename Stream, unsigned int N, typename T>
@@ -607,13 +657,13 @@ inline void Unserialize(Stream &is, prevector<N, T> &v);
  * single opaque blob.
  */
 template <typename Stream, typename T, typename A>
-void Serialize_impl(Stream &os, const std::vector<T, A> &v, uint8_t const &);
+void Serialize_impl(Stream &os, const std::vector<T, A> &v, const uint8_t &);
 template <typename Stream, typename T, typename A, typename V>
 void Serialize_impl(Stream &os, const std::vector<T, A> &v, const V &);
 template <typename Stream, typename T, typename A>
 inline void Serialize(Stream &os, const std::vector<T, A> &v);
 template <typename Stream, typename T, typename A>
-void Unserialize_impl(Stream &is, std::vector<T, A> &v, uint8_t const &);
+void Unserialize_impl(Stream &is, std::vector<T, A> &v, const uint8_t &);
 template <typename Stream, typename T, typename A, typename V>
 void Unserialize_impl(Stream &is, std::vector<T, A> &v, const V &);
 template <typename Stream, typename T, typename A>
@@ -679,7 +729,7 @@ inline void Unserialize(Stream &is, T &&a) {
 template <typename Stream, typename C>
 void Serialize(Stream &os, const std::basic_string<C> &str) {
     WriteCompactSize(os, str.size());
-    if ( ! str.empty()) {
+    if (!str.empty()) {
         os.write((char *)str.data(), str.size() * sizeof(C));
     }
 }
@@ -697,9 +747,9 @@ void Unserialize(Stream &is, std::basic_string<C> &str) {
  * prevector
  */
 template <typename Stream, unsigned int N, typename T>
-void Serialize_impl(Stream &os, const prevector<N, T> &v, uint8_t const &) {
+void Serialize_impl(Stream &os, const prevector<N, T> &v, const uint8_t &) {
     WriteCompactSize(os, v.size());
-    if ( ! v.empty()) {
+    if (!v.empty()) {
         os.write((char *)v.data(), v.size() * sizeof(T));
     }
 }
@@ -718,7 +768,7 @@ inline void Serialize(Stream &os, const prevector<N, T> &v) {
 }
 
 template <typename Stream, unsigned int N, typename T>
-void Unserialize_impl(Stream &is, prevector<N, T> &v, uint8_t const &) {
+void Unserialize_impl(Stream &is, prevector<N, T> &v, const uint8_t &) {
     // Limit size per read so bogus size value won't cause out of memory
     v.clear();
     size_t nSize = ReadCompactSize(is);
@@ -758,9 +808,9 @@ inline void Unserialize(Stream &is, prevector<N, T> &v) {
  * vector
  */
 template <typename Stream, typename T, typename A>
-void Serialize_impl(Stream &os, const std::vector<T, A> &v, uint8_t const &) {
+void Serialize_impl(Stream &os, const std::vector<T, A> &v, const uint8_t &) {
     WriteCompactSize(os, v.size());
-    if ( ! v.empty()) {
+    if (!v.empty()) {
         os.write((char *)v.data(), v.size() * sizeof(T));
     }
 }
@@ -779,7 +829,7 @@ inline void Serialize(Stream &os, const std::vector<T, A> &v) {
 }
 
 template <typename Stream, typename T, typename A>
-void Unserialize_impl(Stream &is, std::vector<T, A> &v, uint8_t const &) {
+void Unserialize_impl(Stream &is, std::vector<T, A> &v, const uint8_t &) {
     // Limit size per read so bogus size value won't cause out of memory
     v.clear();
     size_t nSize = ReadCompactSize(is);
@@ -836,7 +886,7 @@ void Unserialize(Stream &is, std::pair<K, T> &item) {
 template <typename Stream, typename K, typename T, typename Pred, typename A>
 void Serialize(Stream &os, const std::map<K, T, Pred, A> &m) {
     WriteCompactSize(os, m.size());
-    for (auto const &entry : m) {
+    for (const auto &entry : m) {
         Serialize(os, entry);
     }
 }
@@ -928,7 +978,7 @@ class CSizeComputer {
 protected:
     size_t nSize;
 
-    int const nVersion;
+    const int nVersion;
 
 public:
     explicit CSizeComputer(int nVersionIn) : nSize(0), nVersion(nVersionIn) {}

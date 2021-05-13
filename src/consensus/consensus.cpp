@@ -394,20 +394,20 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
     if ((flags & verify_flags_p2sh) != 0) {
         script_flags |= SCRIPT_VERIFY_P2SH;
     }
-    
+
     if ((flags & verify_flags_strictenc) != 0) {
         script_flags |= SCRIPT_VERIFY_STRICTENC;
     }
-    
+
     if ((flags & verify_flags_dersig) != 0) {
         script_flags |= SCRIPT_VERIFY_DERSIG;
     }
-    
+
     if ((flags & verify_flags_low_s) != 0) {
         script_flags |= SCRIPT_VERIFY_LOW_S;
     }
 
-#if ! defined(KTH_CURRENCY_BCH)        
+#if ! defined(KTH_CURRENCY_BCH)
     if ((flags & verify_flags_nulldummy) != 0) {
         script_flags |= SCRIPT_VERIFY_NULLDUMMY;
     }
@@ -416,23 +416,23 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
     if ((flags & verify_flags_sigpushonly) != 0) {
         script_flags |= SCRIPT_VERIFY_SIGPUSHONLY;
     }
-    
+
     if ((flags & verify_flags_minimaldata) != 0) {
         script_flags |= SCRIPT_VERIFY_MINIMALDATA;
     }
-    
+
     if ((flags & verify_flags_discourage_upgradable_nops) != 0) {
         script_flags |= SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS;
     }
-    
+
     if ((flags & verify_flags_cleanstack) != 0) {
         script_flags |= SCRIPT_VERIFY_CLEANSTACK;
     }
-    
+
     if ((flags & verify_flags_checklocktimeverify) != 0) {
         script_flags |= SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
     }
-    
+
     if ((flags & verify_flags_checksequenceverify) != 0) {
         script_flags |= SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
     }
@@ -471,12 +471,6 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
     if ((flags & verify_flags_enable_sighash_forkid) != 0)
         script_flags |= SCRIPT_ENABLE_SIGHASH_FORKID;
 
-    if ((flags & verify_flags_enable_replay_protection) != 0)
-        script_flags |= SCRIPT_ENABLE_REPLAY_PROTECTION;
-
-    if ((flags & verify_flags_enable_checkdatasig_sigops) != 0)
-        script_flags |= SCRIPT_VERIFY_CHECKDATASIG_SIGOPS;
-
     if ((flags & verify_flags_disallow_segwit_recovery) != 0)
         script_flags |= SCRIPT_DISALLOW_SEGWIT_RECOVERY;
 
@@ -486,14 +480,8 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
     if ((flags & verify_flags_input_sigchecks) != 0)
         script_flags |= SCRIPT_VERIFY_INPUT_SIGCHECKS;
 
-    if ((flags & verify_flags_enable_op_reversebytes) != 0)
-        script_flags |= SCRIPT_ENABLE_OP_REVERSEBYTES;
-
-    if ((flags & verify_flags_zero_sigops) != 0)
-        script_flags |= SCRIPT_ZERO_SIGOPS;
-
-    if ((flags & verify_flags_report_sigchecks) != 0)
-        script_flags |= SCRIPT_REPORT_SIGCHECKS;
+    if ((flags & verify_flags_enforce_sigchecks) != 0)
+        script_flags |= SCRIPT_ENFORCE_SIGCHECKS;
 #endif
 
     return script_flags;

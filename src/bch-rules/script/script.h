@@ -20,19 +20,19 @@
 #include <vector>
 
 // Maximum number of bytes pushable to the stack
-static const unsigned int MAX_SCRIPT_ELEMENT_SIZE = 520;
+static constexpr unsigned int MAX_SCRIPT_ELEMENT_SIZE = 520;
 
 // Maximum number of non-push operations per script
-static int const MAX_OPS_PER_SCRIPT = 201;
+static const int MAX_OPS_PER_SCRIPT = 201;
 
 // Maximum number of public keys per multisig
-static int const MAX_PUBKEYS_PER_MULTISIG = 20;
+static const int MAX_PUBKEYS_PER_MULTISIG = 20;
 
 // Maximum script length in bytes
-static int const MAX_SCRIPT_SIZE = 10000;
+static const int MAX_SCRIPT_SIZE = 10000;
 
 // Maximum number of values on script interpreter stack
-static int const MAX_STACK_SIZE = 1000;
+static const int MAX_STACK_SIZE = 1000;
 
 // Threshold for nLockTime: below this value it is interpreted as block number,
 // otherwise as UNIX timestamp. Thresold is Tue Nov 5 00:53:20 1985 UTC
@@ -188,11 +188,7 @@ enum opcodetype {
     // The first op_code value after all defined opcodes
     FIRST_UNDEFINED_OP_VALUE,
 
-    // multi-byte opcodes
-    OP_PREFIX_BEGIN = 0xf0,
-    OP_PREFIX_END = 0xf7,
-
-    OP_INVALIDOPCODE = 0xff,
+    INVALIDOPCODE = 0xff,   ///< Not a real OPCODE!
 };
 
 // Maximum value that an opcode can be
@@ -223,12 +219,12 @@ class CScriptNum {
      * arithmetic is done or the result is interpreted as an integer.
      */
 public:
-    static size_t const MAXIMUM_ELEMENT_SIZE = 4;
+    static const size_t MAXIMUM_ELEMENT_SIZE = 4;
 
-    explicit CScriptNum(int64_t const &n) { m_value = n; }
+    explicit CScriptNum(const int64_t &n) { m_value = n; }
 
     explicit CScriptNum(const std::vector<uint8_t> &vch, bool fRequireMinimal,
-                        size_t const nMaxNumSize = MAXIMUM_ELEMENT_SIZE) {
+                        const size_t nMaxNumSize = MAXIMUM_ELEMENT_SIZE) {
         if (vch.size() > nMaxNumSize) {
             throw scriptnum_error("script number overflow");
         }
@@ -240,16 +236,16 @@ public:
 
     static bool IsMinimallyEncoded(
         const std::vector<uint8_t> &vch,
-        size_t const nMaxNumSize = CScriptNum::MAXIMUM_ELEMENT_SIZE);
+        const size_t nMaxNumSize = CScriptNum::MAXIMUM_ELEMENT_SIZE);
 
     static bool MinimallyEncode(std::vector<uint8_t> &data);
 
-    inline bool operator==(int64_t const &rhs) const { return m_value == rhs; }
-    inline bool operator!=(int64_t const &rhs) const { return m_value != rhs; }
-    inline bool operator<=(int64_t const &rhs) const { return m_value <= rhs; }
-    inline bool operator<(int64_t const &rhs) const { return m_value < rhs; }
-    inline bool operator>=(int64_t const &rhs) const { return m_value >= rhs; }
-    inline bool operator>(int64_t const &rhs) const { return m_value > rhs; }
+    inline bool operator==(const int64_t &rhs) const { return m_value == rhs; }
+    inline bool operator!=(const int64_t &rhs) const { return m_value != rhs; }
+    inline bool operator<=(const int64_t &rhs) const { return m_value <= rhs; }
+    inline bool operator<(const int64_t &rhs) const { return m_value < rhs; }
+    inline bool operator>=(const int64_t &rhs) const { return m_value >= rhs; }
+    inline bool operator>(const int64_t &rhs) const { return m_value > rhs; }
 
     inline bool operator==(const CScriptNum &rhs) const {
         return operator==(rhs.m_value);
@@ -270,10 +266,10 @@ public:
         return operator>(rhs.m_value);
     }
 
-    inline CScriptNum operator+(int64_t const &rhs) const {
+    inline CScriptNum operator+(const int64_t &rhs) const {
         return CScriptNum(m_value + rhs);
     }
-    inline CScriptNum operator-(int64_t const &rhs) const {
+    inline CScriptNum operator-(const int64_t &rhs) const {
         return CScriptNum(m_value - rhs);
     }
     inline CScriptNum operator+(const CScriptNum &rhs) const {
@@ -283,14 +279,14 @@ public:
         return operator-(rhs.m_value);
     }
 
-    inline CScriptNum operator/(int64_t const &rhs) const {
+    inline CScriptNum operator/(const int64_t &rhs) const {
         return CScriptNum(m_value / rhs);
     }
     inline CScriptNum operator/(const CScriptNum &rhs) const {
         return operator/(rhs.m_value);
     }
 
-    inline CScriptNum operator%(int64_t const &rhs) const {
+    inline CScriptNum operator%(const int64_t &rhs) const {
         return CScriptNum(m_value % rhs);
     }
     inline CScriptNum operator%(const CScriptNum &rhs) const {
@@ -304,7 +300,7 @@ public:
         return operator-=(rhs.m_value);
     }
 
-    inline CScriptNum operator&(int64_t const &rhs) const {
+    inline CScriptNum operator&(const int64_t &rhs) const {
         return CScriptNum(m_value & rhs);
     }
     inline CScriptNum operator&(const CScriptNum &rhs) const {
@@ -320,12 +316,12 @@ public:
         return CScriptNum(-m_value);
     }
 
-    inline CScriptNum &operator=(int64_t const &rhs) {
+    inline CScriptNum &operator=(const int64_t &rhs) {
         m_value = rhs;
         return *this;
     }
 
-    inline CScriptNum &operator+=(int64_t const &rhs) {
+    inline CScriptNum &operator+=(const int64_t &rhs) {
         assert(
             rhs == 0 ||
             (rhs > 0 && m_value <= std::numeric_limits<int64_t>::max() - rhs) ||
@@ -334,7 +330,7 @@ public:
         return *this;
     }
 
-    inline CScriptNum &operator-=(int64_t const &rhs) {
+    inline CScriptNum &operator-=(const int64_t &rhs) {
         assert(
             rhs == 0 ||
             (rhs > 0 && m_value >= std::numeric_limits<int64_t>::min() + rhs) ||
@@ -343,7 +339,7 @@ public:
         return *this;
     }
 
-    inline CScriptNum &operator&=(int64_t const &rhs) {
+    inline CScriptNum &operator&=(const int64_t &rhs) {
         m_value &= rhs;
         return *this;
     }
@@ -359,7 +355,7 @@ public:
 
     std::vector<uint8_t> getvch() const { return serialize(m_value); }
 
-    static std::vector<uint8_t> serialize(int64_t const &value) {
+    static std::vector<uint8_t> serialize(const int64_t &value) {
         if (value == 0) {
             return {};
         }
@@ -446,7 +442,7 @@ public:
     CScript(std::vector<uint8_t>::const_iterator pbegin,
             std::vector<uint8_t>::const_iterator pend)
         : CScriptBase(pbegin, pend) {}
-    CScript(uint8_t const *pbegin, uint8_t const *pend)
+    CScript(const uint8_t *pbegin, const uint8_t *pend)
         : CScriptBase(pbegin, pend) {}
 
     ADD_SERIALIZE_METHODS;
@@ -514,7 +510,7 @@ public:
         // I'm not sure if this should push the script or concatenate scripts.
         // If there's ever a use for pushing a script onto a script, delete this
         // member fn.
-        assert( ! "Warning: Pushing a CScript onto a CScript with << is probably "
+        assert(!"Warning: Pushing a CScript onto a CScript with << is probably "
                 "not intended, use + to concatenate!");
         return *this;
     }
@@ -545,20 +541,6 @@ public:
 
         return (opcodetype)(OP_1 + n - 1);
     }
-
-    /**
-     * Pre-version-0.6, Bitcoin always counted CHECKMULTISIGs as 20 sigops. With
-     * pay-to-script-hash, that changed: CHECKMULTISIGs serialized in scriptSigs
-     * are counted more accurately, assuming they are of the form
-     *  ... OP_N CHECKMULTISIG ...
-     */
-    uint32_t GetSigOpCount(uint32_t flags, bool fAccurate) const;
-
-    /**
-     * Accurately count sigOps, including sigOps in pay-to-script-hash
-     * transactions:
-     */
-    uint32_t GetSigOpCount(uint32_t flags, const CScript &scriptSig) const;
 
     bool IsPayToScriptHash() const;
     bool IsCommitment(const std::vector<uint8_t> &data) const;
