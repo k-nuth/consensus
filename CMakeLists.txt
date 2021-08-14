@@ -423,8 +423,8 @@ endif()
 if (ENABLE_POSITION_INDEPENDENT_CODE)
   set_property(TARGET kth-consensus-clone PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif(ENABLE_POSITION_INDEPENDENT_CODE)
-  
-  
+
+
 
 
 if (${CURRENCY} STREQUAL "BCH")
@@ -437,7 +437,7 @@ endif()
 
 # target_compile_definitions(kth-consensus-clone PUBLIC -DKTH_PROJECT_VERSION="\\"${KTH_PROJECT_VERSION}\\"") #TODO(fernando): manage with Conan????
 target_compile_definitions(kth-consensus-clone PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
-  
+
 
 if (NOT USE_CONAN)
   target_compile_definitions(kth-consensus-clone PRIVATE
@@ -475,8 +475,8 @@ add_library(kth-consensus ${MODE}
 if (ENABLE_POSITION_INDEPENDENT_CODE)
   set_property(TARGET kth-consensus PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif(ENABLE_POSITION_INDEPENDENT_CODE)
-  
-  
+
+
 target_include_directories(kth-consensus PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
@@ -532,14 +532,14 @@ endif()
 # local: test/kth_consensus_test
 #------------------------------------------------------------------------------
 if (WITH_TESTS)
- 
+
   add_executable(kth_consensus_test
     test/consensus__script_error_to_verify_result.cpp
     test/consensus__script_verify.cpp
     test/consensus__verify_flags_to_script_flags.cpp
     test/main.cpp
     test/script.hpp)
- 
+
   if (${CURRENCY} STREQUAL "BCH")
     target_include_directories(kth_consensus_test PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -554,7 +554,7 @@ if (WITH_TESTS)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/test>)
 
   target_link_libraries(kth_consensus_test PUBLIC kth-consensus)
- 
+
   _group_sources(kth_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
   if (WITH_TESTS)
@@ -573,7 +573,7 @@ endif()
 
 # Install
 #==============================================================================
-install(TARGETS kth-consensus 
+install(TARGETS kth-consensus
   EXPORT kth-consensus
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin)
