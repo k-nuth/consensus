@@ -19,6 +19,11 @@
 #include <string>
 #include <vector>
 
+#ifdef _MSC_VER
+#include <SafeInt.hpp>
+#endif
+
+
 // Maximum number of bytes pushable to the stack
 static constexpr unsigned int MAX_SCRIPT_ELEMENT_SIZE = 520;
 

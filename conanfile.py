@@ -70,6 +70,9 @@ class KnuthConsensusConan(KnuthConanFile):
         if self.options.tests:
             self.requires("catch2/2.13.7")
 
+        if self.settings.compiler == "Visual Studio" and self.options.currency == 'BCH':
+            self.requires("safeint/3.0.26")
+
     def config_options(self):
         KnuthConanFile.config_options(self)
 
