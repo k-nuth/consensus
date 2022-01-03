@@ -4,8 +4,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_AMOUNT_H
-#define BITCOIN_AMOUNT_H
+#pragma once
 
 #include <serialize.h>
 
@@ -24,7 +23,6 @@ public:
 
     // NOTE (knuth): it needs to be public to work with `verify_script`
     explicit constexpr Amount(int64_t _amount) : amount(_amount) {}
-
 
     /**
      * Assignement operator.
@@ -142,12 +140,7 @@ public:
     std::string ToString() const;
 
     // serialization support
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream &s, Operation ser_action) {
-        READWRITE(amount);
-    }
+    SERIALIZE_METHODS(Amount, obj) { READWRITE(obj.amount); }
 };
 
 static constexpr Amount SATOSHI = Amount::satoshi();
@@ -170,5 +163,3 @@ static const Amount MAX_MONEY = 21000000 * COIN;
 inline bool MoneyRange(const Amount nValue) {
     return nValue >= Amount::zero() && nValue <= MAX_MONEY;
 }
-
-#endif // BITCOIN_AMOUNT_H

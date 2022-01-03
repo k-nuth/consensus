@@ -7,11 +7,19 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <vector>
 
 #include <kth/consensus/define.hpp>
 #include <kth/consensus/version.hpp>
 
 namespace kth::consensus {
+
+#if defined(KTH_CURRENCY_BCH)
+struct coin {
+    int64_t amount;                         // nValue
+    std::vector<uint8_t> output_script;     // scriptPubKey
+};
+#endif
 
 /**
  * Result values from calling verify_script.
@@ -164,6 +172,8 @@ typedef enum verify_result_type {
 // SCRIPT_ENABLE_SCHNORR_MULTISIG = (1U << 21),
 // SCRIPT_VERIFY_INPUT_SIGCHECKS = (1U << 22),
 // SCRIPT_ENFORCE_SIGCHECKS = (1U << 23),
+// SCRIPT_64_BIT_INTEGERS = (1U << 24),
+// SCRIPT_NATIVE_INTROSPECTION = (1U << 25),
 
 /**
  * Flags to use when calling verify_script.
@@ -293,6 +303,16 @@ typedef enum verify_flags_type {
      */
     , verify_flags_enforce_sigchecks = (1U << 23)
 
+    /**
+     * SCRIPT_64_BIT_INTEGERS (BCH).
+     */
+    , verify_flags_64_bit_integers = (1U << 24)
+
+    /**
+     * SCRIPT_NATIVE_INTROSPECTION (BCH).
+     */
+    , verify_flags_native_introspection = (1U << 25)
+
 #else
     // BTC only flags
 
@@ -337,7 +357,7 @@ typedef enum verify_flags_type {
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags, size_t& sig_checks, int64_t amount = 0);
+    unsigned int flags, size_t& sig_checks, int64_t amount, std::vector<coin> coins);
 #else
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,

@@ -2,8 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTIL_BITMANIP_H
-#define BITCOIN_UTIL_BITMANIP_H
+#pragma once
 
 #if defined(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>  //TODO(fernando): implement this
@@ -27,5 +26,3 @@ inline uint32_t countBits(uint32_t v) {
     return (((v + (v >> 4)) & 0xF0F0F0F) * 0x1010101) >> 24;
 #endif
 }
-
-#endif // BITCOIN_UTIL_BITMANIP_H

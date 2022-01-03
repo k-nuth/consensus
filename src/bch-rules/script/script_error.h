@@ -3,8 +3,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SCRIPT_SCRIPT_ERROR_H
-#define BITCOIN_SCRIPT_SCRIPT_ERROR_H
+#pragma once
 
 enum class ScriptError {
     OK = 0,
@@ -80,6 +79,15 @@ enum class ScriptError {
     /* Auxiliary errors (unused by interpreter) */
     SIGCHECKS_LIMIT_EXCEEDED,
 
+    /* Operands checks Bigger Integers (64-bit) */
+    INVALID_NUMBER_RANGE_64_BIT,
+
+    /* Native Introspection */
+    CONTEXT_NOT_PRESENT,
+    LIMITED_CONTEXT_NO_SIBLING_INFO,
+    INVALID_TX_INPUT_INDEX,
+    INVALID_TX_OUTPUT_INDEX,
+
     ERROR_COUNT,
 };
 
@@ -104,5 +112,3 @@ inline bool set_error(ScriptError *ret, const ScriptError serror) {
 }
 
 } // namespace
-
-#endif // BITCOIN_SCRIPT_SCRIPT_ERROR_H

@@ -482,6 +482,12 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
 
     if ((flags & verify_flags_enforce_sigchecks) != 0)
         script_flags |= SCRIPT_ENFORCE_SIGCHECKS;
+
+    if ((flags & verify_flags_64_bit_integers) != 0)
+        script_flags |= SCRIPT_64_BIT_INTEGERS;
+
+    if ((flags & verify_flags_native_introspection) != 0)
+        script_flags |= SCRIPT_NATIVE_INTROSPECTION;
 #endif
 
     return script_flags;
@@ -490,10 +496,11 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
 // This function is published. The implementation exposes no satoshi internals.
 
 #if defined(KTH_CURRENCY_BCH)
-verify_result_type verify_script(const unsigned char* transaction,
-    size_t transaction_size, const unsigned char* prevout_script,
+verify_result_type verify_script(unsigned char const* transaction,
+    size_t transaction_size, unsigned char const* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags, size_t& sig_checks, int64_t amount /* = 0 */) {
+    unsigned int flags, size_t& sig_checks, int64_t amount, std::vector<coin> coins) {
+
 
     if (amount > INT64_MAX) {
         throw std::invalid_argument("value");
@@ -507,36 +514,54 @@ verify_result_type verify_script(const unsigned char* transaction,
         throw std::invalid_argument("prevout_script");
     }
 
-    std::shared_ptr<CTransaction> tx;
+    std::optional<CTransaction> txopt;
 
     try {
         transaction_istream stream(transaction, transaction_size);
-        tx = std::make_shared<CTransaction>(deserialize, stream);
+        // txopt = CTransaction(deserialize, stream);
+        txopt.emplace(deserialize, stream);
     }
     catch (const std::exception&) {
         return verify_result_tx_invalid;
     }
 
-    if (tx_input_index >= tx->vin.size()) {
+    if ( ! txopt) {
+        return verify_result_tx_invalid;
+    }
+
+    auto const& tx = *txopt;
+
+    if (tx_input_index >= tx.vin.size()) {
         return verify_result_tx_input_invalid;
     }
 
-    if (GetSerializeSize(*tx, PROTOCOL_VERSION) != transaction_size) {
+    if (GetSerializeSize(tx, PROTOCOL_VERSION) != transaction_size) {
         return verify_result_tx_size_invalid;
     }
 
     ScriptError error;
-    auto const& tx_ref = *tx;
     Amount am(amount);
-    TransactionSignatureChecker checker(&tx_ref, tx_input_index, am);
+    TransactionSignatureChecker checker(&tx, tx_input_index, am);
     const unsigned int script_flags = verify_flags_to_script_flags(flags);
 
-    CScript output_script(prevout_script, prevout_script + prevout_script_size);
-    auto const& input_script = tx->vin[tx_input_index].scriptSig;
+    CScript const output_script(prevout_script, prevout_script + prevout_script_size);
+    auto const& input_script = tx.vin[tx_input_index].scriptSig;
 
     ScriptExecutionMetrics metrics = {};
 
-    VerifyScript(input_script, output_script, script_flags, checker, metrics, &error);
+    ScriptExecutionContextOpt context = std::nullopt;
+    if (coins.size() != 0) {
+        auto const amount_getter = [&coins](size_t i) { return Amount(coins.at(i).amount); };
+        auto const script_getter = [&coins](size_t i) { 
+            auto const& script = coins.at(i).output_script;
+            return CScript(script.begin(), script.begin() + script.size());
+        };
+
+        auto const contexts = ScriptExecutionContext::createForAllInputs(tx, amount_getter, script_getter);
+        context = contexts[0];
+    }
+
+    VerifyScript(input_script, output_script, script_flags, checker, metrics, context, &error);
     sig_checks = metrics.nSigChecks;
     return script_error_to_verify_result(error);
 }
@@ -586,9 +611,6 @@ verify_result_type verify_script(const unsigned char* transaction,
     auto const& input_script = tx->vin[tx_input_index].scriptSig;
     auto const witness_stack = &tx->vin[tx_input_index].scriptWitness;
 
-    // See blockchain : validate_input.cpp :
-    // bc::blockchain::validate_input::verify_script(transaction const& tx,
-    //     uint32_t input_index, uint32_t forks, bool use_libconsensus)...
     VerifyScript(input_script, output_script, witness_stack, script_flags, checker, &error);
 
     return script_error_to_verify_result(error);

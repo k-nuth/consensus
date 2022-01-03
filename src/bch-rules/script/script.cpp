@@ -257,6 +257,41 @@ const char *GetOpName(opcodetype opcode) {
         case OP_NOP10:
             return "OP_NOP10";
 
+        // Native Introspection opcodes
+        case OP_INPUTINDEX:
+            return "OP_INPUTINDEX";
+        case OP_ACTIVEBYTECODE:
+            return "OP_ACTIVEBYTECODE";
+        case OP_TXVERSION:
+            return "OP_TXVERSION";
+        case OP_TXINPUTCOUNT:
+            return "OP_TXINPUTCOUNT";
+        case OP_TXOUTPUTCOUNT:
+            return "OP_TXOUTPUTCOUNT";
+        case OP_TXLOCKTIME:
+            return "OP_TXLOCKTIME";
+
+        case OP_UTXOVALUE:
+            return "OP_UTXOVALUE";
+        case OP_UTXOBYTECODE:
+            return "OP_UTXOBYTECODE";
+        case OP_OUTPOINTTXHASH:
+            return "OP_OUTPOINTTXHASH";
+        case OP_OUTPOINTINDEX:
+            return "OP_OUTPOINTINDEX";
+        case OP_INPUTBYTECODE:
+            return "OP_INPUTBYTECODE";
+        case OP_INPUTSEQUENCENUMBER:
+            return "OP_INPUTSEQUENCENUMBER";
+        case OP_OUTPUTVALUE:
+            return "OP_OUTPUTVALUE";
+        case OP_OUTPUTBYTECODE:
+            return "OP_OUTPUTBYTECODE";
+        case OP_RESERVED3:
+            return "OP_RESERVED3";
+        case OP_RESERVED4:
+            return "OP_RESERVED4";
+
         default:
             return "OP_UNKNOWN";
     }
@@ -293,9 +328,8 @@ bool CheckMinimalPush(const std::vector<uint8_t> &data, opcodetype opcode) {
     return true;
 }
 
-bool CScriptNum::IsMinimallyEncoded(const std::vector<uint8_t> &vch,
-                                    const size_t nMaxNumSize) {
-    if (vch.size() > nMaxNumSize) {
+bool CScriptNum::IsMinimallyEncoded(const std::vector<uint8_t> &vch, size_t maxIntegerSize) {
+    if (vch.size() > maxIntegerSize) {
         return false;
     }
 
@@ -371,6 +405,13 @@ bool CScript::IsPayToScriptHash() const {
     // Extra-fast test for pay-to-script-hash CScripts:
     return (this->size() == 23 && (*this)[0] == OP_HASH160 &&
             (*this)[1] == 0x14 && (*this)[22] == OP_EQUAL);
+}
+
+bool CScript::IsPayToPubKeyHash() const {
+    // Extra-fast test for P2PKH CScripts:
+    return size() == 25 && (*this)[0] == OP_DUP && (*this)[1] == OP_HASH160
+            && (*this)[2] == 20 && (*this)[23] == OP_EQUALVERIFY
+            && (*this)[24] == OP_CHECKSIG;
 }
 
 bool CScript::IsCommitment(const std::vector<uint8_t> &data) const {

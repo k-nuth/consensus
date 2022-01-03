@@ -2,8 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_PREVECTOR_H
-#define BITCOIN_PREVECTOR_H
+#pragma once
 
 #include <algorithm>
 #include <cassert>
@@ -251,6 +250,10 @@ private:
                   "value_type T cannot have more restrictive alignment "
                   "requirement than pointer");
 
+    static_assert(
+        std::is_trivially_copyable_v<T> && std::is_trivially_destructible_v<T>,
+        "value_type T must be trivially copyable and trivially destructible");
+
     T *direct_ptr(difference_type pos) {
         return reinterpret_cast<T *>(_union.direct) + pos;
     }
@@ -477,6 +480,22 @@ public:
         fill(ptr, first, last);
     }
 
+    inline void resize_uninitialized(size_type new_size) {
+        // resize_uninitialized changes the size of the prevector but does not
+        // initialize it. If size < new_size, the added elements must be
+        // initialized explicitly.
+        if (capacity() < new_size) {
+            change_capacity(new_size);
+            _size += new_size - size();
+            return;
+        }
+        if (new_size < size()) {
+            erase(item_ptr(new_size), end());
+        } else {
+            _size += new_size - size();
+        }
+    }
+
     iterator erase(iterator pos) { return erase(pos, pos + 1); }
 
     iterator erase(iterator first, iterator last) {
@@ -489,6 +508,7 @@ public:
         iterator p = first;
         char *endp = (char *)&(*end());
         if (!std::is_trivially_destructible<T>::value) {
+            // NB: this branch is never taken in the current implementation
             while (p != last) {
                 (*p).~T();
                 _size--;
@@ -501,14 +521,16 @@ public:
         return first;
     }
 
-    void push_back(const T &value) {
+    template <typename... Args> void emplace_back(Args &&...args) {
         size_type new_size = size() + 1;
         if (capacity() < new_size) {
             change_capacity(new_size + (new_size >> 1));
         }
-        new (item_ptr(size())) T(value);
+        new (item_ptr(size())) T(std::forward<Args>(args)...);
         _size++;
     }
+
+    void push_back(const T &value) { emplace_back(value); }
 
     void pop_back() { erase(end() - 1, end()); }
 
@@ -527,6 +549,7 @@ public:
 
     ~prevector() {
         if (!std::is_trivially_destructible<T>::value) {
+            // NB: this branch is never taken in the current implementation
             clear();
         }
         if (!is_direct()) {
@@ -591,5 +614,3 @@ public:
 
     const value_type *data() const { return item_ptr(0); }
 };
-
-#endif // BITCOIN_PREVECTOR_H

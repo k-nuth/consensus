@@ -337,6 +337,7 @@ if (${CURRENCY} STREQUAL "BCH")
   add_library(kth-consensus-clone OBJECT
     src/bch-rules/amount.h
     src/bch-rules/amount.cpp
+    src/bch-rules/coins.cpp
     src/bch-rules/hash.cpp
     src/bch-rules/hash.h
     src/bch-rules/prevector.h
@@ -362,6 +363,7 @@ if (${CURRENCY} STREQUAL "BCH")
     src/bch-rules/crypto/sha256.h
     src/bch-rules/crypto/sha512.cpp
     src/bch-rules/crypto/sha512.h
+    src/bch-rules/crypto/siphash.h
     src/bch-rules/primitives/transaction.cpp
     src/bch-rules/primitives/transaction.h
     src/bch-rules/primitives/txid.h
@@ -373,6 +375,7 @@ if (${CURRENCY} STREQUAL "BCH")
     src/bch-rules/script/script.h
     src/bch-rules/script/script_flags.h
     src/bch-rules/script/script_error.h
+    src/bch-rules/script/script_execution_context.cpp
     src/bch-rules/script/sigencoding.h
     src/bch-rules/script/sigencoding.cpp
     src/bch-rules/util/strencodings.cpp
