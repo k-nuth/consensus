@@ -321,7 +321,11 @@ public:
 
     // Arithmetic operations
     std::optional<Derived> safeAdd(int64_t x) const noexcept {
+#ifdef _MSC_VER
+        bool const res = SafeAdd(value_, x, &x)
+#else
         bool const res = __builtin_add_overflow(value_, x, &x);
+#endif
         if (res) {
             return std::nullopt;
         }
@@ -336,7 +340,11 @@ public:
     }
 
     std::optional<Derived> safeSub(int64_t x) const noexcept {
+#ifdef _MSC_VER
+        bool const res = SafeSubtract(value_, x, &x)
+#else
         bool const res = __builtin_sub_overflow(value_, x, &x);
+#endif
         if (res) {
             return std::nullopt;
         }
@@ -351,7 +359,12 @@ public:
     }
 
     std::optional<Derived> safeMul(int64_t x) const noexcept {
+#ifdef _MSC_VER
+        bool const res = SafeMultiply(value_, x, &x)
+#else
         bool const res = __builtin_mul_overflow(value_, x, &x);
+#endif
+
         if (res) {
             return std::nullopt;
         }
