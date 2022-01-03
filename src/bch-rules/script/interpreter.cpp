@@ -18,6 +18,7 @@
 #include <uint256.h>
 #include <util/bitmanip.h>
 
+namespace Interpreter { //Note(Knuth): Workaround for name collision
 bool CastToBool(const valtype &vch) {
     for (size_t i = 0; i < vch.size(); i++) {
         if (vch[i] != 0) {
@@ -29,6 +30,7 @@ bool CastToBool(const valtype &vch) {
         }
     }
     return false;
+}
 }
 
 /**
@@ -381,7 +383,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                                      ScriptError::MINIMALIF);
                                 }
                             }
-                            fValue = CastToBool(vch);
+                            fValue = Interpreter::CastToBool(vch);
                             if (opcode == OP_NOTIF) {
                                 fValue = !fValue;
                             }
@@ -413,7 +415,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                             return set_error(
                                 serror, ScriptError::INVALID_STACK_OPERATION);
                         }
-                        bool fValue = CastToBool(stacktop(-1));
+                        bool fValue = Interpreter::CastToBool(stacktop(-1));
                         if (fValue) {
                             popstack(stack);
                         } else {
@@ -525,7 +527,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                 serror, ScriptError::INVALID_STACK_OPERATION);
                         }
                         valtype vch = stacktop(-1);
-                        if (CastToBool(vch)) {
+                        if (Interpreter::CastToBool(vch)) {
                             stack.push_back(vch);
                         }
                     } break;
@@ -867,7 +869,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                         stack.push_back(bn.getvch());
 
                         if (opcode == OP_NUMEQUALVERIFY) {
-                            if (CastToBool(stacktop(-1))) {
+                            if (Interpreter::CastToBool(stacktop(-1))) {
                                 popstack(stack);
                             } else {
                                 return set_error(serror, ScriptError::NUMEQUALVERIFY);
@@ -1938,7 +1940,7 @@ bool VerifyScript(const CScript &scriptSig, const CScript &scriptPubKey, uint32_
     if (stack.empty()) {
         return set_error(serror, ScriptError::EVAL_FALSE);
     }
-    if (CastToBool(stack.back()) == false) {
+    if (Interpreter::CastToBool(stack.back()) == false) {
         return set_error(serror, ScriptError::EVAL_FALSE);
     }
 
@@ -1978,7 +1980,7 @@ bool VerifyScript(const CScript &scriptSig, const CScript &scriptPubKey, uint32_
         if (stack.empty()) {
             return set_error(serror, ScriptError::EVAL_FALSE);
         }
-        if (!CastToBool(stack.back())) {
+        if (!Interpreter::CastToBool(stack.back())) {
             return set_error(serror, ScriptError::EVAL_FALSE);
         }
     }
