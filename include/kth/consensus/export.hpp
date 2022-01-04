@@ -18,6 +18,14 @@ namespace kth::consensus {
 struct coin {
     int64_t amount;                         // nValue
     std::vector<uint8_t> output_script;     // scriptPubKey
+
+    coin(int64_t amount, std::vector<uint8_t> const& output_script)
+        : amount(amount), output_script(output_script)
+    {}
+
+    coin(int64_t amount, std::vector<uint8_t>&& output_script)
+        : amount(amount), output_script(std::move(output_script))
+    {}
 };
 #endif
 
