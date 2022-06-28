@@ -104,6 +104,7 @@ class KnuthConsensusConan(KnuthConanFile):
         # cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
         # cmake.definitions["WITH_JAVA"] = option_on_off(self.options.with_java)
         # cmake.definitions["WITH_PYTHON"] = option_on_off(self.options.with_python)
+        cmake.definitions["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
 
         cmake.configure(source_dir=self.source_folder)
         if not self.options.cmake_export_compile_commands:
