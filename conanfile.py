@@ -64,11 +64,11 @@ class KnuthConsensusConan(KnuthConanFile):
 
 
     def requirements(self):
-        self.requires("boost/1.78.0")
+        self.requires("boost/1.79.0")
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.tests:
-            self.requires("catch2/2.13.8")
+            self.requires("catch2/3.0.1")
 
         if self.settings.compiler == "Visual Studio" and self.options.currency == 'BCH':
             self.requires("safeint/3.0.26")
