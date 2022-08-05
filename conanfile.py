@@ -22,9 +22,10 @@ class KnuthConsensusConan(KnuthConanFile):
                "fPIC": [True, False],
                "tests": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
-               "microarchitecture": "ANY",
-               "fix_march": [True, False],
+
                "march_id": "ANY",
+               "march_strategy": ["download_if_possible", "optimized", "download_or_fail"],
+
                "verbose": [True, False],
                "cxxflags": "ANY",
                "cflags": "ANY",
@@ -41,9 +42,10 @@ class KnuthConsensusConan(KnuthConanFile):
         "fPIC": True,
         "tests": False,
         "currency": "BCH",
-        "microarchitecture": "_DUMMY_",
-        "fix_march": False,
+
         "march_id": "_DUMMY_",
+        "march_strategy": "download_if_possible",
+
         "verbose": False,
         "cxxflags": "_DUMMY_",
         "cflags": "_DUMMY_",
