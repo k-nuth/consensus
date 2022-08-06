@@ -2,7 +2,7 @@ import copy
 import os
 import cpuid
 import platform
-from kthbuild import get_base_march_ids, get_builder, handle_microarchs, copy_env_vars, filter_valid_exts, filter_marchs_tests
+from kthbuild import get_base_march_ids, get_builder, handle_microarchs, copy_env_vars, filter_marchs_tests
 
 if __name__ == "__main__":
     full_build = os.getenv('KTH_FULL_BUILD', '0') == '1'
@@ -29,7 +29,7 @@ if __name__ == "__main__":
             opts_bch["%s:currency" % name] = "BCH"
             # opts_btc["%s:currency" % name] = "BTC"
             # opts_ltc["%s:currency" % name] = "LTC"
-            
+
             # opts_bch_new = copy.deepcopy(opts_bch)
             # opts_bch_new["%s:use_domain" % name] = "True"
 
