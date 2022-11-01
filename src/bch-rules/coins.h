@@ -107,7 +107,7 @@ struct hash<COutPoint> {
     }
 };
 }
-// return static_cast<size_t>(SipHashUint256Extra(k0(), k1(), o.GetTxId(), o.GetN()));```
+// return static_cast<size_t>(SipHashUint256Extra(k0(), k1(), o.GetTxId(), o.GetN()));
 
 /** Cursor for iterating over CoinsView state */
 class CCoinsViewCursor {
