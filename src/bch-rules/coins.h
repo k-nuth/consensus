@@ -15,6 +15,8 @@
 #include <cstdint>
 #include <unordered_map>
 
+#include <boost/functional/hash.hpp>
+
 /**
  * A UTXO entry.
  *
