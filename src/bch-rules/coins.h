@@ -89,8 +89,23 @@ struct CCoinsCacheEntry {
         : coin(std::move(coinIn)), flags(0) {}
 };
 
-typedef std::unordered_map<COutPoint, CCoinsCacheEntry, SaltedOutpointHasher>
-    CCoinsMap;
+// typedef std::unordered_map<COutPoint, CCoinsCacheEntry, SaltedOutpointHasher>
+//     CCoinsMap;
+
+using CCoinsMap = std::unordered_map<COutPoint, CCoinsCacheEntry>;
+
+namespace std {
+template <>
+struct hash<COutPoint> {
+    size_t operator()(const COutPoint& point) const {
+        size_t seed = 0;
+        boost::hash_range(seed, point.GetTxId().begin(), point.GetTxId().end());
+        boost::hash_combine(seed, point.GetN());
+        return seed;
+    }
+};
+}
+// return static_cast<size_t>(SipHashUint256Extra(k0(), k1(), o.GetTxId(), o.GetN()));```
 
 /** Cursor for iterating over CoinsView state */
 class CCoinsViewCursor {
