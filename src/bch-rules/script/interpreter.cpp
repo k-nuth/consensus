@@ -18,7 +18,7 @@
 #include <uint256.h>
 #include <util/bitmanip.h>
 
-namespace Interpreter { //Note(Knuth): Workaround for name collision
+// namespace Interpreter { //Note(Knuth): Workaround for name collision
 bool CastToBool(const valtype &vch) {
     for (size_t i = 0; i < vch.size(); i++) {
         if (vch[i] != 0) {
@@ -31,7 +31,7 @@ bool CastToBool(const valtype &vch) {
     }
     return false;
 }
-}
+// }
 
 /**
  * Script is a stack machine (like Forth) that evaluates a predicate
@@ -79,7 +79,7 @@ static void CleanupScriptCode(CScript &scriptCode,
                               uint32_t flags) {
     // Drop the signature in scripts when SIGHASH_FORKID is not used.
     SigHashType sigHashType = GetHashType(vchSig);
-    if (!(flags & SCRIPT_ENABLE_SIGHASH_FORKID) || !sigHashType.hasForkId()) {
+    if (!(flags & SCRIPT_ENABLE_SIGHASH_FORKID) || !sigHashType.hasFork()) {
         FindAndDelete(scriptCode, CScript(vchSig));
     }
 }
@@ -383,7 +383,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                                      ScriptError::MINIMALIF);
                                 }
                             }
-                            fValue = Interpreter::CastToBool(vch);
+                            fValue = CastToBool(vch);
                             if (opcode == OP_NOTIF) {
                                 fValue = !fValue;
                             }
@@ -415,7 +415,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                             return set_error(
                                 serror, ScriptError::INVALID_STACK_OPERATION);
                         }
-                        bool fValue = Interpreter::CastToBool(stacktop(-1));
+                        bool fValue = CastToBool(stacktop(-1));
                         if (fValue) {
                             popstack(stack);
                         } else {
@@ -527,7 +527,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                 serror, ScriptError::INVALID_STACK_OPERATION);
                         }
                         valtype vch = stacktop(-1);
-                        if (Interpreter::CastToBool(vch)) {
+                        if (CastToBool(vch)) {
                             stack.push_back(vch);
                         }
                     } break;
@@ -869,7 +869,7 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                         stack.push_back(bn.getvch());
 
                         if (opcode == OP_NUMEQUALVERIFY) {
-                            if (Interpreter::CastToBool(stacktop(-1))) {
+                            if (CastToBool(stacktop(-1))) {
                                 popstack(stack);
                             } else {
                                 return set_error(serror, ScriptError::NUMEQUALVERIFY);
@@ -924,13 +924,9 @@ bool EvalScript(std::vector<valtype> &stack, const CScript &script,
                                 .Write(vch.data(), vch.size())
                                 .Finalize(vchHash.data());
                         } else if (opcode == OP_HASH160) {
-                            CHash160()
-                                .Write(vch.data(), vch.size())
-                                .Finalize(vchHash.data());
+                            CHash160().Write(vch).Finalize(vchHash);
                         } else if (opcode == OP_HASH256) {
-                            CHash256()
-                                .Write(vch.data(), vch.size())
-                                .Finalize(vchHash.data());
+                            CHash256().Write(vch).Finalize(vchHash);
                         }
                         popstack(stack);
                         stack.push_back(vchHash);
@@ -1705,7 +1701,7 @@ uint256 SignatureHash(const CScript &scriptCode, const T &txTo,
                       const PrecomputedTransactionData *cache, uint32_t flags) {
     assert(nIn < txTo.vin.size());
 
-    if (sigHashType.hasForkId() && (flags & SCRIPT_ENABLE_SIGHASH_FORKID)) {
+    if (sigHashType.hasFork() && (flags & SCRIPT_ENABLE_SIGHASH_FORKID)) {
         uint256 hashPrevouts;
         uint256 hashSequence;
         uint256 hashOutputs;
@@ -1940,7 +1936,7 @@ bool VerifyScript(const CScript &scriptSig, const CScript &scriptPubKey, uint32_
     if (stack.empty()) {
         return set_error(serror, ScriptError::EVAL_FALSE);
     }
-    if (Interpreter::CastToBool(stack.back()) == false) {
+    if (CastToBool(stack.back()) == false) {
         return set_error(serror, ScriptError::EVAL_FALSE);
     }
 
@@ -1980,7 +1976,7 @@ bool VerifyScript(const CScript &scriptSig, const CScript &scriptPubKey, uint32_
         if (stack.empty()) {
             return set_error(serror, ScriptError::EVAL_FALSE);
         }
-        if (!Interpreter::CastToBool(stack.back())) {
+        if (!CastToBool(stack.back())) {
             return set_error(serror, ScriptError::EVAL_FALSE);
         }
     }
