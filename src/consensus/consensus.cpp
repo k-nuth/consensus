@@ -552,13 +552,17 @@ verify_result_type verify_script(unsigned char const* transaction,
     ScriptExecutionContextOpt context = std::nullopt;
     if (coins.size() != 0) {
         auto const amount_getter = [&coins](size_t i) { return Amount(coins.at(i).amount); };
-        auto const script_getter = [&coins](size_t i) { 
+        auto const script_getter = [&coins](size_t i) {
             auto const& script = coins.at(i).output_script;
             return CScript(script.begin(), script.begin() + script.size());
         };
 
         auto const contexts = ScriptExecutionContext::createForAllInputs(tx, amount_getter, script_getter);
-        context = contexts[0];
+
+        if (tx_input_index >= contexts.size()) {
+            return verify_result_tx_input_invalid;
+        }
+        context = contexts[tx_input_index];
     }
 
     VerifyScript(input_script, output_script, script_flags, checker, metrics, context, &error);
