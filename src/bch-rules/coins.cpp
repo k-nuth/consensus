@@ -7,7 +7,7 @@
 #include <consensus/consensus.h>
 // #include <memusage.h>
 // #include <random.h>
-// #include <version.h>
+#include <version.h>
 
 #include <cassert>
 
@@ -305,4 +305,19 @@ bool CCoinsViewCache::HaveInputs(const CTransaction &tx) const {
     }
 
     return true;
+}
+
+// TODO: merge with similar definition in undo.h.
+static const size_t MAX_OUTPUTS_PER_TX =
+    MAX_TX_SIZE / ::GetSerializeSize(CTxOut(), PROTOCOL_VERSION);
+
+const Coin &AccessByTxid(const CCoinsViewCache &view, const TxId &txid) {
+    for (uint32_t n = 0; n < MAX_OUTPUTS_PER_TX; n++) {
+        const Coin &alternate = view.AccessCoin(COutPoint(txid, n));
+        if (!alternate.IsSpent()) {
+            return alternate;
+        }
+    }
+
+    return coinEmpty;
 }

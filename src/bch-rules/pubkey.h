@@ -132,10 +132,10 @@ public:
     }
 
     //! Get the KeyID of this public key (hash of its serialization)
-    CKeyID GetID() const { return CKeyID(Hash160(vch, vch + size())); }
+    CKeyID GetID() const { return CKeyID(Hash160(Span{vch}.first(size()))); }
 
     //! Get the 256-bit hash of this public key.
-    uint256 GetHash() const { return Hash(vch, vch + size()); }
+    uint256 GetHash() const { return Hash(Span{vch}.first(size())); }
 
     /*
      * Check syntactic correctness.
@@ -187,9 +187,9 @@ public:
 };
 
 struct CExtPubKey {
-    uint8_t nDepth;
-    uint8_t vchFingerprint[4];
-    unsigned int nChild;
+    uint8_t nDepth = 0;
+    uint8_t vchFingerprint[4] = {};
+    unsigned int nChild = 0;
     ChainCode chaincode;
     CPubKey pubkey;
 

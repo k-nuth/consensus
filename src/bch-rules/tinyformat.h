@@ -135,6 +135,7 @@ namespace tfm = tinyformat;
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <locale>
 #include <sstream>
 #include <stdexcept>
 
@@ -272,6 +273,7 @@ namespace detail {
     template <typename T>
     inline void formatTruncated(std::ostream &out, const T &value, int ntrunc) {
         std::ostringstream tmp;
+        tmp.imbue(out.getloc());
         tmp << value;
         std::string result = tmp.str();
         out.write(result.c_str(),
@@ -765,7 +767,7 @@ namespace detail {
                 break;
             case 'X':
                 out.setf(std::ios::uppercase);
-            // FALLTHROUGH
+                [[fallthrough]];
             case 'x':
             case 'p':
                 out.setf(std::ios::hex, std::ios::basefield);
@@ -773,20 +775,20 @@ namespace detail {
                 break;
             case 'E':
                 out.setf(std::ios::uppercase);
-            // FALLTHROUGH
+                [[fallthrough]];
             case 'e':
                 out.setf(std::ios::scientific, std::ios::floatfield);
                 out.setf(std::ios::dec, std::ios::basefield);
                 break;
             case 'F':
                 out.setf(std::ios::uppercase);
-            // FALLTHROUGH
+                [[fallthrough]];
             case 'f':
                 out.setf(std::ios::fixed, std::ios::floatfield);
                 break;
             case 'G':
                 out.setf(std::ios::uppercase);
-            // FALLTHROUGH
+                [[fallthrough]];
             case 'g':
                 out.setf(std::ios::dec, std::ios::basefield);
                 // As in boost::format, let stream decide float format.
@@ -1009,6 +1011,7 @@ void format(std::ostream &out, const char *fmt, const Args &... args) {
 template <typename... Args>
 std::string format(const char *fmt, const Args &... args) {
     std::ostringstream oss;
+    oss.imbue(std::locale::classic());
     format(oss, fmt, args...);
     return oss.str();
 }
@@ -1032,6 +1035,7 @@ inline void format(std::ostream &out, const char *fmt) {
 
 inline std::string format(const char *fmt) {
     std::ostringstream oss;
+    oss.imbue(std::locale::classic());
     format(oss, fmt);
     return oss.str();
 }
@@ -1055,6 +1059,7 @@ inline void printfln(const char *fmt) {
     template <TINYFORMAT_ARGTYPES(n)>                                          \
     std::string format(const char *fmt, TINYFORMAT_VARARGS(n)) {               \
         std::ostringstream oss;                                                \
+        oss.imbue(std::locale::classic());                                     \
         format(oss, fmt, TINYFORMAT_PASSARGS(n));                              \
         return oss.str();                                                      \
     }                                                                          \
@@ -1079,6 +1084,7 @@ TINYFORMAT_FOREACH_ARGNUM(TINYFORMAT_MAKE_FORMAT_FUNCS)
 template <typename... Args>
 std::string format(const std::string &fmt, const Args &... args) {
     std::ostringstream oss;
+    oss.imbue(std::locale::classic());
     format(oss, fmt.c_str(), args...);
     return oss.str();
 }

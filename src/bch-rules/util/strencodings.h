@@ -9,7 +9,7 @@
  */
 #pragma once
 
-#include <attributes.h>
+#include <span.h>
 
 #include <cassert>
 #include <cstdint>
@@ -53,12 +53,24 @@ bool IsHex(const std::string &str) noexcept;
 bool IsHexNumber(const std::string &str);
 std::vector<uint8_t> DecodeBase64(const char *p, bool *pfInvalid = nullptr);
 std::string DecodeBase64(const std::string &str);
-std::string EncodeBase64(const uint8_t *pch, size_t len);
+std::string EncodeBase64(Span<const uint8_t> input);
 std::string EncodeBase64(const std::string &str);
 std::vector<uint8_t> DecodeBase32(const char *p, bool *pfInvalid = nullptr);
 std::string DecodeBase32(const std::string &str);
-std::string EncodeBase32(const uint8_t *pch, size_t len);
-std::string EncodeBase32(const std::string &str);
+
+/**
+ * Base32 encode.
+ * If `pad` is true, then the output will be padded with '=' so that its length
+ * is a multiple of 8.
+ */
+std::string EncodeBase32(Span<const uint8_t> input, bool pad = true);
+
+/**
+ * Base32 encode.
+ * If `pad` is true, then the output will be padded with '=' so that its length
+ * is a multiple of 8.
+ */
+std::string EncodeBase32(const std::string &str, bool pad = true);
 
 void SplitHostPort(std::string in, int &portOut, std::string &hostOut);
 std::string i64tostr(int64_t n);
@@ -106,6 +118,13 @@ inline constexpr bool IsSpace(char c) noexcept {
  * not the entire string could be parsed or when overflow or underflow occurred.
  */
 [[nodiscard]] bool ParseInt64(const std::string &str, int64_t *out);
+
+/**
+ * Convert decimal string to unsigned 8-bit integer with strict parse error feedback.
+ * @returns true if the entire string could be parsed as valid integer,
+ *   false if not the entire string could be parsed or when overflow or underflow occurred.
+ */
+[[nodiscard]] bool ParseUInt8(const std::string &str, uint8_t *out);
 
 /**
  * Convert decimal string to unsigned 32-bit integer with strict parse error
@@ -178,9 +197,15 @@ std::string HexStr(const T itbegin, const T itend, bool fSpaces = false) {
     return rv;
 }
 
-template <typename T>
-inline std::string HexStr(const T &vch, bool fSpaces = false) {
-    return HexStr(vch.begin(), vch.end(), fSpaces);
+/**
+ * Convert a span of bytes to a lower-case hexadecimal string.
+ */
+inline std::string HexStr(const Span<const uint8_t> input, bool fSpaces = false) {
+    return HexStr(input.begin(), input.end(), fSpaces);
+}
+
+inline std::string HexStr(const Span<const char> input, bool fSpaces = false) {
+    return HexStr(MakeUInt8Span(input), fSpaces);
 }
 
 /**
@@ -215,14 +240,17 @@ template <typename T> bool TimingResistantEqual(const T &a, const T &b) {
  * If padding is enabled, this always return true. If not, then it returns true
  * of all the bits of the input are encoded in the output.
  */
-template <int frombits, int tobits, bool pad, typename O, typename I>
+template <size_t frombits, size_t tobits, bool pad, typename O, typename I>
 bool ConvertBits(const O &outfn, I it, I end) {
+    constexpr size_t size_t_bits = sizeof(size_t) * 8; // the size of size_t, in bits
+    static_assert(frombits > 0 && tobits > 0 && frombits <= size_t_bits && tobits <= size_t_bits
+                  && frombits + tobits <= size_t_bits, "ConvertBits template argument(s) out of range");
     size_t acc = 0;
     size_t bits = 0;
-    constexpr size_t maxv = (1 << tobits) - 1;
-    constexpr size_t max_acc = (1 << (frombits + tobits - 1)) - 1;
+    constexpr size_t maxv = (size_t{1} << tobits) - 1u;
+    constexpr size_t max_acc = (size_t{1} << (frombits + tobits - 1u)) - 1u;
     while (it != end) {
-        acc = ((acc << frombits) | *it) & max_acc;
+        acc = ((acc << frombits) | static_cast<size_t>(*it)) & max_acc;
         bits += frombits;
         while (bits >= tobits) {
             bits -= tobits;
@@ -249,6 +277,8 @@ bool ConvertBits(const O &outfn, I it, I end) {
  * Converts the given character to its lowercase equivalent.
  * This function is locale independent. It only converts uppercase
  * characters in the standard 7-bit ASCII range.
+ * This is a feature, not a limitation.
+ *
  * @param[in] c     the character to convert to lowercase.
  * @return          the lowercase equivalent of c; or the argument
  *                  if no conversion is possible.
@@ -258,17 +288,22 @@ inline constexpr uint8_t ToLower(uint8_t c) noexcept {
 }
 
 /**
- * Converts the given string to its lowercase equivalent.
+ * Returns the lowercase equivalent of the given string.
  * This function is locale independent. It only converts uppercase
  * characters in the standard 7-bit ASCII range.
- * @param[in,out] str   the string to convert to lowercase.
+ * This is a feature, not a limitation.
+ *
+ * @param[in] str   the string to convert to lowercase.
+ * @returns         lowercased equivalent of str
  */
-void Downcase(std::string &str);
+std::string ToLower(const std::string &str);
 
 /**
  * Converts the given character to its uppercase equivalent.
  * This function is locale independent. It only converts lowercase
  * characters in the standard 7-bit ASCII range.
+ * This is a feature, not a limitation.
+ *
  * @param[in] c     the character to convert to uppercase.
  * @return          the uppercase equivalent of c; or the argument
  *                  if no conversion is possible.
@@ -278,11 +313,23 @@ inline constexpr uint8_t ToUpper(uint8_t c) noexcept {
 }
 
 /**
+ * Returns the uppercase equivalent of the given string.
+ * This function is locale independent. It only converts lowercase
+ * characters in the standard 7-bit ASCII range.
+ * This is a feature, not a limitation.
+ *
+ * @param[in] str   the string to convert to uppercase.
+ * @returns         UPPERCASED EQUIVALENT OF str
+ */
+std::string ToUpper(const std::string& str);
+
+/**
  * Capitalizes the first character of the given string.
- * This function is locale independent. It only capitalizes the
- * first character of the argument if it has an uppercase equivalent
- * in the standard 7-bit ASCII range.
+ * This function is locale independent. It only converts lowercase
+ * characters in the standard 7-bit ASCII range.
+ * This is a feature, not a limitation.
+ *
  * @param[in] str   the string to capitalize.
- * @return          string with the first letter capitalized.
+ * @returns         string with the first letter capitalized.
  */
 std::string Capitalize(std::string str);

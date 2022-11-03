@@ -109,7 +109,6 @@ struct hash<COutPoint> {
 }
 // return static_cast<size_t>(SipHashUint256Extra(k0(), k1(), o.GetTxId(), o.GetN()));
 
-
 /** Cursor for iterating over CoinsView state */
 class CCoinsViewCursor {
 public:
@@ -300,3 +299,9 @@ private:
 // (pre-BIP34) cases.
 void AddCoins(CCoinsViewCache &cache, const CTransaction &tx, int nHeight,
               bool check = false);
+
+//! Utility function to find any unspent output with a given txid.
+//! This function can be quite expensive because in the event of a transaction
+//! which is not found in the cache, it can cause up to MAX_OUTPUTS_PER_BLOCK
+//! lookups to database, so it should be used with care.
+const Coin &AccessByTxid(const CCoinsViewCache &cache, const TxId &txid);
