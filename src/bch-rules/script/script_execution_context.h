@@ -1,4 +1,4 @@
-// Copyright (c) 2021 The Bitcoin developers
+// Copyright (c) 2021-2022 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-// struct PSBTInput;
+struct PSBTInput;
 
 /// An execution context for evaluating a script input. Note that this object contains some shared
 /// data that is shared for all inputs to a tx. This object is given to CScriptCheck as well
@@ -111,7 +111,7 @@ public:
     ///
     /// This constructor is intended for tests or for situations where only limited introspection is available,
     /// such as signing a tx where we don't have a view of all the extant input coins.
-    ScriptExecutionContext(unsigned input, const CScript &scriptPubKey, Amount amount, CTransactionView tx,
+    ScriptExecutionContext(unsigned input, const CTxOut &utxo, CTransactionView tx,
                            /* NOTE: The below two properties of coins are ignored by the script interpreter, so
                               they need not be specified. If that becomes untrue, update this code to require
                               caller to specify them appropriately. */
@@ -146,6 +146,14 @@ public:
     /// Note that if `isLimited()`, this method only returns a valid value for this input.
     const CScript & coinScriptPubKey(std::optional<unsigned> inputIdx = {}) const {
         return coin(inputIdx).GetTxOut().scriptPubKey;
+    }
+
+    /// Get the coin (utxo) token data for this input or any input. Returned wrapped pointer
+    /// may be nullptr if input has no token data.
+    ///
+    /// Note that if `isLimited()`, this method only returns a valid value for this input.
+    const token::OutputDataPtr & coinTokenData(std::optional<unsigned> inputIdx = {}) const {
+        return coin(inputIdx).GetTxOut().tokenDataPtr;
     }
 
     /// Get the amount for this input or any input.

@@ -74,6 +74,7 @@ typedef enum verify_result_type {
     verify_result_cleanstack,
     verify_result_minimalif,
     verify_result_sig_nullfail,
+    verify_result_minimalnum,
 
     // Softfork safeness
     verify_result_discourage_upgradable_nops,

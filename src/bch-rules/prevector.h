@@ -1,4 +1,5 @@
 // Copyright (c) 2015-2016 The Bitcoin Core developers
+// Copyright (c) 2017-2022 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -344,7 +345,7 @@ public:
         fill(item_ptr(0), first, last);
     }
 
-    prevector() {}
+    prevector() noexcept {}
 
     explicit prevector(size_type n) { resize(n); }
 
@@ -369,7 +370,7 @@ public:
         fill(item_ptr(0), other.begin(), other.end());
     }
 
-    prevector(prevector<N, T, Size, Diff> &&other) { swap(other); }
+    prevector(prevector<N, T, Size, Diff> &&other) noexcept { swap(other); }
 
     prevector &operator=(const prevector<N, T, Size, Diff> &other) {
         if (&other == this) {
@@ -379,7 +380,7 @@ public:
         return *this;
     }
 
-    prevector &operator=(prevector<N, T, Size, Diff> &&other) {
+    prevector &operator=(prevector<N, T, Size, Diff> &&other) noexcept {
         swap(other);
         return *this;
     }
@@ -410,11 +411,13 @@ public:
         }
     }
 
+    static constexpr size_t static_capacity() { return N; }
+
     T &operator[](size_type pos) { return *item_ptr(pos); }
 
     const T &operator[](size_type pos) const { return *item_ptr(pos); }
 
-    void resize(size_type new_size) {
+    void resize(size_type new_size, const T &value = T{}) {
         size_type cur_size = size();
         if (cur_size == new_size) {
             return;
@@ -427,7 +430,7 @@ public:
             change_capacity(new_size);
         }
         ptrdiff_t increase = new_size - cur_size;
-        fill(item_ptr(cur_size), increase);
+        fill(item_ptr(cur_size), increase, value);
         _size += increase;
     }
 
@@ -542,7 +545,7 @@ public:
 
     const T &back() const { return *item_ptr(size() - 1); }
 
-    void swap(prevector<N, T, Size, Diff> &other) {
+    void swap(prevector<N, T, Size, Diff> &other) noexcept {
         std::swap(_union, other._union);
         std::swap(_size, other._size);
     }

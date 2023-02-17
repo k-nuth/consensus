@@ -214,6 +214,8 @@ verify_result_type script_error_to_verify_result(ScriptError code) {
             return verify_result_minimalif;
         case ScriptError::SIG_NULLFAIL:
             return verify_result_sig_nullfail;
+        case ScriptError::MINIMALNUM:
+            return verify_result_minimalnum;
 
         // Softfork safeness
         case ScriptError::DISCOURAGE_UPGRADABLE_NOPS:
@@ -541,7 +543,7 @@ verify_result_type verify_script(unsigned char const* transaction,
 
     ScriptError error;
     Amount am(amount);
-    TransactionSignatureChecker checker(&tx, tx_input_index, am);
+    // TransactionSignatureChecker checker(&tx, tx_input_index, am);
     const unsigned int script_flags = verify_flags_to_script_flags(flags);
 
     CScript const output_script(prevout_script, prevout_script + prevout_script_size);
@@ -549,7 +551,7 @@ verify_result_type verify_script(unsigned char const* transaction,
 
     ScriptExecutionMetrics metrics = {};
 
-    ScriptExecutionContextOpt context = std::nullopt;
+
     if (coins.size() != 0) {
         auto const amount_getter = [&coins](size_t i) { return Amount(coins.at(i).amount); };
         auto const script_getter = [&coins](size_t i) {
@@ -562,10 +564,17 @@ verify_result_type verify_script(unsigned char const* transaction,
         if (tx_input_index >= contexts.size()) {
             return verify_result_tx_input_invalid;
         }
-        context = contexts[tx_input_index];
+        auto const context = contexts[tx_input_index];
+        TransactionSignatureChecker checker(context);
+        VerifyScript(input_script, output_script, script_flags, checker, metrics, &error);
+    } else {
+        ScriptExecutionContextOpt context = std::nullopt;
+        // ContextOptSignatureChecker(const ScriptExecutionContextOpt &contextIn) : contextOpt(contextIn) {}
+        ContextOptSignatureChecker checker(context);
+        VerifyScript(input_script, output_script, script_flags, checker, metrics, &error);
     }
 
-    VerifyScript(input_script, output_script, script_flags, checker, metrics, context, &error);
+    // VerifyScript(input_script, output_script, script_flags, checker, metrics, context, &error);
     sig_checks = metrics.nSigChecks;
     return script_error_to_verify_result(error);
 }
