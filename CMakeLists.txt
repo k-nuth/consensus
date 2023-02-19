@@ -361,9 +361,14 @@ if (${CURRENCY} STREQUAL "BCH")
     src/bch-rules/crypto/sha512.cpp
     src/bch-rules/crypto/sha512.h
     src/bch-rules/crypto/siphash.h
+
+    src/bch-rules/primitives/token.h
+    src/bch-rules/primitives/token.cpp
+
     src/bch-rules/primitives/transaction.cpp
     src/bch-rules/primitives/transaction.h
     src/bch-rules/primitives/txid.h
+
     src/bch-rules/script/bitfield.cpp
     src/bch-rules/script/bitfield.h
     src/bch-rules/script/interpreter.cpp
