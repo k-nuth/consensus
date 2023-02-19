@@ -70,7 +70,7 @@ class KnuthConsensusConan(KnuthConanFile):
         self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
 
         if self.options.tests:
-            self.requires("catch2/3.2.1")
+            self.requires("catch2/3.3.1")
 
         if self.settings.compiler == "Visual Studio" and self.options.currency == 'BCH':
             self.requires("safeint/3.0.27")
