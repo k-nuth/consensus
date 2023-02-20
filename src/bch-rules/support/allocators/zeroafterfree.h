@@ -14,21 +14,23 @@
 template <typename T>
 struct zero_after_free_allocator : public std::allocator<T> {
     // MSVC8 default copy constructor is broken
-    typedef std::allocator<T> base;
-    typedef typename base::size_type size_type;
-    typedef typename base::difference_type difference_type;
-    typedef typename base::pointer pointer;
-    typedef typename base::const_pointer const_pointer;
-    typedef typename base::reference reference;
-    typedef typename base::const_reference const_reference;
-    typedef typename base::value_type value_type;
+    using base = std::allocator<T>;
+    using size_type = typename base::size_type;
+    using difference_type = typename base::difference_type;
+    using value_type = typename base::value_type;
+
     zero_after_free_allocator() noexcept {}
+
     zero_after_free_allocator(const zero_after_free_allocator &a) noexcept
-        : base(a) {}
+        : base(a)
+    {}
+
     template <typename U>
     zero_after_free_allocator(const zero_after_free_allocator<U> &a) noexcept
         : base(a) {}
+
     ~zero_after_free_allocator() noexcept {}
+
     template <typename _Other> struct rebind {
         typedef zero_after_free_allocator<_Other> other;
     };
@@ -40,4 +42,4 @@ struct zero_after_free_allocator : public std::allocator<T> {
 };
 
 // Byte-vector that clears its contents before deletion.
-typedef std::vector<char, zero_after_free_allocator<char>> CSerializeData;
+using CSerializeData = std::vector<char, zero_after_free_allocator<char>>;
