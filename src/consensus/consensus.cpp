@@ -490,6 +490,12 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
 
     if ((flags & verify_flags_native_introspection) != 0)
         script_flags |= SCRIPT_NATIVE_INTROSPECTION;
+
+    if ((flags & verify_flags_enable_p2sh_32) != 0)
+        script_flags |= SCRIPT_ENABLE_P2SH_32;
+
+    if ((flags & verify_flags_enable_tokens) != 0)
+        script_flags |= SCRIPT_ENABLE_TOKENS;
 #endif
 
     return script_flags;
@@ -543,7 +549,6 @@ verify_result_type verify_script(unsigned char const* transaction,
 
     ScriptError error;
     Amount am(amount);
-    // TransactionSignatureChecker checker(&tx, tx_input_index, am);
     const unsigned int script_flags = verify_flags_to_script_flags(flags);
 
     CScript const output_script(prevout_script, prevout_script + prevout_script_size);

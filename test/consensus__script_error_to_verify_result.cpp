@@ -12,7 +12,7 @@
 
 using namespace kth::consensus;
 
-// Start Boost Suite: consensus script error to verify result
+// Start Test Suite: consensus script error to verify result
 
 // Logical result
 
@@ -336,4 +336,4 @@ TEST_CASE("consensus script error to verify result ERROR COUNT  unknown error", 
 #endif
 }
 
-// End Boost Suite
+// End Test Suite

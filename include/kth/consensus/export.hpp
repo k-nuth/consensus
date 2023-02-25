@@ -183,6 +183,8 @@ typedef enum verify_result_type {
 // SCRIPT_ENFORCE_SIGCHECKS = (1U << 23),
 // SCRIPT_64_BIT_INTEGERS = (1U << 24),
 // SCRIPT_NATIVE_INTROSPECTION = (1U << 25),
+// SCRIPT_ENABLE_P2SH_32 = (1U << 26),
+// SCRIPT_ENABLE_TOKENS = (1U << 27),
 
 /**
  * Flags to use when calling verify_script.
@@ -322,6 +324,15 @@ typedef enum verify_flags_type {
      */
     , verify_flags_native_introspection = (1U << 25)
 
+    /**
+     * SCRIPT_ENABLE_P2SH_32 (BCH).
+     */
+    , verify_flags_enable_p2sh_32 = (1U << 26)
+
+    /**
+     * SCRIPT_ENABLE_TOKENS (BCH).
+     */
+    , verify_flags_enable_tokens = (1U << 27)
 #else
     // BTC only flags
 

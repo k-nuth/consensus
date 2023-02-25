@@ -17,7 +17,7 @@
 #include <btc-rules/script/interpreter.h>
 #endif // KTH_CURRENCY_BCH
 
-// Start Boost Suite: consensus script verify
+// Start Test Suite: consensus script verify
 
 using namespace kth::consensus;
 
@@ -227,4 +227,4 @@ TEST_CASE("consensus script verify valid nested p2wpkh true", "[consensus script
 //    REQUIRE(result == verify_result_eval_false);
 //}
 
-// End Boost Suite
+// End Test Suite

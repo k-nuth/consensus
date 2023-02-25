@@ -2,15 +2,9 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.23)
 
-# kth-consensus
-#==============================================================================
-project(kth-consensus
-  VERSION 0
-  LANGUAGES CXX C)
-  # VERSION 0.11.0
-
+project(kth-consensus VERSION 0 LANGUAGES CXX C)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -21,12 +15,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Implement --use-conan
 #------------------------------------------------------------------------------
-option(USE_CONAN "Use Conan Build Tool." OFF)
-option(NO_CONAN_AT_ALL "Conan totally disabled." OFF)
+# option(USE_CONAN "Use Conan Build Tool." OFF)
+# option(NO_CONAN_AT_ALL "Conan totally disabled." OFF)
 
-if (NO_CONAN_AT_ALL)
-  set(USE_CONAN OFF)
-endif()
+# if (NO_CONAN_AT_ALL)
+#   set(USE_CONAN OFF)
+# endif()
 
 # Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
 #------------------------------------------------------------------------------
@@ -213,54 +207,55 @@ _check_has_decl(sys/endian.h HAVE_SYS_ENDIAN_H htobe64 HAVE_DECL_HTOBE64)
 # Only if enabled
 #------------------------------------------------------------------------------
 
-if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
-    include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
-else()
-    message( STATUS "knuthbuildinfo doent exists")
-endif()
+# if(EXISTS ${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
+#     include(${CMAKE_SOURCE_DIR}/ci_utils/cmake/knuthbuildinfo.cmake)
+# else()
+#     message( STATUS "knuthbuildinfo doent exists")
+# endif()
 
 
 # Check dependencies.
 #==============================================================================
 #------------------------------------------------------------------------------
-if (NO_CONAN_AT_ALL)
-  # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
-  #------------------------------------------------------------------------------
-  if (NOT ENABLE_SHARED)
-    set(Boost_USE_STATIC_LIBS ON)
-  endif()
+# if (NO_CONAN_AT_ALL)
+#   # Require Boost of at least version 1.56.0 and output ${boost_CPPFLAGS/LDFLAGS}.
+#   #------------------------------------------------------------------------------
+#   if (NOT ENABLE_SHARED)
+#     set(Boost_USE_STATIC_LIBS ON)
+#   endif()
 
-  if (MSVC)
-    find_package(
-      Boost 1.56.0 REQUIRED
-      COMPONENTS atomic chrono date_time filesystem iostreams locale program_options regex system thread unit_test_framework
-    )
-  else()
-    find_package(
-      Boost 1.56.0 REQUIRED
-      COMPONENTS chrono date_time filesystem iostreams locale program_options regex system thread unit_test_framework
-    )
-  endif()
-endif()
+#   if (MSVC)
+#     find_package(
+#       Boost 1.56.0 REQUIRED
+#       COMPONENTS atomic chrono date_time filesystem iostreams locale program_options regex system thread unit_test_framework
+#     )
+#   else()
+#     find_package(
+#       Boost 1.56.0 REQUIRED
+#       COMPONENTS chrono date_time filesystem iostreams locale program_options regex system thread unit_test_framework
+#     )
+#   endif()
+# endif()
 
 
 # message("FER-USE_CONAN")
 # message(${USE_CONAN})
 
-if (NOT USE_CONAN)
-  # Require kth-domain of at least version 0 and output ${kth_domain_CPPFLAGS/LIBS/PKG}.
-  #------------------------------------------------------------------------------
-  if (NOT TARGET kth-domain)
-    find_package(kth-domain 0 REQUIRED)
-  endif()
+# if (NOT USE_CONAN)
+#   # Require kth-domain of at least version 0 and output ${kth_domain_CPPFLAGS/LIBS/PKG}.
+#   #------------------------------------------------------------------------------
+#   if (NOT TARGET kth-domain)
+#     find_package(kth-domain 0 REQUIRED)
+#   endif()
 
-  # Require secp256k1 of at least version 0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
-  #------------------------------------------------------------------------------
-  if (NOT TARGET secp256k1)
-    find_package(secp256k1 0 REQUIRED)
-  endif()
-endif (NOT USE_CONAN)
+#   # Require secp256k1 of at least version 0 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+#   #------------------------------------------------------------------------------
+#   if (NOT TARGET secp256k1)
+#     find_package(secp256k1 0 REQUIRED)
+#   endif()
+# endif (NOT USE_CONAN)
 
+find_package(secp256k1 REQUIRED)
 
 # Set flags.
 #==============================================================================
@@ -446,13 +441,10 @@ endif()
 target_compile_definitions(kth-consensus-clone PUBLIC -DKTH_PROJECT_VERSION="${KTH_PROJECT_VERSION}") #TODO(fernando): manage with Conan????
 
 
-if (NOT USE_CONAN)
-  target_compile_definitions(kth-consensus-clone PRIVATE
-  $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
-
-  target_include_directories(kth-consensus-clone PRIVATE
-  $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
-endif()
+# if (NOT USE_CONAN)
+  target_compile_definitions(kth-consensus-clone PRIVATE $<TARGET_PROPERTY:secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
+  target_include_directories(kth-consensus-clone PRIVATE $<TARGET_PROPERTY:secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
+# endif()
 
 if (${CURRENCY} STREQUAL "BCH")
 #message("clone BCH 3")
@@ -514,12 +506,12 @@ else()
 endif()
 
 
-if (NOT NO_CONAN_AT_ALL)
-  target_link_libraries(kth-consensus PUBLIC ${CONAN_LIBS})
-else()
-  target_link_libraries(kth-consensus secp256k1 kth-domain)
-endif()
-
+# if (NOT NO_CONAN_AT_ALL)
+#   # target_link_libraries(kth-consensus PUBLIC ${CONAN_LIBS})
+# else()
+#   target_link_libraries(kth-consensus secp256k1 kth-domain)
+# endif()
+target_link_libraries(kth-consensus secp256k1)
 
 # if (USE_CONAN)
   if (MINGW)
@@ -531,14 +523,9 @@ _group_sources(kth-consensus "${CMAKE_CURRENT_LIST_DIR}")
 
 # Tests
 #==============================================================================
-
 if (WITH_TESTS)
   enable_testing()
-endif()
-
-# local: test/kth_consensus_test
-#------------------------------------------------------------------------------
-if (WITH_TESTS)
+  find_package(Catch2 3 REQUIRED)
 
   add_executable(kth_consensus_test
     test/consensus__script_error_to_verify_result.cpp
@@ -557,24 +544,15 @@ if (WITH_TESTS)
         ${CMAKE_CURRENT_SOURCE_DIR}/src/btc-rules)
   endif()
 
-  target_include_directories(kth_consensus_test PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/test>)
-
+  target_include_directories(kth_consensus_test PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/test>)
   target_link_libraries(kth_consensus_test PUBLIC kth-consensus)
+  target_link_libraries(kth_consensus_test PRIVATE Catch2::Catch2WithMain)
 
   _group_sources(kth_consensus_test "${CMAKE_CURRENT_LIST_DIR}/test")
 
-  if (WITH_TESTS)
-    include(CTest)
-    include(Catch)
-    catch_discover_tests(kth_consensus_test)
-  endif()
-
-  # _add_tests(kth_consensus_test
-  #   #consensus__script_error_to_verify_result
-  #   consensus__script_verify
-  #   #consensus__verify_flags_to_script_flags
-  #         )
+  include(CTest)
+  include(Catch)
+  catch_discover_tests(kth_consensus_test)
 endif()
 
 
