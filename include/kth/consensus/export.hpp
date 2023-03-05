@@ -14,20 +14,6 @@
 
 namespace kth::consensus {
 
-#if defined(KTH_CURRENCY_BCH)
-struct coin {
-    int64_t amount;                         // nValue
-    std::vector<uint8_t> output_script;     // scriptPubKey
-
-    coin(int64_t amount, std::vector<uint8_t> const& output_script)
-        : amount(amount), output_script(output_script)
-    {}
-
-    coin(int64_t amount, std::vector<uint8_t>&& output_script)
-        : amount(amount), output_script(std::move(output_script))
-    {}
-};
-#endif
 
 /**
  * Result values from calling verify_script.
@@ -377,7 +363,7 @@ typedef enum verify_flags_type {
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags, size_t& sig_checks, int64_t amount, std::vector<coin> coins);
+    unsigned int flags, size_t& sig_checks, int64_t amount, std::vector<std::vector<uint8_t>> coins);
 #else
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,

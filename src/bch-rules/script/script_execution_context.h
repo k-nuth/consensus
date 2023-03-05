@@ -51,19 +51,18 @@ class ScriptExecutionContext {
     /// All of the coins for the tx will get pre-cached and a new internal Shared object will be constructed.
     ScriptExecutionContext(unsigned input, const CCoinsViewCache &coinsCache, CTransactionView tx);
 
-
-    // CTxOut(Amount nValueIn, CScript scriptPubKeyIn)
-
-
-    template <typename AmountGetter, typename ScriptGetter>
-    ScriptExecutionContext(unsigned input, AmountGetter amountGetter, ScriptGetter scriptGetter, CTransactionView tx)
+    template <typename OutputGetter>
+    ScriptExecutionContext(unsigned input, OutputGetter outputGetter, CTransactionView tx)
         : nIn(input)
     {
         assert(input < tx.vin().size());
         std::vector<Coin> coins;
         coins.reserve(tx.vin().size());
         for (size_t i = 0; i < tx.vin().size(); ++i) {
-            coins.emplace_back(CTxOut(amountGetter(i), scriptGetter(i)), 1 /* height ignored */, false /* isCoinbase ignored */);
+            coins.emplace_back(
+                outputGetter(i),
+                1 /* height ignored */,
+                false /* isCoinbase ignored */);
         }
         shared = std::make_shared<Shared>(std::move(coins), tx);
 
@@ -85,14 +84,14 @@ public:
     std::vector<ScriptExecutionContext> createForAllInputs(CTransactionView tx, const CCoinsViewCache &coinsCache);
 
     /// Factory method to create a context for all inputs in a tx.
-    template <typename AmountGetter, typename ScriptGetter>
+    template <typename OutputGetter>
     static
-    std::vector<ScriptExecutionContext> createForAllInputs(CTransactionView tx, AmountGetter amountGetter, ScriptGetter scriptGetter) {
+    std::vector<ScriptExecutionContext> createForAllInputs(CTransactionView tx, OutputGetter outputGetter) {
         std::vector<ScriptExecutionContext> ret;
         if (tx.vin().empty()) return ret;
 
         ret.reserve(tx.vin().size());
-        ret.push_back(ScriptExecutionContext(0, amountGetter, scriptGetter, tx)); // private c'tor, must use push_back
+        ret.push_back(ScriptExecutionContext(0, outputGetter, tx)); // private c'tor, must use push_back
 
         for (size_t i = 1; i < tx.vin().size(); ++i) {
             ret.push_back(ScriptExecutionContext(i, ret.front())); // private c'tor, must use push_back

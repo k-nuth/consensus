@@ -375,6 +375,11 @@ if (${CURRENCY} STREQUAL "BCH")
     src/bch-rules/script/script_execution_context.cpp
     src/bch-rules/script/sigencoding.h
     src/bch-rules/script/sigencoding.cpp
+
+    src/bch-rules/support/cleanse.h
+    src/bch-rules/support/cleanse.cpp
+
+
     src/bch-rules/util/strencodings.cpp
     src/bch-rules/util/strencodings.h
     src/bch-rules/util/string.cpp
