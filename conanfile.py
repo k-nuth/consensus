@@ -3,7 +3,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import os
-from conan import CMake
+from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
 from kthbuild import KnuthConanFile
 
@@ -110,20 +110,18 @@ class KnuthConsensusConan(KnuthConanFile):
         cmake_layout(self)
 
     def generate(self):
-        tc = CMakeToolchain(self)
+        tc = self.cmake_toolchain_basis()
         # tc.variables["CMAKE_VERBOSE_MAKEFILE"] = True
+        # tc.variables["WITH_TESTS"] = option_on_off(self.options.with_tests)
+        # tc.variables["WITH_JAVA"] = option_on_off(self.options.with_java)
+        # tc.variables["WITH_PYTHON"] = option_on_off(self.options.with_python)
+        tc.variables["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
         tc.generate()
         tc = CMakeDeps(self)
         tc.generate()
 
     def build(self):
-        cmake = self.cmake_basis()
-        # cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
-        # cmake.definitions["WITH_JAVA"] = option_on_off(self.options.with_java)
-        # cmake.definitions["WITH_PYTHON"] = option_on_off(self.options.with_python)
-        cmake.definitions["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
-
-        # cmake.configure(source_dir=self.source_folder)
+        cmake = CMake(self)
         cmake.configure()
 
         if not self.options.cmake_export_compile_commands:
