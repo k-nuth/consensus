@@ -219,7 +219,6 @@ add_library(${PROJECT_NAME}-clone ${MODE} ${kth_sources_clone})
 add_library(${PROJECT_NAME}-clone::${PROJECT_NAME}-clone ALIAS ${PROJECT_NAME}-clone)
 set_target_properties(${PROJECT_NAME}-clone PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 20 CXX_STANDARD_REQUIRED TRUE)
 
-
 if (ENABLE_POSITION_INDEPENDENT_CODE)
   set_property(TARGET ${PROJECT_NAME}-clone PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif(ENABLE_POSITION_INDEPENDENT_CODE)
@@ -233,6 +232,8 @@ endif()
 
 target_compile_definitions(${PROJECT_NAME}-clone PRIVATE $<TARGET_PROPERTY:secp256k1::secp256k1,INTERFACE_COMPILE_DEFINITIONS>)
 target_include_directories(${PROJECT_NAME}-clone PRIVATE $<TARGET_PROPERTY:secp256k1::secp256k1,INTERFACE_INCLUDE_DIRECTORIES>)
+
+target_link_libraries(${PROJECT_NAME}-clone PUBLIC Boost::boost)
 
 if (${CURRENCY} STREQUAL "BCH")
   _group_sources(${PROJECT_NAME}-clone "${CMAKE_CURRENT_SOURCE_DIR}/src/bch-rules")
