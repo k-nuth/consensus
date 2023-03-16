@@ -3,14 +3,20 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import os
+<<<<<<< Updated upstream
 from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
+=======
+from conan import ConanFile
+from conan.tools.build.cppstd import check_min_cppstd
+from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
+from conan.tools.files import copy #, apply_conandata_patches, export_conandata_patches, get, rm, rmdir
+>>>>>>> Stashed changes
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
-from kthbuild import KnuthConanFile
+from kthbuild import KnuthConanFileV2
 
-class KnuthConsensusConan(KnuthConanFile):
-    def recipe_dir(self):
-        return os.path.dirname(os.path.abspath(__file__))
+required_conan_version = ">=2.0"
 
+class KnuthConsensusConan(KnuthConanFileV2):
     name = "consensus"
     # version = get_version()
     license = "http://www.boost.org/users/license.html"
@@ -23,13 +29,12 @@ class KnuthConsensusConan(KnuthConanFile):
                "tests": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
 
-               "march_id": "ANY",
+               "march_id": ["ANY"],
                "march_strategy": ["download_if_possible", "optimized", "download_or_fail"],
 
                "verbose": [True, False],
-               "cxxflags": "ANY",
-               "cflags": "ANY",
-               "glibcxx_supports_cxx11_abi": "ANY",
+               "cxxflags": ["ANY"],
+               "cflags": ["ANY"],
                "cmake_export_compile_commands": [True, False],
                "log": ["boost", "spdlog", "binlog"],
     }
@@ -43,13 +48,9 @@ class KnuthConsensusConan(KnuthConanFile):
         "tests": False,
         "currency": "BCH",
 
-        "march_id": "_DUMMY_",
         "march_strategy": "download_if_possible",
 
         "verbose": False,
-        "cxxflags": "_DUMMY_",
-        "cflags": "_DUMMY_",
-        "glibcxx_supports_cxx11_abi": "_DUMMY_",
         "cmake_export_compile_commands": False,
         "log": "spdlog",
     }
@@ -59,8 +60,13 @@ class KnuthConsensusConan(KnuthConanFile):
         # "with_python": False",
 
     # generators = "cmake"
+<<<<<<< Updated upstream
     exports = "conan_*", "ci_utils/*"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "kth-consensusConfig.cmake.in", "knuthbuildinfo.cmake", "include/*", "test/*"
+=======
+    # exports = "conan_*", "ci_utils/*"
+    exports_sources = "src/*", "CMakeLists.txt", "ci_utils/cmake/*", "cmake/*", "kth-consensusConfig.cmake.in", "knuthbuildinfo.cmake", "include/*", "test/*"
+>>>>>>> Stashed changes
     package_files = "build/lkth-consensus.a"
     # build_policy = "missing"
 
@@ -76,15 +82,19 @@ class KnuthConsensusConan(KnuthConanFile):
             self.requires("safeint/3.0.27")
 
     def validate(self):
+<<<<<<< Updated upstream
         KnuthConanFile.validate(self)
         if self.info.settings.compiler.cppstd:
             check_min_cppstd(self, "20")
+=======
+        KnuthConanFileV2.validate(self)
+>>>>>>> Stashed changes
 
     def config_options(self):
-        KnuthConanFile.config_options(self)
+        KnuthConanFileV2.config_options(self)
 
     def configure(self):
-        KnuthConanFile.configure(self)
+        KnuthConanFileV2.configure(self)
 
         # "enable_experimental=False", \
         # "enable_endomorphism=False", \
@@ -104,8 +114,24 @@ class KnuthConsensusConan(KnuthConanFile):
             self.options["secp256k1"].enable_module_schnorr = False
 
     def package_id(self):
-        KnuthConanFile.package_id(self)
+        KnuthConanFileV2.package_id(self)
 
+    def layout(self):
+        cmake_layout(self)
+
+    def generate(self):
+        tc = self.cmake_toolchain_basis()
+        # tc.variables["CMAKE_VERBOSE_MAKEFILE"] = True
+        # tc.variables["WITH_TESTS"] = option_on_off(self.options.with_tests)
+        # tc.variables["WITH_JAVA"] = option_on_off(self.options.with_java)
+        # tc.variables["WITH_PYTHON"] = option_on_off(self.options.with_python)
+        tc.variables["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
+
+        tc.generate()
+        tc = CMakeDeps(self)
+        tc.generate()
+
+<<<<<<< Updated upstream
     def layout(self):
         cmake_layout(self)
 
@@ -120,6 +146,8 @@ class KnuthConsensusConan(KnuthConanFile):
         tc = CMakeDeps(self)
         tc.generate()
 
+=======
+>>>>>>> Stashed changes
     def build(self):
         cmake = CMake(self)
         cmake.configure()
@@ -134,14 +162,12 @@ class KnuthConsensusConan(KnuthConanFile):
         self.copy("*.h", "", "include")
 
     def package(self):
-        self.copy("*.h", dst="include", src="include")
-        self.copy("*.hpp", dst="include", src="include")
-        self.copy("*.ipp", dst="include", src="include")
-        self.copy("*.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.dylib*", dst="lib", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.a", dst="lib", keep_path=False)
+        cmake = CMake(self)
+        cmake.install()
+        # rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
+        # rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))
+        # rmdir(self, os.path.join(self.package_folder, "res"))
+        # rmdir(self, os.path.join(self.package_folder, "share"))
 
     def package_info(self):
         self.cpp_info.includedirs = ['include']

@@ -10,6 +10,7 @@
 #ifndef KTH_CONSENSUS_VERSION_HPP_
 #define KTH_CONSENSUS_VERSION_HPP_
 
+<<<<<<< Updated upstream
 /**
  * The semantic version of this repository as: [major].[minor].[patch]
  * For interpretation of the versioning scheme see: http://semver.org
@@ -25,5 +26,8 @@
 // char const* version();
 // }} /*namespace kth ????????*/
 
+=======
+#define KTH_CONSENSUS_VERSION "0.0.0-dev.1";
+>>>>>>> Stashed changes
 
 #endif //KTH_CONSENSUS_VERSION_HPP_
