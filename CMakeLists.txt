@@ -81,6 +81,7 @@ _check_has_decl(sys/endian.h HAVE_SYS_ENDIAN_H htobe32 HAVE_DECL_HTOBE32)
 _check_has_decl(sys/endian.h HAVE_SYS_ENDIAN_H htobe64 HAVE_DECL_HTOBE64)
 
 find_package(secp256k1 REQUIRED)
+find_package(Boost 1.81.0 COMPONENTS boost REQUIRED)
 
 include(CheckCXXCompilerFlag)
 
@@ -285,6 +286,7 @@ endif()
 
 
 target_link_libraries(${PROJECT_NAME} PUBLIC secp256k1::secp256k1)
+target_link_libraries(${PROJECT_NAME} PUBLIC Boost::boost)
 
 if (MINGW)
   target_link_libraries(${PROJECT_NAME} PUBLIC ws2_32 wsock32) #TODO(fernando): manage with Conan
