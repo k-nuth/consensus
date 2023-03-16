@@ -1,18 +1,19 @@
-# Copyright (c) 2016-2022 Knuth Project developers.
+# Copyright (c) 2016-2023 Knuth Project developers.
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import os
-from conans import CMake
+from conan import ConanFile
+from conan.tools.build.cppstd import check_min_cppstd
+from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
+from conan.tools.files import copy #, apply_conandata_patches, export_conandata_patches, get, rm, rmdir
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
-from kthbuild import KnuthConanFile
+from kthbuild import KnuthConanFileV2
 
-class KnuthConsensusConan(KnuthConanFile):
-    def recipe_dir(self):
-        return os.path.dirname(os.path.abspath(__file__))
+required_conan_version = ">=2.0"
 
+class KnuthConsensusConan(KnuthConanFileV2):
     name = "consensus"
-    # version = get_version()
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/k-nuth/consensus"
     description = "Bitcoin Consensus Library"
@@ -22,67 +23,49 @@ class KnuthConsensusConan(KnuthConanFile):
                "fPIC": [True, False],
                "tests": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
-
-               "march_id": "ANY",
+               "march_id": ["ANY"],
                "march_strategy": ["download_if_possible", "optimized", "download_or_fail"],
-
                "verbose": [True, False],
-               "cxxflags": "ANY",
-               "cflags": "ANY",
-               "glibcxx_supports_cxx11_abi": "ANY",
+               "cxxflags": ["ANY"],
+               "cflags": ["ANY"],
                "cmake_export_compile_commands": [True, False],
                "log": ["boost", "spdlog", "binlog"],
     }
-
-    #    "with_java": [True, False],
-    #    "with_python": [True, False],
 
     default_options = {
         "shared": False,
         "fPIC": True,
         "tests": False,
         "currency": "BCH",
-
-        "march_id": "_DUMMY_",
         "march_strategy": "download_if_possible",
-
         "verbose": False,
-        "cxxflags": "_DUMMY_",
-        "cflags": "_DUMMY_",
-        "glibcxx_supports_cxx11_abi": "_DUMMY_",
         "cmake_export_compile_commands": False,
         "log": "spdlog",
     }
 
-        # "with_png": False",
-        # "with_java": False",
-        # "with_python": False",
+    exports_sources = "src/*", "CMakeLists.txt", "ci_utils/cmake/*", "cmake/*", "knuthbuildinfo.cmake", "include/*", "test/*"
 
-    generators = "cmake"
-    exports = "conan_*", "ci_utils/*"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "kth-consensusConfig.cmake.in", "knuthbuildinfo.cmake", "include/*", "test/*"
-    package_files = "build/lkth-consensus.a"
-    build_policy = "missing"
-
+    def build_requirements(self):
+        if self.options.tests:
+            self.test_requires("catch2/3.3.1")
 
     def requirements(self):
-        self.requires("boost/1.80.0")
-        self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
+        self.requires("boost/1.81.0")
+        self.requires("secp256k1/0.17.0")
 
-        if self.options.tests:
-            self.requires("catch2/3.0.1")
-
-        if self.settings.compiler == "Visual Studio" and self.options.currency == 'BCH':
-            self.requires("safeint/3.0.26")
+        if self.settings.compiler == "msvc" and self.options.currency == 'BCH':
+            self.requires("safeint/3.0.27")
 
     def validate(self):
-        KnuthConanFile.validate(self)
+        KnuthConanFileV2.validate(self)
+        if self.info.settings.compiler.cppstd:
+            check_min_cppstd(self, "20")
 
     def config_options(self):
-        KnuthConanFile.config_options(self)
+        KnuthConanFileV2.config_options(self)
 
     def configure(self):
-        KnuthConanFile.configure(self)
+        KnuthConanFileV2.configure(self)
 
         # "enable_experimental=False", \
         # "enable_endomorphism=False", \
@@ -102,35 +85,44 @@ class KnuthConsensusConan(KnuthConanFile):
             self.options["secp256k1"].enable_module_schnorr = False
 
     def package_id(self):
-        KnuthConanFile.package_id(self)
+        KnuthConanFileV2.package_id(self)
+
+    def layout(self):
+        cmake_layout(self)
+
+    def generate(self):
+        tc = self.cmake_toolchain_basis()
+        # tc.variables["CMAKE_VERBOSE_MAKEFILE"] = True
+        # tc.variables["WITH_TESTS"] = option_on_off(self.options.with_tests)
+        # tc.variables["WITH_JAVA"] = option_on_off(self.options.with_java)
+        # tc.variables["WITH_PYTHON"] = option_on_off(self.options.with_python)
+        tc.variables["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
+
+        tc.generate()
+        tc = CMakeDeps(self)
+        tc.generate()
 
     def build(self):
-        cmake = self.cmake_basis()
-        # cmake.definitions["WITH_TESTS"] = option_on_off(self.options.with_tests)
-        # cmake.definitions["WITH_JAVA"] = option_on_off(self.options.with_java)
-        # cmake.definitions["WITH_PYTHON"] = option_on_off(self.options.with_python)
-        cmake.definitions["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
+        cmake = CMake(self)
+        cmake.configure()
 
-        cmake.configure(source_dir=self.source_folder)
         if not self.options.cmake_export_compile_commands:
             cmake.build()
             if self.options.tests:
                 cmake.test()
                 # cmake.test(target="tests")
 
-    def imports(self):
-        self.copy("*.h", "", "include")
+    # def imports(self):
+    #     self.copy("*.h", "", "include")
 
     def package(self):
-        self.copy("*.h", dst="include", src="include")
-        self.copy("*.hpp", dst="include", src="include")
-        self.copy("*.ipp", dst="include", src="include")
-        self.copy("*.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.dylib*", dst="lib", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.a", dst="lib", keep_path=False)
+        cmake = CMake(self)
+        cmake.install()
+        # rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
+        # rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))
+        # rmdir(self, os.path.join(self.package_folder, "res"))
+        # rmdir(self, os.path.join(self.package_folder, "share"))
 
     def package_info(self):
         self.cpp_info.includedirs = ['include']
-        self.cpp_info.libs = ["kth-consensus"]
+        self.cpp_info.libs = ["consensus"]

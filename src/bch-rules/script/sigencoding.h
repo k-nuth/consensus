@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
-// Copyright (c) 2017-2019 The Bitcoin developers
+// Copyright (c) 2017-2022 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,9 +12,7 @@
 #include <cstdint>
 #include <vector>
 
-typedef std::vector<uint8_t> valtype;
-
-namespace {
+using valtype = std::vector<uint8_t>;
 
 inline SigHashType GetHashType(const valtype &vchSig) {
     if (vchSig.size() == 0) {
@@ -23,8 +21,6 @@ inline SigHashType GetHashType(const valtype &vchSig) {
 
     return SigHashType(vchSig[vchSig.size() - 1]);
 }
-
-} // namespace
 
 /**
  * Check that the signature provided on some data is properly encoded.
