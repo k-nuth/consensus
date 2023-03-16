@@ -3,14 +3,10 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import os
-<<<<<<< Updated upstream
-from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
-=======
 from conan import ConanFile
 from conan.tools.build.cppstd import check_min_cppstd
 from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
 from conan.tools.files import copy #, apply_conandata_patches, export_conandata_patches, get, rm, rmdir
->>>>>>> Stashed changes
 from kthbuild import option_on_off, march_conan_manip, pass_march_to_compiler
 from kthbuild import KnuthConanFileV2
 
@@ -18,7 +14,6 @@ required_conan_version = ">=2.0"
 
 class KnuthConsensusConan(KnuthConanFileV2):
     name = "consensus"
-    # version = get_version()
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/k-nuth/consensus"
     description = "Bitcoin Consensus Library"
@@ -28,10 +23,8 @@ class KnuthConsensusConan(KnuthConanFileV2):
                "fPIC": [True, False],
                "tests": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
-
                "march_id": ["ANY"],
                "march_strategy": ["download_if_possible", "optimized", "download_or_fail"],
-
                "verbose": [True, False],
                "cxxflags": ["ANY"],
                "cflags": ["ANY"],
@@ -39,36 +32,18 @@ class KnuthConsensusConan(KnuthConanFileV2):
                "log": ["boost", "spdlog", "binlog"],
     }
 
-    #    "with_java": [True, False],
-    #    "with_python": [True, False],
-
     default_options = {
         "shared": False,
         "fPIC": True,
         "tests": False,
         "currency": "BCH",
-
         "march_strategy": "download_if_possible",
-
         "verbose": False,
         "cmake_export_compile_commands": False,
         "log": "spdlog",
     }
 
-        # "with_png": False",
-        # "with_java": False",
-        # "with_python": False",
-
-    # generators = "cmake"
-<<<<<<< Updated upstream
-    exports = "conan_*", "ci_utils/*"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "kth-consensusConfig.cmake.in", "knuthbuildinfo.cmake", "include/*", "test/*"
-=======
-    # exports = "conan_*", "ci_utils/*"
-    exports_sources = "src/*", "CMakeLists.txt", "ci_utils/cmake/*", "cmake/*", "kth-consensusConfig.cmake.in", "knuthbuildinfo.cmake", "include/*", "test/*"
->>>>>>> Stashed changes
-    package_files = "build/lkth-consensus.a"
-    # build_policy = "missing"
+    exports_sources = "src/*", "CMakeLists.txt", "ci_utils/cmake/*", "cmake/*", "knuthbuildinfo.cmake", "include/*", "test/*"
 
     def build_requirements(self):
         if self.options.tests:
@@ -76,19 +51,15 @@ class KnuthConsensusConan(KnuthConanFileV2):
 
     def requirements(self):
         self.requires("boost/1.81.0")
-        self.requires("secp256k1/0.X@%s/%s" % (self.user, self.channel))
+        self.requires("secp256k1/0.17.0")
 
-        if self.settings.compiler == "Visual Studio" and self.options.currency == 'BCH':
+        if self.settings.compiler == "msvc" and self.options.currency == 'BCH':
             self.requires("safeint/3.0.27")
 
     def validate(self):
-<<<<<<< Updated upstream
-        KnuthConanFile.validate(self)
+        KnuthConanFileV2.validate(self)
         if self.info.settings.compiler.cppstd:
             check_min_cppstd(self, "20")
-=======
-        KnuthConanFileV2.validate(self)
->>>>>>> Stashed changes
 
     def config_options(self):
         KnuthConanFileV2.config_options(self)
@@ -131,23 +102,6 @@ class KnuthConsensusConan(KnuthConanFileV2):
         tc = CMakeDeps(self)
         tc.generate()
 
-<<<<<<< Updated upstream
-    def layout(self):
-        cmake_layout(self)
-
-    def generate(self):
-        tc = self.cmake_toolchain_basis()
-        # tc.variables["CMAKE_VERBOSE_MAKEFILE"] = True
-        # tc.variables["WITH_TESTS"] = option_on_off(self.options.with_tests)
-        # tc.variables["WITH_JAVA"] = option_on_off(self.options.with_java)
-        # tc.variables["WITH_PYTHON"] = option_on_off(self.options.with_python)
-        tc.variables["CONAN_DISABLE_CHECK_COMPILER"] = option_on_off(True)
-        tc.generate()
-        tc = CMakeDeps(self)
-        tc.generate()
-
-=======
->>>>>>> Stashed changes
     def build(self):
         cmake = CMake(self)
         cmake.configure()
@@ -158,8 +112,8 @@ class KnuthConsensusConan(KnuthConanFileV2):
                 cmake.test()
                 # cmake.test(target="tests")
 
-    def imports(self):
-        self.copy("*.h", "", "include")
+    # def imports(self):
+    #     self.copy("*.h", "", "include")
 
     def package(self):
         cmake = CMake(self)
@@ -171,4 +125,4 @@ class KnuthConsensusConan(KnuthConanFileV2):
 
     def package_info(self):
         self.cpp_info.includedirs = ['include']
-        self.cpp_info.libs = ["kth-consensus"]
+        self.cpp_info.libs = ["consensus"]
