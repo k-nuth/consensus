@@ -1,4 +1,4 @@
-// Copyright (c) 2021 The Bitcoin developers
+// Copyright (c) 2021-2022 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-// struct PSBTInput;
+struct PSBTInput;
 
 /// An execution context for evaluating a script input. Note that this object contains some shared
 /// data that is shared for all inputs to a tx. This object is given to CScriptCheck as well
@@ -51,19 +51,18 @@ class ScriptExecutionContext {
     /// All of the coins for the tx will get pre-cached and a new internal Shared object will be constructed.
     ScriptExecutionContext(unsigned input, const CCoinsViewCache &coinsCache, CTransactionView tx);
 
-
-    // CTxOut(Amount nValueIn, CScript scriptPubKeyIn)
-
-
-    template <typename AmountGetter, typename ScriptGetter>
-    ScriptExecutionContext(unsigned input, AmountGetter amountGetter, ScriptGetter scriptGetter, CTransactionView tx)
+    template <typename OutputGetter>
+    ScriptExecutionContext(unsigned input, OutputGetter outputGetter, CTransactionView tx)
         : nIn(input)
     {
         assert(input < tx.vin().size());
         std::vector<Coin> coins;
         coins.reserve(tx.vin().size());
         for (size_t i = 0; i < tx.vin().size(); ++i) {
-            coins.emplace_back(CTxOut(amountGetter(i), scriptGetter(i)), 1 /* height ignored */, false /* isCoinbase ignored */);
+            coins.emplace_back(
+                outputGetter(i),
+                1 /* height ignored */,
+                false /* isCoinbase ignored */);
         }
         shared = std::make_shared<Shared>(std::move(coins), tx);
 
@@ -85,14 +84,14 @@ public:
     std::vector<ScriptExecutionContext> createForAllInputs(CTransactionView tx, const CCoinsViewCache &coinsCache);
 
     /// Factory method to create a context for all inputs in a tx.
-    template <typename AmountGetter, typename ScriptGetter>
+    template <typename OutputGetter>
     static
-    std::vector<ScriptExecutionContext> createForAllInputs(CTransactionView tx, AmountGetter amountGetter, ScriptGetter scriptGetter) {
+    std::vector<ScriptExecutionContext> createForAllInputs(CTransactionView tx, OutputGetter outputGetter) {
         std::vector<ScriptExecutionContext> ret;
         if (tx.vin().empty()) return ret;
 
         ret.reserve(tx.vin().size());
-        ret.push_back(ScriptExecutionContext(0, amountGetter, scriptGetter, tx)); // private c'tor, must use push_back
+        ret.push_back(ScriptExecutionContext(0, outputGetter, tx)); // private c'tor, must use push_back
 
         for (size_t i = 1; i < tx.vin().size(); ++i) {
             ret.push_back(ScriptExecutionContext(i, ret.front())); // private c'tor, must use push_back
@@ -111,7 +110,7 @@ public:
     ///
     /// This constructor is intended for tests or for situations where only limited introspection is available,
     /// such as signing a tx where we don't have a view of all the extant input coins.
-    ScriptExecutionContext(unsigned input, const CScript &scriptPubKey, Amount amount, CTransactionView tx,
+    ScriptExecutionContext(unsigned input, const CTxOut &utxo, CTransactionView tx,
                            /* NOTE: The below two properties of coins are ignored by the script interpreter, so
                               they need not be specified. If that becomes untrue, update this code to require
                               caller to specify them appropriately. */
@@ -146,6 +145,14 @@ public:
     /// Note that if `isLimited()`, this method only returns a valid value for this input.
     const CScript & coinScriptPubKey(std::optional<unsigned> inputIdx = {}) const {
         return coin(inputIdx).GetTxOut().scriptPubKey;
+    }
+
+    /// Get the coin (utxo) token data for this input or any input. Returned wrapped pointer
+    /// may be nullptr if input has no token data.
+    ///
+    /// Note that if `isLimited()`, this method only returns a valid value for this input.
+    const token::OutputDataPtr & coinTokenData(std::optional<unsigned> inputIdx = {}) const {
+        return coin(inputIdx).GetTxOut().tokenDataPtr;
     }
 
     /// Get the amount for this input or any input.
