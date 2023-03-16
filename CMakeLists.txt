@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(kth-consensus VERSION 0 LANGUAGES CXX C)
+project(consensus VERSION 0 LANGUAGES CXX C)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
