@@ -1,4 +1,5 @@
 // Copyright (c) 2015-2016 The Bitcoin Core developers
+// Copyright (c) 2017-2022 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,6 +7,7 @@
 
 #include <indirectmap.h>
 #include <prevector.h>
+#include <util/heapoptional.h>
 
 #include <cstdlib>
 #include <map>
@@ -149,4 +151,10 @@ inline size_t DynamicUsage(const std::unordered_map<X, Y, Hasher, Eq, A> &m) {
     return IncrementalDynamicUsage(m) * m.size() +
            MallocUsage(sizeof(void *) * m.bucket_count());
 }
+
+// Some of our utility wrappers
+
+template <typename T>
+inline size_t DynamicUsage(const HeapOptional<T> &p) { return p ? MallocUsage(sizeof(T)) : 0; }
+
 } // namespace memusage

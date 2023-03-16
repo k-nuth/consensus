@@ -12,7 +12,7 @@
 
 using namespace kth::consensus;
 
-// Start Boost Suite: consensus verify flags to script flags
+// Start Test Suite: consensus verify flags to script flags
 
 // Unnamed enum values require cast for boost comparison macros.
 
@@ -152,4 +152,4 @@ TEST_CASE("consensus verify flags to script flags all  all", "[consensus verify 
     REQUIRE(verify_flags_to_script_flags(all_verify_flags) == all_script_flags);
 }
 
-// End Boost Suite
+// End Test Suite

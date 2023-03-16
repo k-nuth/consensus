@@ -14,20 +14,6 @@
 
 namespace kth::consensus {
 
-#if defined(KTH_CURRENCY_BCH)
-struct coin {
-    int64_t amount;                         // nValue
-    std::vector<uint8_t> output_script;     // scriptPubKey
-
-    coin(int64_t amount, std::vector<uint8_t> const& output_script)
-        : amount(amount), output_script(output_script)
-    {}
-
-    coin(int64_t amount, std::vector<uint8_t>&& output_script)
-        : amount(amount), output_script(std::move(output_script))
-    {}
-};
-#endif
 
 /**
  * Result values from calling verify_script.
@@ -74,6 +60,7 @@ typedef enum verify_result_type {
     verify_result_cleanstack,
     verify_result_minimalif,
     verify_result_sig_nullfail,
+    verify_result_minimalnum,
 
     // Softfork safeness
     verify_result_discourage_upgradable_nops,
@@ -182,6 +169,8 @@ typedef enum verify_result_type {
 // SCRIPT_ENFORCE_SIGCHECKS = (1U << 23),
 // SCRIPT_64_BIT_INTEGERS = (1U << 24),
 // SCRIPT_NATIVE_INTROSPECTION = (1U << 25),
+// SCRIPT_ENABLE_P2SH_32 = (1U << 26),
+// SCRIPT_ENABLE_TOKENS = (1U << 27),
 
 /**
  * Flags to use when calling verify_script.
@@ -321,6 +310,15 @@ typedef enum verify_flags_type {
      */
     , verify_flags_native_introspection = (1U << 25)
 
+    /**
+     * SCRIPT_ENABLE_P2SH_32 (BCH).
+     */
+    , verify_flags_enable_p2sh_32 = (1U << 26)
+
+    /**
+     * SCRIPT_ENABLE_TOKENS (BCH).
+     */
+    , verify_flags_enable_tokens = (1U << 27)
 #else
     // BTC only flags
 
@@ -365,7 +363,7 @@ typedef enum verify_flags_type {
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags, size_t& sig_checks, int64_t amount, std::vector<coin> coins);
+    unsigned int flags, size_t& sig_checks, int64_t amount, std::vector<std::vector<uint8_t>> coins);
 #else
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,

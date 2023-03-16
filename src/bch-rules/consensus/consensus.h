@@ -1,19 +1,22 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
-// Copyright (c) 2021 The Bitcoin developers
+// Copyright (c) 2021-2022 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #pragma once
 
 #include <cstdint>
+#include <limits>
 
 /** 1MB */
 inline constexpr uint64_t ONE_MEGABYTE = 1000000;
 /** The maximum allowed size for a transaction, in bytes */
 inline constexpr uint64_t MAX_TX_SIZE = ONE_MEGABYTE;
-/** The minimum allowed size for a transaction, in bytes */
-inline constexpr uint64_t MIN_TX_SIZE = 100;
+/** The minimum allowed size for a transaction, in bytes, after magnetic anomaly but before upgrade 9 */
+inline constexpr uint64_t MIN_TX_SIZE_MAGNETIC_ANOMALY = 100;
+/** The minimum allowed size for a transaction, in bytes, after upgrade 9 */
+inline constexpr uint64_t MIN_TX_SIZE_UPGRADE9 = 65;
 /** The maximum allowed size for a block, before the UAHF */
 inline constexpr uint64_t LEGACY_MAX_BLOCK_SIZE = ONE_MEGABYTE;
 /** Default setting for maximum allowed size for a block, in bytes */
@@ -25,6 +28,9 @@ inline constexpr uint64_t DEFAULT_EXCESSIVE_BLOCK_SIZE = 32 * ONE_MEGABYTE;
  *  this constant should be raised well beyond 32-bit addressing limits.
  */
 inline constexpr uint64_t MAX_EXCESSIVE_BLOCK_SIZE = uint64_t(2000) * ONE_MEGABYTE;
+static_assert(MAX_EXCESSIVE_BLOCK_SIZE <= std::numeric_limits<unsigned int>::max(),
+              "MAX_EXCESSIVE_BLOCKSIZE must fit within an unsigned int due to current block file data format");
+
 /** Allowed number of signature check operations per transaction. */
 inline constexpr uint64_t MAX_TX_SIGCHECKS = 3000;
 /**

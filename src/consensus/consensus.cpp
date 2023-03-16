@@ -17,6 +17,7 @@
 #include "pubkey.h"
 #include "script/interpreter.h"
 #include "script/script_error.h"
+#include "streams.h"
 #include "version.h"
 
 #if defined(KTH_CURRENCY_BCH)
@@ -214,6 +215,8 @@ verify_result_type script_error_to_verify_result(ScriptError code) {
             return verify_result_minimalif;
         case ScriptError::SIG_NULLFAIL:
             return verify_result_sig_nullfail;
+        case ScriptError::MINIMALNUM:
+            return verify_result_minimalnum;
 
         // Softfork safeness
         case ScriptError::DISCOURAGE_UPGRADABLE_NOPS:
@@ -464,6 +467,10 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
 #endif //! defined(KTH_CURRENCY_BCH)
 
 #if defined(KTH_CURRENCY_BCH)
+    if ((flags & verify_flags_null_fail) != 0) {
+        script_flags |= SCRIPT_VERIFY_NULLFAIL;
+    }
+
     // Removed
     // if ((flags & verify_flags_compressed_pubkeytype) != 0)
     //     script_flags |= SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE;
@@ -488,6 +495,12 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
 
     if ((flags & verify_flags_native_introspection) != 0)
         script_flags |= SCRIPT_NATIVE_INTROSPECTION;
+
+    if ((flags & verify_flags_enable_p2sh_32) != 0)
+        script_flags |= SCRIPT_ENABLE_P2SH_32;
+
+    if ((flags & verify_flags_enable_tokens) != 0)
+        script_flags |= SCRIPT_ENABLE_TOKENS;
 #endif
 
     return script_flags;
@@ -499,7 +512,7 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
 verify_result_type verify_script(unsigned char const* transaction,
     size_t transaction_size, unsigned char const* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags, size_t& sig_checks, int64_t amount, std::vector<coin> coins) {
+    unsigned int flags, size_t& sig_checks, int64_t amount, std::vector<std::vector<uint8_t>> coins) {
 
 
     if (amount > INT64_MAX) {
@@ -518,7 +531,6 @@ verify_result_type verify_script(unsigned char const* transaction,
 
     try {
         transaction_istream stream(transaction, transaction_size);
-        // txopt = CTransaction(deserialize, stream);
         txopt.emplace(deserialize, stream);
     }
     catch (const std::exception&) {
@@ -541,7 +553,6 @@ verify_result_type verify_script(unsigned char const* transaction,
 
     ScriptError error;
     Amount am(amount);
-    TransactionSignatureChecker checker(&tx, tx_input_index, am);
     const unsigned int script_flags = verify_flags_to_script_flags(flags);
 
     CScript const output_script(prevout_script, prevout_script + prevout_script_size);
@@ -549,23 +560,32 @@ verify_result_type verify_script(unsigned char const* transaction,
 
     ScriptExecutionMetrics metrics = {};
 
-    ScriptExecutionContextOpt context = std::nullopt;
     if (coins.size() != 0) {
-        auto const amount_getter = [&coins](size_t i) { return Amount(coins.at(i).amount); };
-        auto const script_getter = [&coins](size_t i) {
-            auto const& script = coins.at(i).output_script;
-            return CScript(script.begin(), script.begin() + script.size());
+        auto const output_getter = [&coins](size_t i) {
+            auto const& data = coins.at(i);
+            CDataStream stream(data, SER_NETWORK, PROTOCOL_VERSION);
+            CTxOut ret;
+            ::Unserialize(stream, ret);
+            return ret;
         };
 
-        auto const contexts = ScriptExecutionContext::createForAllInputs(tx, amount_getter, script_getter);
+        auto const contexts = ScriptExecutionContext::createForAllInputs(tx, output_getter);
 
         if (tx_input_index >= contexts.size()) {
             return verify_result_tx_input_invalid;
         }
-        context = contexts[tx_input_index];
+        auto const context = contexts[tx_input_index];
+        PrecomputedTransactionData txdata(context);
+        TransactionSignatureChecker checker(context, txdata);
+        VerifyScript(input_script, output_script, script_flags, checker, metrics, &error);
+    } else {
+        ScriptExecutionContextOpt context = std::nullopt;
+        // ContextOptSignatureChecker(const ScriptExecutionContextOpt &contextIn) : contextOpt(contextIn) {}
+        ContextOptSignatureChecker checker(context);
+        VerifyScript(input_script, output_script, script_flags, checker, metrics, &error);
     }
 
-    VerifyScript(input_script, output_script, script_flags, checker, metrics, context, &error);
+    // VerifyScript(input_script, output_script, script_flags, checker, metrics, context, &error);
     sig_checks = metrics.nSigChecks;
     return script_error_to_verify_result(error);
 }

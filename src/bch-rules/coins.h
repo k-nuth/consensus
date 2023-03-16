@@ -1,11 +1,13 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2017-2022 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #pragma once
 
 #include <compressor.h>
+#include <core_memusage.h>
 #include <memusage.h>
 #include <primitives/blockhash.h>
 #include <serialize.h>
@@ -65,7 +67,7 @@ public:
     }
 
     size_t DynamicMemoryUsage() const {
-        return memusage::DynamicUsage(out.scriptPubKey);
+        return memusage::DynamicUsage(out.scriptPubKey) + RecursiveDynamicUsage(out.tokenDataPtr);
     }
 };
 
