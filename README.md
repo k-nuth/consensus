@@ -1,7 +1,7 @@
 <!-- <a target="_blank" href="http://semver.org">![Version][badge.version]</a> -->
 <!-- <a target="_blank" href="https://cirrus-ci.com/github/k-nuth/consensus">![Build Status][badge.Cirrus]</a> -->
 
-# consensus <a target="_blank" href="https://github.com/k-nuth/consensus/releases">![Github Releases][badge.release]</a> <a target="_blank" href="https://travis-ci.org/k-nuth/consensus">![Build status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/projects/k-nuth/consensus">![Build Status][badge.Appveyor]</a> <a href="#">![CPP][badge.cpp]</a> <a target="_blank" href="https://t.me/knuth_cash">![Telegram][badge.telegram]</a> <a target="_blank" href="https://k-nuth.slack.com/">![Slack][badge.slack]</a>
+# consensus <a target="_blank" href="https://github.com/k-nuth/consensus/releases">![Github Releases][badge.release]</a> <a target="_blank" href="https://github.com/k-nuth/consensus/actions">![Build status][badge.GhA]</a> <a href="#">![CPP][badge.cpp]</a> <a target="_blank" href="https://t.me/knuth_cash">![Telegram][badge.telegram]</a> <a target="_blank" href="https://k-nuth.slack.com/">![Slack][badge.slack]</a>
 
 > Consensus code
 
@@ -33,6 +33,7 @@ This library can be used stand-alone, but it is probably convenient for you to u
 Each of our modules has its own Github repository, but in case you want to create an issue, please do so in our [main repository](https://github.com/k-nuth/kth/issues).
 
 <!-- Links -->
+[badge.GhA]: https://github.com/k-nuth/consensus/workflows/Build%20and%20Test/badge.svg?branch=master
 [badge.Travis]: https://travis-ci.org/k-nuth/consensus.svg?branch=master
 [badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/k-nuth/consensus?svg=true&branch=master
 [badge.Cirrus]: https://api.cirrus-ci.com/github/k-nuth/consensus.svg?branch=master
