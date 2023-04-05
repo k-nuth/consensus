@@ -51,7 +51,7 @@ class KnuthConsensusConan(KnuthConanFileV2):
 
     def requirements(self):
         self.requires("boost/1.81.0")
-        self.requires("secp256k1/0.15.0")
+        self.requires("secp256k1/0.16.0")
 
         if self.settings.compiler == "msvc" and self.options.currency == 'BCH':
             self.requires("safeint/3.0.27")
