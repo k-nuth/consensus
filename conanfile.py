@@ -80,9 +80,9 @@ class KnuthConsensusConan(KnuthConanFileV2):
         #     self.options["boost"].without_log = True
 
         if self.options.currency == 'BCH':
-            self.options["secp256k1"].enable_module_schnorr = True
+            self.options["secp256k1/*"].enable_module_schnorr = True
         else:
-            self.options["secp256k1"].enable_module_schnorr = False
+            self.options["secp256k1/*"].enable_module_schnorr = False
 
     def package_id(self):
         KnuthConanFileV2.package_id(self)
