@@ -50,8 +50,8 @@ class KnuthConsensusConan(KnuthConanFileV2):
             self.test_requires("catch2/3.3.2")
 
     def requirements(self):
-        self.requires("boost/1.82.0", transitive_headers=True, transitive_libs=True)
-        self.requires("secp256k1/0.17.0", transitive_headers=True, transitive_libs=True)
+        self.requires("boost/1.83.0", transitive_headers=True, transitive_libs=True)
+        self.requires("secp256k1/0.18.0", transitive_headers=True, transitive_libs=True)
 
         if self.settings.compiler == "msvc" and self.options.currency == 'BCH':
             self.requires("safeint/3.0.28", transitive_headers=True, transitive_libs=True)
@@ -78,6 +78,9 @@ class KnuthConsensusConan(KnuthConanFileV2):
         # if self.options.log != "boost":
         #     self.options["boost"].without_filesystem = True
         #     self.options["boost"].without_log = True
+
+        if self.settings.os == "Emscripten":
+            self.options["boost/*"].header_only = True
 
         if self.options.currency == 'BCH':
             self.options["secp256k1/*"].enable_module_schnorr = True
