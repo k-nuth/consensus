@@ -47,10 +47,10 @@ class KnuthConsensusConan(KnuthConanFileV2):
 
     def build_requirements(self):
         if self.options.tests:
-            self.test_requires("catch2/3.3.2")
+            self.test_requires("catch2/3.5.2")
 
     def requirements(self):
-        self.requires("boost/1.83.0", transitive_headers=True, transitive_libs=True)
+        self.requires("boost/1.84.0", transitive_headers=True, transitive_libs=True)
         self.requires("secp256k1/0.18.0", transitive_headers=True, transitive_libs=True)
 
         if self.settings.compiler == "msvc" and self.options.currency == 'BCH':
