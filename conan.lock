@@ -6,11 +6,11 @@
         "libbacktrace/cci.20210118#ec1aa63bbc10145c6a299e68e711670c%1676205469.545",
         "gmp/6.3.0#df20ffb6d21c34d67704305bcd1dea9e%1698225617.026",
         "bzip2/1.0.8#411fc05e80d47a89045edc1ee6f23c1d%1678293522.814",
-        "boost/1.83.0#f0c3932db7f65b606ed78357ecbdcbef%1692286008.562"
+        "boost/1.84.0#695713218cdeec6aef61de1f34bf57ee%1706382844.645"
     ],
     "build_requires": [
         "m4/1.4.19#c1c4b1ee919e34630bb9b50046253d3c%1676610086.39",
-        "b2/4.9.6#2e02945ad41739b8051247d14fe8297d%1679927934.674"
+        "b2/4.10.1#8dc3df1cc73ad65d86cbdfd31fdb011f%1690006205.975"
     ],
     "python_requires": []
 }
