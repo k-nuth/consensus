@@ -2,7 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.20)
 
 project(consensus VERSION 0 LANGUAGES CXX C)
 
@@ -217,7 +217,7 @@ endif()
 # add_library(${PROJECT_NAME}-clone OBJECT)
 add_library(${PROJECT_NAME}-clone ${MODE} ${kth_sources_clone})
 add_library(${PROJECT_NAME}-clone::${PROJECT_NAME}-clone ALIAS ${PROJECT_NAME}-clone)
-set_target_properties(${PROJECT_NAME}-clone PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 20 CXX_STANDARD_REQUIRED TRUE)
+set_target_properties(${PROJECT_NAME}-clone PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 23 CXX_STANDARD_REQUIRED TRUE)
 
 if (ENABLE_POSITION_INDEPENDENT_CODE)
   set_property(TARGET ${PROJECT_NAME}-clone PROPERTY POSITION_INDEPENDENT_CODE ON)
@@ -261,7 +261,7 @@ set(kth_headers
 
 add_library(${PROJECT_NAME} ${MODE} ${kth_sources} ${kth_headers} $<TARGET_OBJECTS:${PROJECT_NAME}-clone>)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 20 CXX_STANDARD_REQUIRED TRUE)
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 23 CXX_STANDARD_REQUIRED TRUE)
 
 if (ENABLE_POSITION_INDEPENDENT_CODE)
   set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
