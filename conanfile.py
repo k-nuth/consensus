@@ -18,6 +18,7 @@ class KnuthConsensusConan(KnuthConanFileV2):
     url = "https://github.com/k-nuth/consensus"
     description = "Bitcoin Consensus Library"
     settings = "os", "compiler", "build_type", "arch"
+    package_type = "library"
 
     options = {"shared": [True, False],
                "fPIC": [True, False],
