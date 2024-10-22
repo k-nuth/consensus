@@ -2,21 +2,17 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef KTH_CONSENSUS_CONSENSUS_HPP
-#define KTH_CONSENSUS_CONSENSUS_HPP
+#ifndef KTH_CONSENSUS_CONVERSIONS_HPP
+#define KTH_CONSENSUS_CONVERSIONS_HPP
 
 #include <cstddef>
 #include <kth/consensus/define.hpp>
 #include <kth/consensus/export.hpp>
-#include "script/script_error.h"
 
 namespace kth::consensus {
 
-// These are not published in the public header but are exposed here for test.
-BCK_API verify_result_type script_error_to_verify_result(ScriptError code);
-
-BCK_API char const* version();
+BCK_API unsigned int verify_flags_to_script_flags(unsigned int flags);
 
 } // namespace kth::consensus
 
-#endif
+#endif // KTH_CONSENSUS_CONVERSIONS_HPP
