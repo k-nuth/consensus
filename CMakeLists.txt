@@ -80,7 +80,10 @@ _check_has_decl(sys/endian.h HAVE_SYS_ENDIAN_H htobe16 HAVE_DECL_HTOBE16)
 _check_has_decl(sys/endian.h HAVE_SYS_ENDIAN_H htobe32 HAVE_DECL_HTOBE32)
 _check_has_decl(sys/endian.h HAVE_SYS_ENDIAN_H htobe64 HAVE_DECL_HTOBE64)
 
-find_package(secp256k1 REQUIRED)
+
+if (NOT GLOBAL_BUILD)
+  find_package(secp256k1 REQUIRED)
+endif()
 find_package(Boost COMPONENTS boost REQUIRED)
 
 include(CheckCXXCompilerFlag)
