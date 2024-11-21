@@ -17,6 +17,7 @@
  * Maintainers: Do not include this header internal to this library.
  */
 
+#include <kth/consensus/conversions.hpp>
 #include <kth/consensus/define.hpp>
 #include <kth/consensus/export.hpp>
 #include <kth/consensus/version.hpp>
