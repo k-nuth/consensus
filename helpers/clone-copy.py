@@ -3,7 +3,7 @@ import os.path
 from shutil import copyfile
 
 #  BCHN
-PATH = '/Users/fernando/dev/kth/kth-master/consensus/src/bch-rules/'
+PATH = '/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/'
 SOURCE_PATH = '/Users/fernando/dev/bchn/bitcoin-cash-node-master/src/'
 
 # # Core
