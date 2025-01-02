@@ -34,9 +34,59 @@ def replace(kth_files):
 # # kth_files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames if os.path.splitext(f)[1] == '.txt']
 # # kth_files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames]
 
-kth_files = [(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames]
-print(kth_files)
-replace(kth_files)
+# kth_files = [(dp, f) for dp, dn, filenames in os.walk(PATH) for f in filenames]
+# print(kth_files)
+# replace(kth_files)
+
+ # ------------------------------------------------------------------------------------------
+
+
+
+missing_files = [
+    # /Users/fernando/dev/bchn/bitcoin-cash-node-master/src/script/bigint.h
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/script', 'bigint.h'),
+
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/script', 'script_num_encoding.h'),
+
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/script', 'vm_limits.h'),
+
+    # src/script/bigint.cpp
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/script', 'bigint.cpp'),
+
+    # src/util/time.h
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/util', 'time.h'),
+
+    # src/util/time.cpp
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/util', 'time.cpp'),
+
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/', 'random.cpp'),
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/', 'random.h')
+
+    # src/crypto/sha512.h
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/crypto', 'sha512.h'),
+
+    # src/support/allocators/secure.h
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/support/allocators', 'secure.h'),
+
+    # src/support/lockedpool.h
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/support', 'lockedpool.h'),
+
+    # src/support/lockedpool.cpp
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/support', 'lockedpool.cpp'),
+
+    # src/script/script_num_encoding.cpp
+    # ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/script', 'script_num_encoding.cpp'),
+
+    # src/crypto/chacha20.cpp
+    ('/Users/fernando/dev/kth/kth-master-simple/consensus/src/bch-rules/crypto', 'chacha20.cpp'),
+
+]
+
+
+print(missing_files)
+replace(missing_files)
+
+
 
 
 # # # # ------------------------------------------------------------------------------------------
