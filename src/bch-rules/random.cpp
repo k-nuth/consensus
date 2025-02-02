@@ -10,7 +10,7 @@
 // #include <compat.h> // for Windows API
 // #include <wincrypt.h>
 // #endif
-// #include <compat/cpuid.h>
+#include <compat/cpuid.h>
 #include <crypto/sha512.h>
 // // #include <logging.h> // for LogPrint()
 #include <support/allocators/secure.h>
@@ -86,147 +86,147 @@ static inline int64_t GetPerformanceCounter() noexcept {
 #endif
 }
 
-// #ifdef HAVE_GETCPUID
-// static bool g_rdrand_supported = false;
-// static bool g_rdseed_supported = false;
-// static constexpr uint32_t CPUID_F1_ECX_RDRAND = 0x40000000;
-// static constexpr uint32_t CPUID_F7_EBX_RDSEED = 0x00040000;
-// #ifdef bit_RDRND
-// static_assert(CPUID_F1_ECX_RDRAND == bit_RDRND,
-//               "Unexpected value for bit_RDRND");
-// #endif
-// #ifdef bit_RDSEED
-// static_assert(CPUID_F7_EBX_RDSEED == bit_RDSEED,
-//               "Unexpected value for bit_RDSEED");
-// #endif
+#ifdef HAVE_GETCPUID
+static bool g_rdrand_supported = false;
+static bool g_rdseed_supported = false;
+static constexpr uint32_t CPUID_F1_ECX_RDRAND = 0x40000000;
+static constexpr uint32_t CPUID_F7_EBX_RDSEED = 0x00040000;
+#ifdef bit_RDRND
+static_assert(CPUID_F1_ECX_RDRAND == bit_RDRND,
+              "Unexpected value for bit_RDRND");
+#endif
+#ifdef bit_RDSEED
+static_assert(CPUID_F7_EBX_RDSEED == bit_RDSEED,
+              "Unexpected value for bit_RDSEED");
+#endif
 
-// static void InitHardwareRand() {
-//     uint32_t eax, ebx, ecx, edx;
-//     GetCPUID(1, 0, eax, ebx, ecx, edx);
-//     if (ecx & CPUID_F1_ECX_RDRAND) {
-//         g_rdrand_supported = true;
-//     }
-//     GetCPUID(7, 0, eax, ebx, ecx, edx);
-//     if (ebx & CPUID_F7_EBX_RDSEED) {
-//         g_rdseed_supported = true;
-//     }
-// }
+static void InitHardwareRand() {
+    uint32_t eax, ebx, ecx, edx;
+    GetCPUID(1, 0, eax, ebx, ecx, edx);
+    if (ecx & CPUID_F1_ECX_RDRAND) {
+        g_rdrand_supported = true;
+    }
+    GetCPUID(7, 0, eax, ebx, ecx, edx);
+    if (ebx & CPUID_F7_EBX_RDSEED) {
+        g_rdseed_supported = true;
+    }
+}
 
-// static void ReportHardwareRand() {
-//     // This must be done in a separate function, as InitHardwareRand() may be
-//     // indirectly called from global constructors, before logging is
-//     // initialized.
-//     if (g_rdseed_supported) {
-//         LogPrintf("Using RdSeed as additional entropy source\n");
-//     }
-//     if (g_rdrand_supported) {
-//         LogPrintf("Using RdRand as an additional entropy source\n");
-//     }
-// }
+static void ReportHardwareRand() {
+    // This must be done in a separate function, as InitHardwareRand() may be
+    // indirectly called from global constructors, before logging is
+    // initialized.
+    if (g_rdseed_supported) {
+        LogPrintf("Using RdSeed as additional entropy source\n");
+    }
+    if (g_rdrand_supported) {
+        LogPrintf("Using RdRand as an additional entropy source\n");
+    }
+}
 
-// /**
-//  * Read 64 bits of entropy using rdrand.
-//  *
-//  * Must only be called when RdRand is supported.
-//  */
-// static uint64_t GetRdRand() noexcept {
-//     // RdRand may very rarely fail. Invoke it up to 10 times in a loop to reduce
-//     // this risk.
-// #ifdef __i386__
-//     uint8_t ok;
-//     uint32_t r1, r2;
-//     for (int i = 0; i < 10; ++i) {
-//         // rdrand %eax
-//         __asm__ volatile(".byte 0x0f, 0xc7, 0xf0; setc %1"
-//                          : "=a"(r1), "=q"(ok)::"cc");
-//         if (ok) {
-//             break;
-//         }
-//     }
-//     for (int i = 0; i < 10; ++i) {
-//         // rdrand %eax
-//         __asm__ volatile(".byte 0x0f, 0xc7, 0xf0; setc %1"
-//                          : "=a"(r2), "=q"(ok)::"cc");
-//         if (ok) {
-//             break;
-//         }
-//     }
-//     return (uint64_t(r2) << 32) | r1;
-// #elif defined(__x86_64__) || defined(__amd64__)
-//     uint8_t ok;
-//     uint64_t r1;
-//     for (int i = 0; i < 10; ++i) {
-//         // rdrand %rax
-//         __asm__ volatile(".byte 0x48, 0x0f, 0xc7, 0xf0; setc %1"
-//                          : "=a"(r1), "=q"(ok)::"cc");
-//         if (ok) {
-//             break;
-//         }
-//     }
-//     return r1;
-// #else
-// #error "RdRand is only supported on x86 and x86_64"
-// #endif
-// }
+/**
+ * Read 64 bits of entropy using rdrand.
+ *
+ * Must only be called when RdRand is supported.
+ */
+static uint64_t GetRdRand() noexcept {
+    // RdRand may very rarely fail. Invoke it up to 10 times in a loop to reduce
+    // this risk.
+#ifdef __i386__
+    uint8_t ok;
+    uint32_t r1, r2;
+    for (int i = 0; i < 10; ++i) {
+        // rdrand %eax
+        __asm__ volatile(".byte 0x0f, 0xc7, 0xf0; setc %1"
+                         : "=a"(r1), "=q"(ok)::"cc");
+        if (ok) {
+            break;
+        }
+    }
+    for (int i = 0; i < 10; ++i) {
+        // rdrand %eax
+        __asm__ volatile(".byte 0x0f, 0xc7, 0xf0; setc %1"
+                         : "=a"(r2), "=q"(ok)::"cc");
+        if (ok) {
+            break;
+        }
+    }
+    return (uint64_t(r2) << 32) | r1;
+#elif defined(__x86_64__) || defined(__amd64__)
+    uint8_t ok;
+    uint64_t r1;
+    for (int i = 0; i < 10; ++i) {
+        // rdrand %rax
+        __asm__ volatile(".byte 0x48, 0x0f, 0xc7, 0xf0; setc %1"
+                         : "=a"(r1), "=q"(ok)::"cc");
+        if (ok) {
+            break;
+        }
+    }
+    return r1;
+#else
+#error "RdRand is only supported on x86 and x86_64"
+#endif
+}
 
-// /**
-//  * Read 64 bits of entropy using rdseed.
-//  *
-//  * Must only be called when RdSeed is supported.
-//  */
-// static uint64_t GetRdSeed() noexcept {
-//     // RdSeed may fail when the HW RNG is overloaded. Loop indefinitely until
-//     // enough entropy is gathered, but pause after every failure.
-// #ifdef __i386__
-//     uint8_t ok;
-//     uint32_t r1, r2;
-//     do {
-//         // rdseed %eax
-//         __asm__ volatile(".byte 0x0f, 0xc7, 0xf8; setc %1"
-//                          : "=a"(r1), "=q"(ok)::"cc");
-//         if (ok) {
-//             break;
-//         }
-//         __asm__ volatile("pause");
-//     } while (true);
-//     do {
-//         // rdseed %eax
-//         __asm__ volatile(".byte 0x0f, 0xc7, 0xf8; setc %1"
-//                          : "=a"(r2), "=q"(ok)::"cc");
-//         if (ok) {
-//             break;
-//         }
-//         __asm__ volatile("pause");
-//     } while (true);
-//     return (uint64_t(r2) << 32) | r1;
-// #elif defined(__x86_64__) || defined(__amd64__)
-//     uint8_t ok;
-//     uint64_t r1;
-//     do {
-//         // rdseed %rax
-//         __asm__ volatile(".byte 0x48, 0x0f, 0xc7, 0xf8; setc %1"
-//                          : "=a"(r1), "=q"(ok)::"cc");
-//         if (ok) {
-//             break;
-//         }
-//         __asm__ volatile("pause");
-//     } while (true);
-//     return r1;
-// #else
-// #error "RdSeed is only supported on x86 and x86_64"
-// #endif
-// }
+/**
+ * Read 64 bits of entropy using rdseed.
+ *
+ * Must only be called when RdSeed is supported.
+ */
+static uint64_t GetRdSeed() noexcept {
+    // RdSeed may fail when the HW RNG is overloaded. Loop indefinitely until
+    // enough entropy is gathered, but pause after every failure.
+#ifdef __i386__
+    uint8_t ok;
+    uint32_t r1, r2;
+    do {
+        // rdseed %eax
+        __asm__ volatile(".byte 0x0f, 0xc7, 0xf8; setc %1"
+                         : "=a"(r1), "=q"(ok)::"cc");
+        if (ok) {
+            break;
+        }
+        __asm__ volatile("pause");
+    } while (true);
+    do {
+        // rdseed %eax
+        __asm__ volatile(".byte 0x0f, 0xc7, 0xf8; setc %1"
+                         : "=a"(r2), "=q"(ok)::"cc");
+        if (ok) {
+            break;
+        }
+        __asm__ volatile("pause");
+    } while (true);
+    return (uint64_t(r2) << 32) | r1;
+#elif defined(__x86_64__) || defined(__amd64__)
+    uint8_t ok;
+    uint64_t r1;
+    do {
+        // rdseed %rax
+        __asm__ volatile(".byte 0x48, 0x0f, 0xc7, 0xf8; setc %1"
+                         : "=a"(r1), "=q"(ok)::"cc");
+        if (ok) {
+            break;
+        }
+        __asm__ volatile("pause");
+    } while (true);
+    return r1;
+#else
+#error "RdSeed is only supported on x86 and x86_64"
+#endif
+}
 
-// #else
-// /**
-//  * Access to other hardware random number generators could be added here later,
-//  * assuming it is sufficiently fast (in the order of a few hundred CPU cycles).
-//  * Slower sources should probably be invoked separately, and/or only from
-//  * RandAddSeedSleep (which is called during idle background operation).
-//  */
+#else
+/**
+ * Access to other hardware random number generators could be added here later,
+ * assuming it is sufficiently fast (in the order of a few hundred CPU cycles).
+ * Slower sources should probably be invoked separately, and/or only from
+ * RandAddSeedSleep (which is called during idle background operation).
+ */
 static void InitHardwareRand() {}
 // static void ReportHardwareRand() {}
-// #endif
+#endif // HAVE_GETCPUID
 
 /**
  * Add 64 bits of entropy gathered from hardware to hasher. Do nothing if not
