@@ -24,6 +24,7 @@
 
 #include <chrono>
 #include <cstdlib>
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -117,10 +118,12 @@ static void ReportHardwareRand() {
     // indirectly called from global constructors, before logging is
     // initialized.
     if (g_rdseed_supported) {
-        LogPrintf("Using RdSeed as additional entropy source\n");
+        // LogPrintf("Using RdSeed as additional entropy source\n");
+        std::cout << "Using RdSeed as additional entropy source\n";
     }
     if (g_rdrand_supported) {
-        LogPrintf("Using RdRand as an additional entropy source\n");
+        // LogPrintf("Using RdRand as an additional entropy source\n");
+        std::cout << "Using RdRand as an additional entropy source\n";
     }
 }
 
