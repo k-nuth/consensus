@@ -265,12 +265,14 @@ if (ENABLE_SHARED)
 endif()
 
 set(kth_sources
+  src/consensus/conversions.cpp
   src/consensus/consensus.cpp
   src/consensus/consensus.hpp
 )
 
 set(kth_headers
   include/kth/consensus.hpp
+  include/kth/consensus/conversions.hpp
   include/kth/consensus/define.hpp
   include/kth/consensus/export.hpp
   include/kth/consensus/version.hpp
