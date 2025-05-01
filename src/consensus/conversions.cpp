@@ -62,8 +62,9 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
     // if ((flags & verify_flags_compressed_pubkeytype) != 0)
     //     script_flags |= SCRIPT_VERIFY_COMPRESSED_PUBKEYTYPE;
 
-    if ((flags & verify_flags_enable_sighash_forkid) != 0)
+    if ((flags & verify_flags_enable_sighash_forkid) != 0) {
         script_flags |= SCRIPT_ENABLE_SIGHASH_FORKID;
+    }
 
     if ((flags & verify_flags_disallow_segwit_recovery) != 0)
         script_flags |= SCRIPT_DISALLOW_SEGWIT_RECOVERY;
