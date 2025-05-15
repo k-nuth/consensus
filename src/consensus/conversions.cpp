@@ -90,6 +90,9 @@ unsigned int verify_flags_to_script_flags(unsigned int flags) {
     if ((flags & verify_flags_enable_tokens) != 0)
         script_flags |= SCRIPT_ENABLE_TOKENS;
 
+    if ((flags & verify_flags_enable_may2025) != 0)
+        script_flags |= SCRIPT_ENABLE_MAY2025;
+
     return script_flags;
 }
 
